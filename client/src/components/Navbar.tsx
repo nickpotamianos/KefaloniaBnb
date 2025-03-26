@@ -40,7 +40,10 @@ const Navbar = () => {
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"}`}>
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
-        <a href="#" className="flex items-center space-x-2">
+        <a href="#" className="flex items-center space-x-3">
+          <div className="h-9 w-9 bg-[#3B83BD] rounded-md flex items-center justify-center text-white font-bold text-xl">
+            VK
+          </div>
           <span className="text-2xl font-bold text-[#3B83BD] playfair">Vintage Kefalonia Home</span>
         </a>
         
