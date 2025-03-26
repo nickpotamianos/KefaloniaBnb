@@ -1,0 +1,93 @@
+**📝 Website Development Prompt for Airbnb House in Kefalonia, Greece**
+
+---
+
+### 🔹 Project Overview:
+I need a **modern, visually stunning, and mobile-responsive website** to advertise and showcase my **Airbnb rental property** located on the beautiful island of **Kefalonia, Greece**. The website should serve as a digital brochure, designed to attract and convert visitors into guests. It must emphasize the **natural beauty, amenities, and unique experience** of staying at the property.
+
+---
+
+### 🔹 Core Goals:
+1. **Showcase the Property** – High-quality visuals and elegant layout to highlight rooms, views, and amenities.
+2. **Inspire Bookings** – Lead visitors to book via Airbnb or contact me directly.
+3. **Tell a Story** – Convey the experience of staying at the house and exploring Kefalonia.
+4. **Build Trust** – Present reviews, testimonials, and secure contact options.
+
+---
+
+### 🔹 Essential Pages / Sections:
+
+1. **Homepage**  
+   - Hero image or video (sunset, drone shot, sea view, etc.)  
+   - Short welcome tagline (e.g., *“Your Seaside Escape in Kefalonia”*)  
+   - Quick intro + call-to-action (e.g., "Book Now" or "View the House")
+
+2. **The House**  
+   - Full gallery (optimized for performance)  
+   - Room descriptions and amenities  
+   - Unique features (e.g., pool, balcony with sea view, walking distance to beach, etc.)
+
+3. **Location**  
+   - Interactive map showing exact location  
+   - Info about the area (nearest beaches, attractions, restaurants)  
+   - Suggestions for day trips, hiking, etc.
+
+4. **Experiences**  
+   - Highlight what guests can do during their stay  
+   - Embed Instagram feed or local photography (optional)
+
+5. **Guest Reviews**  
+   - Showcase Airbnb testimonials  
+   - Optionally pull them directly from the listing (or manually added)
+
+6. **Booking**  
+   - Clear CTA to book through Airbnb (with a prominent button)  
+   - Optional contact form for direct inquiries  
+   - Calendar availability embed (if possible)
+
+7. **About / Contact**  
+   - Short bio about the host(s)  
+   - Contact form  
+   - Social media links
+
+---
+
+### 🔹 Design Guidelines:
+
+- **Aesthetic**: Clean, modern, minimal, beachy-luxury feel (think Mediterranean/Boho vibes)  
+- **Colors**: Inspired by the sea, sand, whitewashed homes, and olive trees – soft blues, whites, beige, and earthy tones  
+- **Typography**: Elegant and readable, slightly upscale but still friendly  
+- **Layout**: Spacious, airy, with strong use of visuals  
+- **Responsive Design**: Must look great on mobile, tablet, and desktop  
+- **Speed-optimized**: Prioritize image compression and lazy loading for fast performance
+
+---
+
+### 🔹 Technical Preferences:
+
+- CMS (optional): WordPress, Webflow, or custom static site  
+- SEO-optimized (basic on-page SEO, metadata, alt tags)  
+- Analytics setup (Google Analytics or similar)  
+- GDPR-compliant contact form (if targeting EU)
+
+---
+
+### 🔹 Content & Assets:
+
+I will provide:
+- High-resolution photos and drone footage of the property and surroundings  
+- Airbnb listing URL  
+- Logo (if available) or request for simple logo design  
+- Text descriptions (or I can work with you to refine copy)
+
+---
+
+### 🔹 Bonus Features (optional but desirable):
+
+- Multi-language support (English + Greek)  
+- Testimonials slider  
+- Live weather widget for Kefalonia  
+- Blog section (for SEO / sharing local tips later)  
+- Instagram or Airbnb embed  
+- FAQ section for common guest questions
+
