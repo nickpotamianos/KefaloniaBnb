@@ -1,23 +1,47 @@
-import { users, type User, type InsertUser } from "@shared/schema";
+import { 
+  users, contacts, newsletter,
+  type User, type InsertUser,
+  type Contact, type Newsletter
+} from "@shared/schema";
 
 // modify the interface with any CRUD methods
 // you might need
 
 export interface IStorage {
+  // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  
+  // Contact methods
+  getContact(id: number): Promise<Contact | undefined>;
+  createContact(contactData: Omit<Contact, "id">): Promise<Contact>;
+  
+  // Newsletter methods
+  getNewsletterByEmail(email: string): Promise<Newsletter | undefined>;
+  createNewsletterSubscription(data: Omit<Newsletter, "id">): Promise<Newsletter>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
-  currentId: number;
+  private contactsList: Map<number, Contact>;
+  private newsletterList: Map<number, Newsletter>;
+  
+  private userCurrentId: number;
+  private contactCurrentId: number;
+  private newsletterCurrentId: number;
 
   constructor() {
     this.users = new Map();
-    this.currentId = 1;
+    this.contactsList = new Map();
+    this.newsletterList = new Map();
+    
+    this.userCurrentId = 1;
+    this.contactCurrentId = 1;
+    this.newsletterCurrentId = 1;
   }
 
+  // User methods
   async getUser(id: number): Promise<User | undefined> {
     return this.users.get(id);
   }
@@ -29,10 +53,36 @@ export class MemStorage implements IStorage {
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
+    const id = this.userCurrentId++;
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
     return user;
+  }
+  
+  // Contact methods
+  async getContact(id: number): Promise<Contact | undefined> {
+    return this.contactsList.get(id);
+  }
+  
+  async createContact(contactData: Omit<Contact, "id">): Promise<Contact> {
+    const id = this.contactCurrentId++;
+    const contact = { ...contactData, id };
+    this.contactsList.set(id, contact);
+    return contact;
+  }
+  
+  // Newsletter methods
+  async getNewsletterByEmail(email: string): Promise<Newsletter | undefined> {
+    return Array.from(this.newsletterList.values()).find(
+      (subscription) => subscription.email === email,
+    );
+  }
+  
+  async createNewsletterSubscription(data: Omit<Newsletter, "id">): Promise<Newsletter> {
+    const id = this.newsletterCurrentId++;
+    const subscription = { ...data, id };
+    this.newsletterList.set(id, subscription);
+    return subscription;
   }
 }
 
