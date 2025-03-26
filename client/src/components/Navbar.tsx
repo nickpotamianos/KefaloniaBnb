@@ -41,7 +41,7 @@ const Navbar = () => {
     <header className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"}`}>
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         <a href="#" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-[#3B83BD] playfair">Villa Kefalonia</span>
+          <span className="text-2xl font-bold text-[#3B83BD] playfair">Vintage Kefalonia Home</span>
         </a>
         
         {/* Mobile menu button */}

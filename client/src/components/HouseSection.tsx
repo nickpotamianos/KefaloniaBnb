@@ -9,8 +9,8 @@ const HouseSection = () => {
     <section id="house" className="py-20 px-4 bg-white">
       <div className="container mx-auto">
         <Heading
-          title="The House"
-          description="Discover our beautiful villa nestled on the hills of Kefalonia with panoramic sea views and all the comforts of modern luxury."
+          title="Unique Kefalonian Vintage Home"
+          description="Experience the charm of our beautifully restored 100-year-old traditional Kefalonian home that blends heritage with modern comforts."
           centered
         />
         
@@ -27,15 +27,15 @@ const HouseSection = () => {
         
         <div className="flex flex-col md:flex-row gap-12">
           <div className="md:w-2/3">
-            <h3 className="text-2xl font-bold playfair text-[#2C5F89] mb-6">About the Villa</h3>
+            <h3 className="text-2xl font-bold playfair text-[#2C5F89] mb-6">About the House</h3>
             <p className="text-gray-700 mb-4">
-              Perched on a hillside overlooking the crystal-clear waters of the Ionian Sea, our villa combines traditional Greek architecture with modern luxury. Bright and airy spaces filled with natural light create the perfect atmosphere for your dream vacation.
+              Welcome to our unique Kefalonian vintage home with over 100 years of history. This beautifully restored traditional house embodies the authentic charm and character of 19th-century Kefalonian architecture while offering all the modern comforts you need.
             </p>
             <p className="text-gray-700 mb-4">
-              The villa features 3 bedrooms, 2 bathrooms, a fully equipped kitchen, spacious living areas, and multiple terraces for enjoying the magnificent sea views and spectacular sunsets.
+              The house comfortably accommodates up to 5 guests with 2 bedrooms (one with a double bed and the living room with 2 sofa beds). It features 1 bathroom, a fully equipped kitchen, and a dedicated workspace perfect for remote working.
             </p>
             <p className="text-gray-700 mb-8">
-              Throughout the property, you'll find a thoughtful blend of contemporary design and authentic Mediterranean touches, creating a space that is both stylish and comfortable.
+              Throughout the property, you'll find a thoughtful blend of heritage elements and contemporary amenities, creating a space that honors its history while ensuring a comfortable and convenient stay for all our guests.
             </p>
             
             <h3 className="text-2xl font-bold playfair text-[#2C5F89] mb-6">Highlights</h3>
