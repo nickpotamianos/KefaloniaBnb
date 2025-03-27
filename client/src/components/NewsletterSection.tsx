@@ -24,7 +24,18 @@ const NewsletterSection = () => {
     setIsSubmitting(true);
     
     try {
-      await apiRequest("POST", "/api/newsletter", { email });
+      // Use Formspree to handle newsletter subscriptions
+      const response = await fetch("https://formspree.io/f/YOUR_NEWSLETTER_FORM_ID", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
       
       toast({
         title: "Subscribed successfully!",

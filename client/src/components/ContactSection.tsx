@@ -45,7 +45,18 @@ const ContactSection = () => {
     setIsSubmitting(true);
     
     try {
-      await apiRequest("POST", "/api/contact", data);
+      // Use Formspree with the provided ID to handle form submissions
+      const response = await fetch("https://formspree.io/f/xqapdkez", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
       
       toast({
         title: "Message sent successfully!",
@@ -364,16 +375,16 @@ const ContactSection = () => {
                   control={form.control}
                   name="privacy"
                   render={({ field }) => (
-                    <FormItem className="mb-6 flex items-start space-x-3">
+                    <FormItem className="mb-6 flex flex-row items-center space-x-3">
                       <FormControl>
                         <Checkbox 
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="mt-1 text-[var(--terracotta)]"
+                          className="text-[var(--terracotta)]"
                         />
                       </FormControl>
                       <div className="space-y-1">
-                        <FormLabel className="text-sm text-gray-700 font-normal leading-relaxed">
+                        <FormLabel className="text-sm text-gray-700 font-normal leading-relaxed cursor-pointer">
                           I agree to the <a href="#" className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] underline">Privacy Policy</a> and consent to being contacted regarding my inquiry.
                         </FormLabel>
                         <FormMessage />
