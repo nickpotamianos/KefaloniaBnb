@@ -17,7 +17,7 @@ const Navbar = () => {
       }
 
       // Find the active section based on scroll position
-      const sections = ["home", "house", "location", "experiences", "reviews", "contact"];
+      const sections = ["home", "house", "location", "experiences", "contact"];
       for (const section of sections) {
         const element = document.getElementById(section);
         if (element) {
@@ -37,14 +37,16 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  const logoSrc = scrolled ? "/images/logokef1.png" : "/images/2logokef1.png";
+
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-sm shadow-sm" : "bg-transparent"}`}>
       <div className="container mx-auto px-4 flex items-center justify-between h-16">
         <a href="#" className="flex items-center space-x-3">
-          <div className="h-9 w-9 bg-[#3B83BD] rounded-md flex items-center justify-center text-white font-bold text-xl">
-            VK
+          <div className="flex items-center space-x-3">
+            <img src={logoSrc} alt="Logo" className="h-12 w-auto" />
+            <span className={`text-2xl font-bold playfair ${scrolled ? 'text-[#3B83BD]' : 'text-white'}`}>Vintage Kefalonian Home</span>
           </div>
-          <span className="text-2xl font-bold text-[#3B83BD] playfair">Vintage Kefalonia Home</span>
         </a>
         
         {/* Mobile menu button */}
@@ -60,37 +62,31 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-8">
           <a 
             href="#home" 
-            className={`text-[#3B83BD] hover:text-[#2C5F89] font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "home" ? "border-[#D17A46]" : "border-transparent"}`}
+            className={`text-${scrolled ? '[#3B83BD]' : 'white'} hover:text-${scrolled ? '[#2C5F89]' : 'white'} font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "home" ? "border-[#D17A46]" : "border-transparent"}`}
           >
             Home
           </a>
           <a 
             href="#house" 
-            className={`text-[#3B83BD] hover:text-[#2C5F89] font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "house" ? "border-[#D17A46]" : "border-transparent"}`}
+            className={`text-${scrolled ? '[#3B83BD]' : 'white'} hover:text-${scrolled ? '[#2C5F89]' : 'white'} font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "house" ? "border-[#D17A46]" : "border-transparent"}`}
           >
             The House
           </a>
           <a 
             href="#location" 
-            className={`text-[#3B83BD] hover:text-[#2C5F89] font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "location" ? "border-[#D17A46]" : "border-transparent"}`}
+            className={`text-${scrolled ? '[#3B83BD]' : 'white'} hover:text-${scrolled ? '[#2C5F89]' : 'white'} font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "location" ? "border-[#D17A46]" : "border-transparent"}`}
           >
             Location
           </a>
           <a 
             href="#experiences" 
-            className={`text-[#3B83BD] hover:text-[#2C5F89] font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "experiences" ? "border-[#D17A46]" : "border-transparent"}`}
+            className={`text-${scrolled ? '[#3B83BD]' : 'white'} hover:text-${scrolled ? '[#2C5F89]' : 'white'} font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "experiences" ? "border-[#D17A46]" : "border-transparent"}`}
           >
             Experiences
           </a>
           <a 
-            href="#reviews" 
-            className={`text-[#3B83BD] hover:text-[#2C5F89] font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "reviews" ? "border-[#D17A46]" : "border-transparent"}`}
-          >
-            Reviews
-          </a>
-          <a 
             href="#contact" 
-            className={`text-[#3B83BD] hover:text-[#2C5F89] font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "contact" ? "border-[#D17A46]" : "border-transparent"}`}
+            className={`text-${scrolled ? '[#3B83BD]' : 'white'} hover:text-${scrolled ? '[#2C5F89]' : 'white'} font-medium transition-all duration-300 border-b-2 py-1 ${activeSection === "contact" ? "border-[#D17A46]" : "border-transparent"}`}
           >
             Contact
           </a>
@@ -131,13 +127,6 @@ const Navbar = () => {
               className={`text-[#3B83BD] py-2 block ${activeSection === "experiences" ? "font-bold border-l-4 border-[#D17A46] pl-2" : ""}`}
             >
               Experiences
-            </a>
-            <a 
-              onClick={closeMenu} 
-              href="#reviews" 
-              className={`text-[#3B83BD] py-2 block ${activeSection === "reviews" ? "font-bold border-l-4 border-[#D17A46] pl-2" : ""}`}
-            >
-              Reviews
             </a>
             <a 
               onClick={closeMenu} 

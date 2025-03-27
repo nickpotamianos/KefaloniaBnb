@@ -35,7 +35,7 @@ export const houseHighlights = [
   "Self check-in with lockbox",
   "Mountain and garden views",
   "Beach access nearby",
-  "High-speed WiFi and TV",
+  "High-speed WiFi",
   "Fully equipped kitchen",
   "Dedicated workspace for remote working",
   "Air conditioning throughout",
@@ -44,55 +44,55 @@ export const houseHighlights = [
 
 // Nearby Locations
 export const nearbyBeaches: Location[] = [
-  { name: "Foki Beach", distance: "nearby" },
-  { name: "Emblisi Beach", distance: "nearby" },
-  { name: "Kimilia Beach", distance: "nearby" },
-  { name: "Dafnoudi Beach", distance: "nearby" }
+  { name: "Myrtos Beach", distance: "20 min drive" },
+  { name: "Foki Beach", distance: "7 min drive" },
+  { name: "Emblisi Beach", distance: "7 min drive" },
+  { name: "Kimilia Beach", distance: "8 min drive" },
 ];
 
 export const localAttractions: Location[] = [
-  { name: "Fiskardo Village", distance: "30 min drive" },
-  { name: "Assos Village", distance: "30 min drive" },
-  { name: "Melissani Cave", distance: "15 min drive" }
+  { name: "Fiskardo Village", distance: "5 min drive" },
+  { name: "Assos Village", distance: "20 min drive" },
+  { name: "Melissani Cave", distance: "30 min drive" }
 ];
 
 export const diningOptions: Location[] = [
-  { name: "Local Tavernas", distance: "5-10 min walk" },
+  { name: "Local Tavernas", distance: "1-2 min walk" },
+  { name: "Minimarket", distance: "1 min walk" },
   { name: "Supermarket", distance: "5 min drive" },
-  { name: "Agia Efimia Marina", distance: "10 min drive" }
 ];
 
 // Experiences
 export const experiences: Experience[] = [
   {
     title: "Beach Exploration",
-    description: "Discover the island's world-famous beaches, from the iconic Myrtos Beach to hidden coves accessible only by boat.",
-    image: "https://images.unsplash.com/photo-1534430480872-3498386e7856?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    description: "Discover Kefalonia’s breathtaking coastline—from the world-renowned Myrtos Beach with its turquoise waters and dramatic cliffs, to secluded Petani and Antisamos.",
+    image: "/images/myrtos2.jpg"
   },
   {
     title: "Culinary Delights",
-    description: "Sample authentic Greek cuisine at local tavernas, taste fresh-caught seafood, and enjoy traditional Kefalonian specialties.",
-    image: "https://images.unsplash.com/photo-1474447976065-67d23accb1e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    description: "Savor authentic Kefalonian flavors in family-run tavernas. Try fresh-caught seafood in Fiscardo, traditional meat pies in mountain villages, and local meze with a view of the Ionian.",
+    image: "/images/fiskardo.jpeg"
   },
   {
     title: "Island Cruising",
-    description: "Explore Kefalonia's coastline on a boat trip, visiting sea caves, snorkeling in crystal-clear waters, and spotting dolphins.",
-    image: "https://images.unsplash.com/photo-1566822937863-b0007f5e3733?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    description: "Sail along Kefalonia’s coast to explore hidden sea caves, swim in crystal-clear coves, and spot dolphins. Don’t miss a day trip to nearby Ithaca, the mythical home of Odysseus.",
+    image: "/images/foki.jpeg"
   },
   {
     title: "Nature Hikes",
     description: "Trek through lush forests, discover hidden waterfalls, and enjoy breathtaking views from Mount Ainos National Park.",
-    image: "https://images.unsplash.com/photo-1560256342-0d1eb9adabd7?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    image: "/images/hikepng.png"
   },
   {
     title: "Wine Tasting",
     description: "Visit local wineries to sample the island's distinctive Robola wine and learn about Kefalonia's winemaking traditions.",
-    image: "https://images.unsplash.com/photo-1599912239434-80920ec51b23?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    image: "/images/Robola.jpg"
   },
   {
     title: "Sunset Magic",
     description: "Enjoy spectacular sunsets directly from our villa's terraces, with panoramic views of the Ionian Sea.",
-    image: "https://images.unsplash.com/photo-1596394516093-501ba68a0ba6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+    image: "/images/alaties.jpg"
   }
 ];
 
@@ -141,7 +141,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "What amenities are provided in the house?",
-    answer: "Our home includes WiFi, TV, air conditioning, a fully equipped kitchen, dedicated workspace, free parking on premises, mountain views, garden views, and beach access. We provide all essential items including bed linens, towels, basic toiletries, and kitchen essentials. As a historic property with modern updates, you'll have all the comforts needed for a pleasant stay."
+    answer: "Our home includes WiFi, air conditioning, a fully equipped kitchen, dedicated workspace, free parking on premises, mountain views, garden views, and beach access. We provide all essential items including bed linens, towels, basic toiletries, and kitchen essentials. As a historic property with modern updates, you'll have all the comforts needed for a pleasant stay."
   },
   {
     question: "Is the house suitable for remote working?",
