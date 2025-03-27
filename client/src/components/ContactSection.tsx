@@ -10,8 +10,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Phone, MessageSquare } from "lucide-react";
+import { Mail, Phone, MessageSquare, Clock, Instagram, Facebook, Globe, Calendar, Languages } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { motion } from "framer-motion";
 
 const contactFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
@@ -65,162 +66,280 @@ const ContactSection = () => {
   };
 
   return (
-    <section id="contact" className="py-20 px-4 bg-gradient-to-b from-[#F8F6F2] to-[#F8F6F2]">
+    <section id="contact" className="py-24 px-4 bg-gradient-to-b from-white to-[var(--off-white)]">
       <div className="container mx-auto">
-        <Heading
-          title="Contact Us"
-          description="Have questions about our villa or need assistance with your booking? We're here to help!"
-          centered
-        />
-        
-        <div className="flex flex-col md:flex-row gap-12">
-          <div className="md:w-1/2">
-            <h3 className="text-2xl font-bold playfair text-[#2C5F89] mb-6">Get in Touch</h3>
-            <p className="text-gray-700 mb-8">
-              We pride ourselves on providing exceptional service to all our guests. Feel free to reach out with any questions, special requests, or for assistance planning your Kefalonian adventure.
-            </p>
-            
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <Mail className="h-6 w-6 text-[#D17A46] flex-shrink-0" />
-                <div>
-                  <h4 className="font-bold text-gray-800">Email</h4>
-                  <a href="mailto:info@villakefalonia.com" className="text-[#3B83BD] hover:text-[#2C5F89] transition duration-300">info@villakefalonia.com</a>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <Phone className="h-6 w-6 text-[#D17A46] flex-shrink-0" />
-                <div>
-                  <h4 className="font-bold text-gray-800">Phone</h4>
-                  <a href="tel:+306948201383" className="text-[#3B83BD] hover:text-[#2C5F89] transition duration-300">+30 694 820 1383</a>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <MessageSquare className="h-6 w-6 text-[#D17A46] flex-shrink-0" />
-                <div>
-                  <h4 className="font-bold text-gray-800">Response Time</h4>
-                  <p className="text-gray-700">We typically respond within 24 hours</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="mt-10">
-              <h4 className="text-xl font-bold text-[#2C5F89] mb-4 playfair">Follow Us</h4>
-              <div className="flex space-x-4">
-                <a href="https://www.instagram.com/kefalonianvintagehome" className="text-[#3B83BD] hover:text-[#2C5F89] transition duration-300" aria-label="Follow us on Instagram">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.057 1.805.249 2.227.419.562.217.96.477 1.382.896.419.42.679.819.896 1.381.17.422.363 1.057.42 2.227.058 1.265.07 1.645.07 4.849s-.012 3.584-.07 4.85c-.057 1.17-.249 1.805-.419 2.227-.217.562-.477.96-.896 1.382-.419.419-.819.679-1.381.896-.422.17-1.057.363-2.227.42-1.266.058-1.645.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.057-1.805-.249-2.227-.419-.562-.217-.96-.477-1.382-.896-.419-.419-.679-.819-.896-1.381-.17-.422-.363-1.057-.42-2.227-.058-1.266-.07-1.645-.07-4.85s.012-3.584.07-4.85c.057-1.17.249-1.805.419-2.227.217-.562.477-.96.896-1.382.419-.419.819-.679 1.381-.896.422-.17 1.057-.363 2.227-.42 1.266-.058 1.645-.07 4.85-.07zm0-2.163c-3.259 0-3.667.014-4.947.072-1.277.06-2.148.262-2.913.558-.789.306-1.459.717-2.126 1.384s-1.079 1.336-1.384 2.126c-.296.765-.499 1.636-.558 2.913-.058 1.28-.072 1.689-.072 4.948 0 3.259.014 3.668.072 4.948.06 1.277.262 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558 1.28.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.058-1.28.072-1.689.072-4.948 0-3.259-.014-3.667-.072-4.947-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126-.667-.667-1.335-1.079-2.126-1.384-.765-.297-1.636-.499-2.913-.558-1.28-.058-1.689-.072-4.949-.072h.003z"></path>
-                    <path d="M12 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4z"></path>
-                    <circle cx="18.406" cy="5.594" r="1.44"></circle>
-                  </svg>
-                </a>
-                <a href="https://www.facebook.com/kefalonianvintagehome" className="text-[#3B83BD] hover:text-[#2C5F89] transition duration-300" aria-label="Follow us on Facebook">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
-                  </svg>
-                </a>
-              </div>
-            </div>
-            
-            <div className="mt-10 p-6 bg-[#FFFFFF] rounded-lg">
-              <h4 className="text-xl font-bold text-[#2C5F89] mb-4 playfair">Your Host</h4>
-              <div className="flex items-start">
-                <img src="/images/alex.png" alt="Host photo" className="w-16 h-16 rounded-full mr-4" />
-                <div>
-                  <h5 className="font-bold text-gray-800">Alex</h5>
-                  <p className="text-gray-700 mt-1">
-                    Having lived for decades in Kefalonia, I'm passionate about sharing the beauty of my island with visitors from around the world. I'll ensure your stay is comfortable, memorable, and authentic.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+        >
+          <span className="inline-block mb-3 px-4 py-2 bg-[var(--terracotta)]/10 rounded-full text-[var(--terracotta)] text-sm font-medium flex items-center justify-center mx-auto">
+            <MessageSquare className="mr-1.5 h-4 w-4" />
+            We're Here For You
+          </span>
           
-          <div className="md:w-1/2">
+          <Heading
+            title="Contact Us"
+            description="Have questions about our villa or need assistance with your booking? We're here to help you plan your perfect Kefalonian getaway!"
+            centered
+          />
+        </motion.div>
+        
+        <div className="flex flex-col lg:flex-row gap-12 mt-16">
+          {/* Contact Information */}
+          <motion.div 
+            className="lg:w-1/2"
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-2xl font-semibold playfair text-[var(--deep-blue)] mb-6 relative">
+                  <span className="relative">
+                    Get in Touch
+                    <span className="absolute -bottom-1 left-0 h-1 w-12 bg-[var(--terracotta)] rounded-full"></span>
+                  </span>
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  We pride ourselves on providing exceptional service to all our guests. Feel free to reach out with any questions, special requests, or for assistance planning your Kefalonian adventure. We're always happy to share local insights and recommendations!
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <Mail className="h-6 w-6 text-[var(--primary-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Email</h4>
+                      <a 
+                        href="mailto:info@villakefalonia.com" 
+                        className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300 flex items-center"
+                      >
+                        info@villakefalonia.com
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <Phone className="h-6 w-6 text-[var(--primary-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Phone</h4>
+                      <a 
+                        href="tel:+306948201383" 
+                        className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300"
+                      >
+                        +30 694 820 1383
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <Clock className="h-6 w-6 text-[var(--primary-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Response Time</h4>
+                      <p className="text-gray-700">We typically respond within 24 hours</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
+                  <div className="flex items-start space-x-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <Languages className="h-6 w-6 text-[var(--primary-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Languages</h4>
+                      <p className="text-gray-700">English, Greek</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-[var(--sand)]/20 p-6 rounded-xl border border-[var(--sand)]/30">
+                <div className="flex items-center gap-3 mb-3">
+                  <Calendar className="h-5 w-5 text-[var(--terracotta)]" />
+                  <h4 className="font-bold text-gray-800">Booking Questions</h4>
+                </div>
+                <p className="text-gray-700 mb-4">
+                  Planning a stay at our Kefalonian villa? We're happy to answer any questions about availability, rates, and special requests.
+                </p>
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="bg-white text-[var(--deep-blue)] border-[var(--deep-blue)] hover:bg-[var(--deep-blue)]/5 rounded-full"
+                >
+                  <a href="#booking">Check Availability</a>
+                </Button>
+              </div>
+              
+              <div>
+                <h4 className="text-xl font-semibold playfair text-[var(--deep-blue)] mb-4">Connect With Us</h4>
+                <div className="flex space-x-4">
+                  <a 
+                    href="https://www.instagram.com/kefalonianvintagehome" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]" 
+                    aria-label="Follow us on Instagram"
+                  >
+                    <Instagram className="h-5 w-5" />
+                  </a>
+                  <a 
+                    href="https://www.facebook.com/kefalonianvintagehome" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]" 
+                    aria-label="Follow us on Facebook"
+                  >
+                    <Facebook className="h-5 w-5" />
+                  </a>
+                  <a 
+                    href="https://www.airbnb.com/h/kefalonianvintagehome" 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]" 
+                    aria-label="View our Airbnb listing"
+                  >
+                    <Globe className="h-5 w-5" />
+                  </a>
+                </div>
+              </div>
+              
+              <div className="glass-card p-6 rounded-xl">
+                <h4 className="text-xl font-semibold playfair text-[var(--deep-blue)] mb-4">Your Host</h4>
+                <div className="flex items-start gap-4">
+                  <img src="/images/alex.png" alt="Host photo" className="w-20 h-20 rounded-full object-cover border-2 border-white shadow-md" />
+                  <div>
+                    <h5 className="font-bold text-gray-800 text-lg mb-1">Alex</h5>
+                    <div className="flex items-center text-sm text-[var(--terracotta)] mb-3">
+                      <span className="font-medium">Superhost</span>
+                      <span className="mx-2">•</span>
+                      <span>4.67★</span>
+                    </div>
+                    <p className="text-gray-700 leading-relaxed">
+                      Having lived for decades in Kefalonia, I'm passionate about sharing the beauty of my island with visitors from around the world. I'll ensure your stay is comfortable, memorable, and authentic.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+          
+          {/* Contact Form */}
+          <motion.div 
+            className="lg:w-1/2"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+          >
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="bg-white rounded-lg p-8 shadow-sm border border-gray-100">
-                <h3 className="text-2xl font-bold playfair text-[#2C5F89] mb-6">Send a Message</h3>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="glass-card rounded-xl p-8 shadow-md border-t border-l border-white/20">
+                <h3 className="text-2xl font-semibold playfair text-[var(--deep-blue)] mb-6 relative">
+                  <span className="relative">
+                    Send a Message
+                    <span className="absolute -bottom-1 left-0 h-1 w-12 bg-[var(--terracotta)] rounded-full"></span>
+                  </span>
+                </h3>
                 
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="text-gray-700 font-medium">Your Name</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="John Doe" 
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#A65C32]" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="text-gray-700 font-medium">Email Address</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="email" 
-                          placeholder="your@email.com" 
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#A65C32]" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="text-gray-700 font-medium">Phone Number (optional)</FormLabel>
-                      <FormControl>
-                        <Input 
-                          type="tel" 
-                          placeholder="+1 (123) 456-7890" 
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#A65C32]" 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                
-                <FormField
-                  control={form.control}
-                  name="subject"
-                  render={({ field }) => (
-                    <FormItem className="mb-6">
-                      <FormLabel className="text-gray-700 font-medium">Subject</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700 font-medium">Your Name</FormLabel>
                         <FormControl>
-                          <SelectTrigger className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#A65C32]">
-                            <SelectValue placeholder="Select a subject" />
-                          </SelectTrigger>
+                          <Input 
+                            placeholder="John Doe" 
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
+                            {...field} 
+                          />
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Booking Inquiry">Booking Inquiry</SelectItem>
-                          <SelectItem value="Availability Question">Availability Question</SelectItem>
-                          <SelectItem value="Special Requests">Special Requests</SelectItem>
-                          <SelectItem value="General Information">General Information</SelectItem>
-                          <SelectItem value="Feedback">Feedback</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700 font-medium">Email Address</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="email" 
+                            placeholder="your@email.com" 
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700 font-medium">Phone Number (optional)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="tel" 
+                            placeholder="+1 (123) 456-7890" 
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="subject"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-gray-700 font-medium">Subject</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]">
+                              <SelectValue placeholder="Select a subject" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="Booking Inquiry">Booking Inquiry</SelectItem>
+                            <SelectItem value="Availability Question">Availability Question</SelectItem>
+                            <SelectItem value="Special Requests">Special Requests</SelectItem>
+                            <SelectItem value="Transportation Help">Transportation Help</SelectItem>
+                            <SelectItem value="Local Recommendations">Local Recommendations</SelectItem>
+                            <SelectItem value="General Information">General Information</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 
                 <FormField
                   control={form.control}
@@ -230,8 +349,8 @@ const ContactSection = () => {
                       <FormLabel className="text-gray-700 font-medium">Your Message</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Tell us how we can help you..." 
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-2 focus:ring-[#A65C32]" 
+                          placeholder="Tell us how we can help you plan your perfect Kefalonian vacation..." 
+                          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
                           rows={5}
                           {...field} 
                         />
@@ -245,36 +364,38 @@ const ContactSection = () => {
                   control={form.control}
                   name="privacy"
                   render={({ field }) => (
-                    <FormItem className="mb-6 flex items-center space-x-2">
+                    <FormItem className="mb-6 flex items-start space-x-3">
                       <FormControl>
                         <Checkbox 
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          className="text-[#3B83BD]"
+                          className="mt-1 text-[var(--terracotta)]"
                         />
                       </FormControl>
-                      <FormLabel className="text-sm text-gray-700 font-normal leading-none">
-                        I agree to the <a href="#" className="text-[#3B83BD] hover:text-[#2C5F89] underline">Privacy Policy</a> and consent to being contacted regarding my inquiry.
-                      </FormLabel>
-                      <FormMessage />
+                      <div className="space-y-1">
+                        <FormLabel className="text-sm text-gray-700 font-normal leading-relaxed">
+                          I agree to the <a href="#" className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] underline">Privacy Policy</a> and consent to being contacted regarding my inquiry.
+                        </FormLabel>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
                 
                 <Button 
                   type="submit" 
-                  className="w-full bg-[#D17A46] hover:bg-[#A65C32] text-white font-medium py-3 rounded-lg transition duration-300"
+                  className="w-full bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 text-white font-medium py-6 rounded-lg transition duration-300 shadow-sm hover:shadow-md"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
                 
-                <p className="text-sm text-gray-600 mt-4">
-                  We respect your privacy and will never share your information with third parties. This contact form is GDPR compliant.
+                <p className="text-sm text-gray-600 mt-4 text-center">
+                  We respect your privacy and will never share your information with third parties.
                 </p>
               </form>
             </Form>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

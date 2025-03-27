@@ -1,12 +1,15 @@
-import { MapPin, Camera, Zap } from "lucide-react";
+import { MapPin, Camera, Navigation, Sailboat, Utensils, Waves, Mountain, Coffee } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
-import { nearbyBeaches, localAttractions, diningOptions } from "@/lib/constants";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { nearbyBeaches, localAttractions, diningOptions, cafeShoppingOptions } from "@/lib/constants";
 import { Helmet } from "react-helmet";
+import { useState, useEffect } from "react";
 
-// Fix for default marker icon in Leaflet with React
+// Custom villa marker icon
 const customIcon = new Icon({
   iconUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png",
   iconRetinaUrl: "https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png",
@@ -50,111 +53,238 @@ const LocationSection = () => {
         </script>
       </Helmet>
       
-      <section id="location" className="py-20 px-4 bg-[#F8F6F2]">
+      <section id="location" className="py-24 px-4 bg-gradient-to-b from-white to-[var(--off-white)]">
         <div className="container mx-auto">
-          <Heading
-            title="Ideal Location in Kefalonia"
-            description="Discover our perfect location in Fiscardo with easy access to world-famous beaches, charming villages, and natural wonders of Kefalonia."
-            centered
-          />
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+            className="mb-16"
+          >
+            <span className="inline-block mb-3 px-4 py-2 bg-[var(--sea-blue)]/10 rounded-full text-[var(--primary-blue)] text-sm font-medium flex items-center justify-center mx-auto">
+              <MapPin className="mr-1.5 h-4 w-4" />
+              Discover Kefalonia's Paradise
+            </span>
+            
+            <Heading
+              title="Your Perfect Island Location"
+              description="Situated in picturesque Fiscardo with easy access to world-famous beaches, charming villages, and the natural wonders of Kefalonia."
+              centered
+            />
+          </motion.div>
           
-          <div className="flex flex-col md:flex-row gap-12 items-start">
-            <div className="md:w-1/2">
-              <div className="bg-white rounded-lg shadow-md overflow-hidden h-96 relative z-0">
+          <div className="flex flex-col lg:flex-row gap-12 items-start">
+            {/* Map and Getting Here Section */}
+            <motion.div 
+              className="lg:w-1/2"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden h-[400px] relative z-0">
                 <MapContainer 
                   center={villaPosition} 
                   zoom={13} 
                   scrollWheelZoom={false} 
-                  className="h-96 rounded-lg shadow-md"
+                  className="h-[400px] w-full rounded-xl"
                 >
                   <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png?language=en"
                   />
                   <Marker position={villaPosition} icon={customIcon}>
                     <Popup>
-                      <strong>Kefalonian Vintage Home</strong> <br /> 
-                      Traditional villa in Fiscardo <br />
-                      <a href="https://goo.gl/maps/abcdefg" target="_blank" rel="noopener noreferrer">Directions</a>
+                      <div className="text-center">
+                        <strong className="text-[var(--deep-blue)] block">Kefalonian Vintage Home</strong>
+                        <span className="text-sm block mb-2">Traditional villa in Fiscardo</span>
+                        <a 
+                          href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-sm text-[var(--terracotta)] hover:underline"
+                        >
+                          Get Directions
+                        </a>
+                      </div>
                     </Popup>
                   </Marker>
                 </MapContainer>
               </div>
               
-              <div className="mt-6">
-                <h3 className="text-xl font-bold playfair text-[#2C5F89] mb-3">Getting Here</h3>
-                <div className="flex items-start space-x-4 mb-3">
-                  <MapPin className="h-6 w-6 text-[#D17A46] flex-shrink-0" />
-                  <div>
-                    <span className="font-bold text-gray-700">Address:</span>
-                    <p className="text-gray-700">Kefalonian Vintage Home, Fiscardo, Kefalonia 28081, Greece</p>
+              <div className="mt-8">
+                <h3 className="text-2xl font-semibold playfair text-[var(--deep-blue)] mb-5 relative">
+                  <span className="relative">
+                    Getting Here
+                    <span className="absolute -bottom-1 left-0 h-1 w-12 bg-[var(--terracotta)] rounded-full"></span>
+                  </span>
+                </h3>
+                
+                <div className="space-y-6 mt-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <MapPin className="h-6 w-6 text-[var(--deep-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Address</h4>
+                      <p className="text-gray-600">Kefalonian Vintage Home, Fiscardo, Kefalonia 28081, Greece</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <Camera className="h-6 w-6 text-[var(--deep-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Nearest Airport</h4>
+                      <p className="text-gray-600">Kefalonia International Airport (EFL) - 40 minutes by car (35km)</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4">
+                    <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
+                      <Navigation className="h-6 w-6 text-[var(--deep-blue)]" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-800 mb-1">Transportation</h4>
+                      <p className="text-gray-600">Car rental recommended for exploring the island. We can arrange airport transfers upon request.</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-start space-x-4 mb-3">
-                  <Camera className="h-6 w-6 text-[#D17A46] flex-shrink-0" />
-                  <div>
-                    <span className="font-bold text-gray-700">Nearest Airport:</span>
-                    <p className="text-gray-700">Kefalonia International Airport (EFL) - 40 minutes by car (35km)</p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-4">
-                  <Zap className="h-6 w-6 text-[#D17A46] flex-shrink-0" />
-                  <div>
-                    <span className="font-bold text-gray-700">Transportation:</span>
-                    <p className="text-gray-700">Car rental recommended. We can arrange airport transfers upon request.</p>
-                  </div>
+                
+                <div className="mt-8 flex gap-4">
+                  <Button 
+                    asChild 
+                    className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
+                  >
+                    <a 
+                      href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      Get Directions
+                    </a>
+                  </Button>
+                  
+                  <Button 
+                    asChild 
+                    variant="outline"
+                    className="border-[var(--deep-blue)] text-[var(--deep-blue)] hover:bg-[var(--deep-blue)]/5 rounded-full"
+                  >
+                    <a href="#contact">
+                      Ask for Transport Help
+                    </a>
+                  </Button>
                 </div>
               </div>
-            </div>
+            </motion.div>
             
-            <div className="md:w-1/2">
-              <h3 className="text-2xl font-bold playfair text-[#2C5F89] mb-6">Explore Kefalonia Island</h3>
-              <p className="text-gray-700 mb-6">
-                Our traditional villa is perfectly positioned in the picturesque village of Fiscardo, an ideal base for exploring Kefalonia's treasures. From world-renowned beaches like Myrtos and Antisamos to charming fishing villages and natural wonders, everything is within easy reach.
+            {/* Island Exploration Section */}
+            <motion.div 
+              className="lg:w-1/2"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
+              <h3 className="text-2xl font-semibold playfair text-[var(--deep-blue)] mb-6 relative">
+                <span className="relative">
+                  Explore Kefalonia Island
+                  <span className="absolute -bottom-1 left-0 h-1 w-12 bg-[var(--terracotta)] rounded-full"></span>
+                </span>
+              </h3>
+              
+              <p className="text-gray-700 mb-8 leading-relaxed">
+                Our traditional villa is perfectly positioned in the enchanting village of Fiscardo, providing an ideal base for discovering Kefalonia's treasures. From world-renowned beaches like Myrtos and Antisamos to charming fishing villages and natural wonders, the island's most captivating attractions are all within easy reach.
               </p>
               
-              <div className="space-y-6">
-                <div className="bg-white p-5 rounded-lg shadow-sm">
-                  <h4 className="text-xl font-bold text-[#2C5F89] mb-2">Nearby Beaches</h4>
-                  <div className="space-y-3">
-                    {nearbyBeaches.map((beach, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-gray-700">{beach.name}</span>
-                        <span className="text-sm text-gray-500">{beach.distance}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <LocationCard 
+                  title="Beaches & Coves" 
+                  icon={<Waves className="h-5 w-5 text-white" />}
+                  iconBg="bg-[var(--sea-blue)]"
+                  items={nearbyBeaches}
+                />
                 
-                <div className="bg-white p-5 rounded-lg shadow-sm">
-                  <h4 className="text-xl font-bold text-[#2C5F89] mb-2">Local Attractions</h4>
-                  <div className="space-y-3">
-                    {localAttractions.map((attraction, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-gray-700">{attraction.name}</span>
-                        <span className="text-sm text-gray-500">{attraction.distance}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <LocationCard 
+                  title="Local Attractions" 
+                  icon={<Mountain className="h-5 w-5 text-white" />}
+                  iconBg="bg-[var(--olive)]"
+                  items={localAttractions}
+                />
                 
-                <div className="bg-white p-5 rounded-lg shadow-sm">
-                  <h4 className="text-xl font-bold text-[#2C5F89] mb-2">Dining & Shopping</h4>
-                  <div className="space-y-3">
-                    {diningOptions.map((option, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <span className="text-gray-700">{option.name}</span>
-                        <span className="text-sm text-gray-500">{option.distance}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <LocationCard 
+                  title="Dining & Tavernas" 
+                  icon={<Utensils className="h-5 w-5 text-white" />}
+                  iconBg="bg-[var(--terracotta)]"
+                  items={diningOptions}
+                />
+                
+                <LocationCard 
+                  title="Cafés & Shopping" 
+                  icon={<Coffee className="h-5 w-5 text-white" />}
+                  iconBg="bg-[var(--stone)]"
+                  items={cafeShoppingOptions}
+                />
               </div>
-            </div>
+              
+              <div className="mt-8 p-5 rounded-xl bg-[var(--sand)]/20 border border-[var(--sand)]/30">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="p-2 rounded-full bg-[var(--sea-blue)]/10">
+                    <Sailboat className="h-5 w-5 text-[var(--primary-blue)]" />
+                  </div>
+                  <h4 className="font-bold text-gray-800">Boat Rentals & Island Tours</h4>
+                </div>
+                <p className="text-gray-600 text-sm">
+                  Discover hidden beaches and sea caves only accessible by water. We can help arrange boat rentals or guided tours around the island – just ask!
+                </p>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
     </>
+  );
+};
+
+// Location Card Component
+interface LocationCardProps {
+  title: string;
+  icon: React.ReactNode;
+  iconBg: string;
+  items: Array<{
+    name: string;
+    distance: string;
+    type?: string;
+    description?: string;
+  }>;
+}
+
+const LocationCard = ({ title, icon, iconBg, items }: LocationCardProps) => {
+  return (
+    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`p-2 rounded-full ${iconBg} flex-shrink-0`}>
+          {icon}
+        </div>
+        <h4 className="font-bold text-[var(--deep-blue)]">{title}</h4>
+      </div>
+      
+      <div className="space-y-3">
+        {items.map((item, index) => (
+          <div key={index} className="flex flex-col">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-700 font-medium">{item.name}</span>
+              <span className="text-sm bg-[var(--off-white)] px-2 py-0.5 rounded-full text-gray-500">{item.distance}</span>
+            </div>
+            {item.description && (
+              <span className="text-xs text-gray-500 mt-0.5">{item.description}</span>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

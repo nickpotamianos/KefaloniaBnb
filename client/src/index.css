@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  --primary-blue: #1E88E5;
+  --deep-blue: #1565C0;
+  --sea-blue: #4FC3F7;
+  --sand: #F9E3B3;
+  --terracotta: #E76F51;
+  --olive: #6B8E23;
+  --stone: #D2C6B8;
+  --off-white: #F8F6F2;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -9,5 +22,50 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    background-color: var(--off-white);
   }
+}
+
+.playfair {
+  font-family: 'Playfair Display', serif;
+}
+
+.poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Modern animations */
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+.slide-up {
+  animation: slideUp 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Modern card styles */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.1);
+}
+
+/* Image hover effects */
+.hover-zoom {
+  transition: transform 0.5s ease;
+}
+
+.hover-zoom:hover {
+  transform: scale(1.03);
 }

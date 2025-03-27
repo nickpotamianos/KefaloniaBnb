@@ -45,9 +45,9 @@ export const houseHighlights = [
 // Nearby Locations
 export const nearbyBeaches: Location[] = [
   { name: "Myrtos Beach", distance: "20 min drive" },
+  { name: "Antisamos Beach", distance: "28 min drive" },
   { name: "Foki Beach", distance: "7 min drive" },
   { name: "Emblisi Beach", distance: "7 min drive" },
-  { name: "Kimilia Beach", distance: "8 min drive" },
 ];
 
 export const localAttractions: Location[] = [
@@ -60,6 +60,11 @@ export const diningOptions: Location[] = [
   { name: "Local Tavernas", distance: "1-2 min walk" },
   { name: "Minimarket", distance: "1 min walk" },
   { name: "Supermarket", distance: "5 min drive" },
+];
+
+export const cafeShoppingOptions: Location[] = [
+  { name: "Picnic Café", distance: "2 min walk", type: "cafe", description: "Traditional Greek coffee house" },
+  { name: "Tasia's", distance: "5 min drive", type: "cafe - restaurant", description: "Fresh pastries and local treats" },
 ];
 
 // Experiences
