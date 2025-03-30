@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
+import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isToday } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ICAL from "ical.js";
@@ -30,7 +30,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
   const [error, setError] = useState<string | null>(null);
   const [bookings, setBookings] = useState<BookingEvent[]>([]);
   const [month, setMonth] = useState<Date>(new Date());
-  const [days, setDays] = useState<{date: Date, isBooked: boolean}[]>([]);
+  const [days, setDays] = useState<{date: Date, isBooked: boolean, isPast: boolean}[]>([]);
   
   // Fetch booking data from iCal feeds
   useEffect(() => {
@@ -115,11 +115,13 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
     const monthStart = startOfMonth(month);
     const monthEnd = endOfMonth(month);
     const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    const today = new Date();
     
     // Calculate booking status for each day
     const daysWithStatus = daysInMonth.map(day => ({
       date: day,
-      isBooked: isDateBooked(day)
+      isBooked: isDateBooked(day),
+      isPast: isBefore(day, today) && !isToday(day)
     }));
     
     setDays(daysWithStatus);
@@ -174,10 +176,12 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
             key={i} 
             className={cn(
               "h-10 w-full flex items-center justify-center rounded-md text-sm transition-colors",
-              isSameDay(day.date, new Date()) && "border-2 border-[var(--sea-blue)]",
-              day.isBooked 
-                ? "bg-red-100 text-red-700 line-through" 
-                : "bg-green-50 hover:bg-green-100 cursor-pointer"
+              isToday(day.date) && "border-2 border-[var(--sea-blue)]",
+              day.isPast 
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                : day.isBooked 
+                  ? "bg-red-100 text-red-700 line-through" 
+                  : "bg-green-50 hover:bg-green-100 cursor-pointer"
             )}
           >
             {format(day.date, "d")}
@@ -212,7 +216,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
         
         {renderCalendarGrid()}
         
-        <div className="flex justify-between text-sm text-gray-600 pt-2">
+        <div className="flex justify-center gap-8 text-sm text-gray-600 pt-2">
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded-full bg-white border-2 border-[var(--sea-blue)]"></span>
             <span>Today</span>
@@ -226,27 +230,6 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded-full bg-green-50"></span>
             <span>Available</span>
-          </div>
-        </div>
-        
-        {/* Seasonal indicators */}
-        <div className="mt-4">
-          <h4 className="text-sm font-medium text-gray-700 mb-2">Season Information</h4>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="inline-block w-3 h-3 rounded-full bg-[var(--terracotta)]"></span>
-              <span className="text-sm text-gray-600">Peak Season (Jun-Sep)</span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <span className="inline-block w-3 h-3 rounded-full bg-[var(--sea-blue)]"></span>
-              <span className="text-sm text-gray-600">Great Weather (Apr-May, Oct)</span>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              <span className="inline-block w-3 h-3 rounded-full bg-[var(--olive)]"></span>
-              <span className="text-sm text-gray-600">Best Value (Nov-Mar)</span>
-            </div>
           </div>
         </div>
       </div>
