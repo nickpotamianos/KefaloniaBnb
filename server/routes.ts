@@ -5,8 +5,54 @@ import { insertContactSchema, insertNewsletterSchema } from "@shared/schema";
 import { z } from "zod";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import fetch from "node-fetch";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Availability calendar endpoint
+  app.get("/api/calendar/availability", async (_req, res) => {
+    try {
+      const calendarUrls = [
+        "https://api.host.holidu.com/pmc/rest/apartments/62738918/ical.ics?key=133c7bc35012e5825e06b5cd503c77e8",
+        "https://ical.booking.com/v1/export?t=ae535b52-549f-4976-bffd-dd05f7121b9c",
+        "https://www.airbnb.com/calendar/ical/936140466545331330.ics?s=4db5df46d02514f399d3cc9362b00162",
+        "http://www.vrbo.com/icalendar/a5f9a9c10a434d21a93c76b054037556.ics?nonTentative",
+        "https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
+      ];
+      
+      // Fetch all iCal feeds
+      const icalPromises = calendarUrls.map(async (url) => {
+        try {
+          const response = await fetch(url);
+          if (!response.ok) {
+            console.error(`Failed to fetch from ${url}: ${response.statusText}`);
+            return "";
+          }
+          return response.text();
+        } catch (error) {
+          console.error(`Error fetching from ${url}:`, error);
+          return "";
+        }
+      });
+      
+      const icalResults = await Promise.all(icalPromises);
+      
+      // Process the data and extract booking dates
+      // We'll send this raw data to the client and process there
+      // to avoid adding ical.js as a server dependency
+      
+      res.json({
+        success: true,
+        icalData: icalResults.filter(data => data !== "")
+      });
+    } catch (error) {
+      console.error("Calendar availability error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch availability data. Please try again later."
+      });
+    }
+  });
+
   // Contact form submission
   app.post("/api/contact", async (req, res) => {
     try {

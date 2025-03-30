@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Calendar, Users, Home, Bed, Bath, Languages, MapPin, Star, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import AvailabilityCalendar from "./AvailabilityCalendar";
 
 const BookingCard = () => {
   return (
@@ -83,78 +84,8 @@ const BookingCard = () => {
             </h4>
             <p className="text-gray-700 mb-4">Check our calendar for available dates. Book early for the summer season (June-September)!</p>
             
-            {/* Enhanced availability indicator with seasonal information */}
-            <div className="mt-3 space-y-3">
-              <div className="flex items-center">
-                <div className="w-1/4 text-xs text-right pr-2 font-medium text-gray-600">Peak Season</div>
-                <div className="w-3/4 flex">
-                  <div className="w-1/12 bg-gray-100 h-2.5 rounded-l"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-[var(--terracotta)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--terracotta)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--terracotta)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--terracotta)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5 rounded-r"></div>
-                </div>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="w-1/4 text-xs text-right pr-2 font-medium text-gray-600">Great Weather</div>
-                <div className="w-3/4 flex">
-                  <div className="w-1/12 bg-gray-100 h-2.5 rounded-l"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-[var(--sea-blue)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--sea-blue)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--sea-blue)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--sea-blue)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--sea-blue)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5 rounded-r"></div>
-                </div>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="w-1/4 text-xs text-right pr-2 font-medium text-gray-600">Best Value</div>
-                <div className="w-3/4 flex">
-                  <div className="w-1/12 bg-gray-100 h-2.5 rounded-l"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-[var(--olive)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--olive)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5"></div>
-                  <div className="w-1/12 bg-[var(--olive)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-[var(--olive)] h-2.5 border-l border-r border-white/30"></div>
-                  <div className="w-1/12 bg-gray-100 h-2.5 rounded-r"></div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Month labels with proper alignment */}
-            <div className="mt-2 grid grid-cols-12 text-[10px] text-gray-500" style={{ marginLeft: "25%" }}>
-              <div className="text-center">Jan</div>
-              <div className="text-center">Feb</div>
-              <div className="text-center">Mar</div>
-              <div className="text-center">Apr</div>
-              <div className="text-center">May</div>
-              <div className="text-center">Jun</div>
-              <div className="text-center">Jul</div>
-              <div className="text-center">Aug</div>
-              <div className="text-center">Sep</div>
-              <div className="text-center">Oct</div>
-              <div className="text-center">Nov</div>
-              <div className="text-center">Dec</div>
-            </div>
+            {/* Dynamic availability calendar that replaces the static bars */}
+            <AvailabilityCalendar />
           </div>
           
           <div className="space-y-3">
