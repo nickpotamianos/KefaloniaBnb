@@ -217,10 +217,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
         {renderCalendarGrid()}
         
         <div className="flex justify-center gap-8 text-sm text-gray-600 pt-2">
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-white border-2 border-[var(--sea-blue)]"></span>
-            <span>Today</span>
-          </div>
+          
           
           <div className="flex items-center gap-2">
             <span className="inline-block w-3 h-3 rounded-full bg-red-100"></span>
