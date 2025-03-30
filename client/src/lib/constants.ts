@@ -35,7 +35,7 @@ export const houseHighlights = [
   "Self check-in with lockbox",
   "Mountain and garden views",
   "Beach access nearby",
-  "High-speed WiFi",
+  "WiFi",
   "Fully equipped kitchen",
   "Dedicated workspace for remote working",
   "Air conditioning throughout",
@@ -45,15 +45,15 @@ export const houseHighlights = [
 // Nearby Locations
 export const nearbyBeaches: Location[] = [
   { name: "Myrtos Beach", distance: "20 min drive" },
-  { name: "Antisamos Beach", distance: "28 min drive" },
-  { name: "Foki Beach", distance: "7 min drive" },
-  { name: "Emblisi Beach", distance: "7 min drive" },
+  { name: "Antisamos Beach", distance: "38 min drive" },
+  { name: "Foki Beach", distance: "6 min drive" },
+  { name: "Emblisi Beach", distance: "6 min drive" },
 ];
 
 export const localAttractions: Location[] = [
-  { name: "Fiskardo Village", distance: "5 min drive" },
-  { name: "Assos Village", distance: "20 min drive" },
-  { name: "Melissani Cave", distance: "30 min drive" }
+  { name: "Fiskardo Village", distance: "7 min drive" },
+  { name: "Assos Village", distance: "25 min drive" },
+  { name: "Melissani Cave", distance: "32 min drive" }
 ];
 
 export const diningOptions: Location[] = [
@@ -64,7 +64,7 @@ export const diningOptions: Location[] = [
 
 export const cafeShoppingOptions: Location[] = [
   { name: "Picnic Café", distance: "2 min walk", type: "cafe", description: "Traditional Greek coffee house" },
-  { name: "Tasia's", distance: "5 min drive", type: "cafe - restaurant", description: "Fresh pastries and local treats" },
+  { name: "Tasia's", distance: "7 min drive", type: "cafe - restaurant", description: "Fresh pastries and local treats" },
 ];
 
 // Experiences
@@ -101,31 +101,6 @@ export const experiences: Experience[] = [
   }
 ];
 
-// Reviews
-export const reviews: Review[] = [
-  {
-    name: "Sarah M.",
-    avatarUrl: "https://randomuser.me/api/portraits/women/42.jpg",
-    text: "\"Absolutely charming! This traditional Kefalonian home is full of character and history. Alex was a wonderful host who responded quickly to all our questions. The mountain views are breathtaking, and the beaches nearby are some of the best on the island.\"",
-    date: "July 2023",
-    rating: 5
-  },
-  {
-    name: "Michael R.",
-    avatarUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    text: "\"This place exceeded all expectations. We loved the blend of traditional architecture with modern comforts. The kitchen was well-equipped for cooking, and the dedicated workspace was perfect as I needed to work remotely for a few days. Great for pet owners too!\"",
-    date: "August 2023",
-    rating: 5
-  },
-  {
-    name: "Emma L.",
-    avatarUrl: "https://randomuser.me/api/portraits/women/68.jpg",
-    text: "\"Perfect in every way. We stayed for two weeks and didn't want to leave. The self check-in process was simple, and the house was impeccably clean. All the beaches mentioned are stunning and just a short drive away. Already planning our return!\"",
-    date: "June 2023",
-    rating: 4
-  }
-];
-
 // FAQs
 export const faqs: FAQ[] = [
   {
@@ -142,7 +117,7 @@ export const faqs: FAQ[] = [
   },
   {
     question: "How far are the nearby beaches?",
-    answer: "Our home is conveniently located near several beautiful beaches including Foki, Emblisi, Kimilia, and Dafnoudi. Most of these beaches are a short drive away and offer crystal clear waters perfect for swimming and snorkeling. Fiskardo village is also just a 30-minute drive, where you can find even more coastal beauty."
+    answer: "Our home is conveniently located near several beautiful beaches including Foki, Emblisi, Kimilia, and Dafnoudi. Most of these beaches are a short drive away and offer crystal clear waters perfect for swimming and snorkeling. Fiskardo village is also just a 7-minute drive, where you can find even more coastal beauty."
   },
   {
     question: "What amenities are provided in the house?",

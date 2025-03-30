@@ -27,7 +27,7 @@ const LocationSection = () => {
   return (
     <>
       <Helmet>
-        <title>Location | Kefalonian Vintage Home in Fiscardo</title>
+        <title>Kefalonia Vintage Home in Fiscardo</title>
         <meta name="description" content="Perfectly positioned in Fiscardo, Kefalonia - just minutes from Myrtos Beach, Antisamos Beach, and charming fishing villages. Ideal base for exploring the island." />
         <script type="application/ld+json">
           {`

@@ -10,14 +10,14 @@ const HouseSection = () => {
   return (
     <>
       <Helmet>
-        <title>The House | Kefalonian Vintage Home in Fiscardo</title>
+        <title>The House | Kefalonia Vintage Home in Fiscardo</title>
         <meta name="description" content="Traditional 100-year-old Kefalonian house beautifully restored with modern comforts. 2 bedrooms, fully equipped kitchen, private garden, and authentic Greek charm." />
         <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
               "@type": "Accommodation",
-              "name": "Kefalonian Vintage Home",
+              "name": "Kefalonia Vintage Home",
               "description": "Beautifully restored 100-year-old traditional Kefalonian house blending heritage with modern comforts",
               "numberOfRooms": "2",
               "amenityFeature": [
@@ -45,7 +45,7 @@ const HouseSection = () => {
       <section id="house" className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <Heading
-            title="Unique Kefalonian Vintage Home"
+            title="Unique Kefalonia Vintage Home"
             description="Experience the charm of our beautifully restored 100-year-old traditional Kefalonian home that blends heritage with modern comforts."
             centered
           />
@@ -70,7 +70,7 @@ const HouseSection = () => {
                   Welcome to our unique Kefalonian vintage home with over 100 years of history. This beautifully restored traditional house embodies the authentic charm and character of 19th-century Kefalonian architecture while offering all the modern comforts you need for a memorable Greek island experience.
                 </p>
                 <p className="text-gray-700 mb-4">
-                  The house comfortably accommodates up to 5 guests with 2 bedrooms (two with a double bed, one with a single bed) and the living room with 2 comfortable sofa beds. It features 1 bathroom, a fully equipped kitchen perfect for preparing local dishes, and a dedicated workspace with fast WiFi for remote working.
+                  The house comfortably accommodates up to 5 guests with 2 bedrooms (two with a double bed, one with a single bed) and the living room with 2 comfortable sofa beds. It features 1 bathroom, a fully equipped kitchen perfect for preparing local dishes, and a dedicated workspace with WiFi for remote working.
                 </p>
                 <p className="text-gray-700 mb-8">
                   Throughout the property, you'll find a thoughtful blend of heritage elements and contemporary amenities, creating a space that honors its history while ensuring a comfortable and convenient stay. From the traditional stone walls to the modern air conditioning, every detail has been carefully considered.
