@@ -86,7 +86,7 @@ export const experiences: Experience[] = [
   },
   {
     title: "Nature Hikes",
-    description: "Trek through lush forests, discover hidden waterfalls, and enjoy breathtaking views from Mount Ainos National Park.",
+    description: "Scenic trails from Foki to Dafnoudi lead through pine forests and sea views, with stops near Fiskardo and hidden coves along the way.",
     image: "/images/hikepng.png"
   },
   {
@@ -96,7 +96,7 @@ export const experiences: Experience[] = [
   },
   {
     title: "Sunset Magic",
-    description: "Enjoy spectacular sunsets directly from our villa's terraces, with panoramic views of the Ionian Sea.",
+    description: " Catch unforgettable sunsets at Alaties Beach or nearby spots, with sweeping views of the Ionian Sea.",
     image: "/images/alaties.jpg"
   }
 ];

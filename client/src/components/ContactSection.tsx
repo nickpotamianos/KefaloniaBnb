@@ -128,10 +128,11 @@ const ContactSection = () => {
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Email</h4>
                       <a 
-                        href="mailto:info@villakefalonia.com" 
-                        className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300 flex items-center"
+                        href="mailto:alexandros@potamianosgroup.com" 
+                        className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300 break-words"
+                        style={{ wordBreak: "break-word", display: "block", maxWidth: "100%" }}
                       >
-                        info@villakefalonia.com
+                        alexandros@potamianosgroup.com
                       </a>
                     </div>
                   </div>

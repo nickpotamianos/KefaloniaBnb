@@ -21,7 +21,7 @@ const Footer = () => {
               <div className="flex items-center mb-6">
                 <img src="/images/2logokef1.png" alt="Kefalonian Vintage Home Logo" className="h-14 mr-3" />
                 <div>
-                  <h2 className="text-2xl font-bold playfair">Kefalonian Vintage Home</h2>
+                  <h2 className="text-2xl font-bold playfair">Kefalonia Vintage Home</h2>
                   <p className="text-white/60 text-sm">Traditional Greek Island Escape</p>
                 </div>
               </div>
@@ -248,10 +248,10 @@ const Footer = () => {
                   <div>
                     <h5 className="text-white/60 text-sm">Email</h5>
                     <a 
-                      href="mailto:info@kefalonianvintagehome.com" 
+                      href="mailto:alexandros@potamianosgroup.com" 
                       className="text-white hover:text-[var(--sea-blue)] transition-colors duration-300"
                     >
-                      info@kefalonianvintagehome.com
+                      alexandros@potamianosgroup.com
                     </a>
                   </div>
                 </li>
@@ -276,7 +276,7 @@ const Footer = () => {
                   <div>
                     <h5 className="text-white/60 text-sm">Address</h5>
                     <address className="not-italic text-white/90">
-                      Kefalonian Vintage Home<br />
+                      Epar. Odos Fiscardou - Magganou<br />
                       Fiscardo<br />
                       Kefalonia, 28081<br />
                       Greece
@@ -310,7 +310,7 @@ const Footer = () => {
         <div className="border-t border-white/10 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-white/60 mb-4 md:mb-0">
-              © {currentYear} Kefalonian Vintage Home. All rights reserved.
+              © {currentYear} Kefalonia Vintage Home. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
               <a href="#" className="text-sm text-white/60 hover:text-white transition-colors duration-300">
