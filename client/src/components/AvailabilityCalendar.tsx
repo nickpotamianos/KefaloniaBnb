@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isToday, compareAsc } from "date-fns";
+import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, 
+  isBefore, isToday, compareAsc, startOfWeek, endOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBookings } from "@/hooks/use-bookings";
@@ -11,7 +12,7 @@ type AvailabilityCalendarProps = {
 const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }) => {
   const { isLoading, error, isDateBooked } = useBookings();
   const [month, setMonth] = useState<Date>(new Date());
-  const [days, setDays] = useState<{date: Date, isBooked: boolean, isPast: boolean}[]>([]);
+  const [days, setDays] = useState<{date: Date, isBooked: boolean, isPast: boolean, isCurrentMonth: boolean}[]>([]);
   
   // New states for date selection
   const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
@@ -22,24 +23,28 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
   
   // Calculate days for the current month with booking status
   useEffect(() => {
-    // Get all days in the current month
+    // Get all days in the current month, plus days from prev/next month to fill the week
     const monthStart = startOfMonth(month);
     const monthEnd = endOfMonth(month);
-    const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    const calendarStart = startOfWeek(monthStart);
+    const calendarEnd = endOfWeek(monthEnd);
+    
+    const daysInView = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
     const today = new Date();
     
     // Calculate booking status for each day
-    const daysWithStatus = daysInMonth.map(day => ({
+    const daysWithStatus = daysInView.map(day => ({
       date: day,
       isBooked: isDateBooked(day),
-      isPast: isBefore(day, today) && !isToday(day)
+      isPast: isBefore(day, today) && !isToday(day),
+      isCurrentMonth: day.getMonth() === month.getMonth()
     }));
     
     setDays(daysWithStatus);
   }, [month, isDateBooked]);
 
   // Handle date selection
-  const handleDateClick = (day: {date: Date, isBooked: boolean, isPast: boolean}) => {
+  const handleDateClick = (day: {date: Date, isBooked: boolean, isPast: boolean, isCurrentMonth: boolean}) => {
     if (day.isPast || day.isBooked) return;
     
     if (selectionPhase === 'start') {
@@ -156,6 +161,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
             onClick={() => handleDateClick(day)}
             className={cn(
               "h-10 w-full flex items-center justify-center rounded-md text-sm transition-all",
+              !day.isCurrentMonth && "opacity-40",
               isToday(day.date) && !isSelectedDate(day.date) && "border-2 border-[var(--sea-blue)]",
               day.isPast 
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed" 

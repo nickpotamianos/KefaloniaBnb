@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { addMonths, format, isSameDay, isWithinInterval, startOfMonth, 
-  endOfMonth, eachDayOfInterval, isBefore, isToday, compareAsc } from 'date-fns';
+  endOfMonth, eachDayOfInterval, isBefore, isToday, compareAsc,
+  addDays, subDays, getDay, startOfWeek, endOfWeek } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -33,11 +34,17 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   });
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
 
-  // Generate array of month dates
-  const generateMonthDates = (month: Date) => {
-    const start = startOfMonth(month);
-    const end = endOfMonth(month);
-    return eachDayOfInterval({ start, end });
+  // Generate array of all days visible in the month view, including days from previous/next months
+  const generateCalendarDays = (month: Date) => {
+    const monthStart = startOfMonth(month);
+    const monthEnd = endOfMonth(month);
+    const startDate = startOfWeek(monthStart);
+    const endDate = endOfWeek(monthEnd);
+    
+    return eachDayOfInterval({ start: startDate, end: endDate }).map(date => ({
+      date,
+      isCurrentMonth: date.getMonth() === month.getMonth()
+    }));
   };
 
   // Navigate to previous/next month
@@ -136,11 +143,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {monthsToDisplay.map((month, monthIdx) => {
-          const daysInMonth = generateMonthDates(month);
-          
-          // Calculate days needed to fill complete weeks
-          const dayOfWeekFirstDay = daysInMonth[0].getDay();
-          const emptyDaysAtStart = Array(dayOfWeekFirstDay).fill(null);
+          const calendarDays = generateCalendarDays(month);
           
           return (
             <div key={monthIdx} className="month">
@@ -153,13 +156,9 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
               </div>
               
               <div className="grid grid-cols-7 gap-1">
-                {/* Empty days at start of month */}
-                {emptyDaysAtStart.map((_, i) => (
-                  <div key={`empty-start-${i}`} className="h-10"></div>
-                ))}
-                
-                {/* Actual days */}
-                {daysInMonth.map((date, i) => {
+                {/* All days including those from previous/next months */}
+                {calendarDays.map((dayInfo, i) => {
+                  const { date, isCurrentMonth } = dayInfo;
                   const isDisabled = isDateDisabled(date);
                   const isSelected = (dateRange.startDate && isSameDay(date, dateRange.startDate)) || 
                                     (dateRange.endDate && isSameDay(date, dateRange.endDate));
@@ -172,6 +171,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
                       key={i} 
                       className={cn(
                         "h-10 w-full flex items-center justify-center rounded-md text-sm transition-all",
+                        !isCurrentMonth && "opacity-40",
                         isToday(date) && !isSelected && "border-2 border-[var(--sea-blue)]",
                         isDisabled ? "bg-red-100 text-red-700 line-through cursor-not-allowed" : (
                           isSelected ? "bg-[var(--terracotta)] text-white font-bold hover:bg-[var(--terracotta)]/90 cursor-pointer" : (
@@ -211,10 +211,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
           <span>In Range</span>
         </div>
         
-        <div className="flex items-center gap-1">
-          <span className="inline-block w-3 h-3 rounded-full bg-white"></span>
-          <span>Available</span>
-        </div>
+
       </div>
     </div>
   );

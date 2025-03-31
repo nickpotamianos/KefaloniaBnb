@@ -1,18 +1,105 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import CustomDateRangePicker from '@/components/CustomDateRangePicker';
-import { Users, Baby, Minus, Plus, Calendar, CheckCircle } from 'lucide-react';
+import { Users, Baby, Minus, Plus, Calendar, CheckCircle, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useBookings } from '@/hooks/use-bookings';
 
 // Constants that can be imported by Booking.tsx
 export const BASE_PRICE_PER_NIGHT = 150;
 export const CLEANING_FEE = 50;
 export const ADDITIONAL_GUEST_FEE = 25;
 export const MIN_NIGHTS = 2;
+
+// Country codes for phone numbers - comprehensive worldwide list
+const countryCodes = [
+  // Europe (putting Greece first since it's the most relevant)
+  { code: '+30', country: 'Greece', flag: '🇬🇷' },
+  { code: '+355', country: 'Albania', flag: '🇦🇱' },
+  { code: '+43', country: 'Austria', flag: '🇦🇹' },
+  { code: '+375', country: 'Belarus', flag: '🇧🇾' },
+  { code: '+32', country: 'Belgium', flag: '🇧🇪' },
+  { code: '+387', country: 'Bosnia and Herzegovina', flag: '🇧🇦' },
+  { code: '+359', country: 'Bulgaria', flag: '🇧🇬' },
+  { code: '+385', country: 'Croatia', flag: '🇭🇷' },
+  { code: '+357', country: 'Cyprus', flag: '🇨🇾' },
+  { code: '+420', country: 'Czech Republic', flag: '🇨🇿' },
+  { code: '+45', country: 'Denmark', flag: '🇩🇰' },
+  { code: '+372', country: 'Estonia', flag: '🇪🇪' },
+  { code: '+358', country: 'Finland', flag: '🇫🇮' },
+  { code: '+33', country: 'France', flag: '🇫🇷' },
+  { code: '+49', country: 'Germany', flag: '🇩🇪' },
+  { code: '+36', country: 'Hungary', flag: '🇭🇺' },
+  { code: '+354', country: 'Iceland', flag: '🇮🇸' },
+  { code: '+353', country: 'Ireland', flag: '🇮🇪' },
+  { code: '+39', country: 'Italy', flag: '🇮🇹' },
+  { code: '+371', country: 'Latvia', flag: '🇱🇻' },
+  { code: '+370', country: 'Lithuania', flag: '🇱🇹' },
+  { code: '+352', country: 'Luxembourg', flag: '🇱🇺' },
+  { code: '+356', country: 'Malta', flag: '🇲🇹' },
+  { code: '+373', country: 'Moldova', flag: '🇲🇩' },
+  { code: '+377', country: 'Monaco', flag: '🇲🇨' },
+  { code: '+31', country: 'Netherlands', flag: '🇳🇱' },
+  { code: '+47', country: 'Norway', flag: '🇳🇴' },
+  { code: '+48', country: 'Poland', flag: '🇵🇱' },
+  { code: '+351', country: 'Portugal', flag: '🇵🇹' },
+  { code: '+40', country: 'Romania', flag: '🇷🇴' },
+  { code: '+7', country: 'Russia', flag: '🇷🇺' },
+  { code: '+381', country: 'Serbia', flag: '🇷🇸' },
+  { code: '+421', country: 'Slovakia', flag: '🇸🇰' },
+  { code: '+386', country: 'Slovenia', flag: '🇸🇮' },
+  { code: '+34', country: 'Spain', flag: '🇪🇸' },
+  { code: '+46', country: 'Sweden', flag: '🇸🇪' },
+  { code: '+41', country: 'Switzerland', flag: '🇨🇭' },
+  { code: '+90', country: 'Turkey', flag: '🇹🇷' },
+  { code: '+380', country: 'Ukraine', flag: '🇺🇦' },
+  { code: '+44', country: 'United Kingdom', flag: '🇬🇧' },
+  
+  // North America
+  { code: '+1', country: 'United States', flag: '🇺🇸' },
+  { code: '+1', country: 'Canada', flag: '🇨🇦' },
+  { code: '+52', country: 'Mexico', flag: '🇲🇽' },
+  
+  // Asia
+  { code: '+86', country: 'China', flag: '🇨🇳' },
+  { code: '+91', country: 'India', flag: '🇮🇳' },
+  { code: '+81', country: 'Japan', flag: '🇯🇵' },
+  { code: '+82', country: 'South Korea', flag: '🇰🇷' },
+  { code: '+65', country: 'Singapore', flag: '🇸🇬' },
+  { code: '+66', country: 'Thailand', flag: '🇹🇭' },
+  { code: '+60', country: 'Malaysia', flag: '🇲🇾' },
+  { code: '+84', country: 'Vietnam', flag: '🇻🇳' },
+  { code: '+62', country: 'Indonesia', flag: '🇮🇩' },
+  { code: '+63', country: 'Philippines', flag: '🇵🇭' },
+  { code: '+852', country: 'Hong Kong', flag: '🇭🇰' },
+  { code: '+971', country: 'United Arab Emirates', flag: '🇦🇪' },
+  { code: '+966', country: 'Saudi Arabia', flag: '🇸🇦' },
+  { code: '+972', country: 'Israel', flag: '🇮🇱' },
+  
+  // Australia & Oceania
+  { code: '+61', country: 'Australia', flag: '🇦🇺' },
+  { code: '+64', country: 'New Zealand', flag: '🇳🇿' },
+  
+  // South America
+  { code: '+55', country: 'Brazil', flag: '🇧🇷' },
+  { code: '+54', country: 'Argentina', flag: '🇦🇷' },
+  { code: '+56', country: 'Chile', flag: '🇨🇱' },
+  { code: '+57', country: 'Colombia', flag: '🇨🇴' },
+  { code: '+51', country: 'Peru', flag: '🇵🇪' },
+  { code: '+58', country: 'Venezuela', flag: '🇻🇪' },
+  
+  // Africa
+  { code: '+27', country: 'South Africa', flag: '🇿🇦' },
+  { code: '+20', country: 'Egypt', flag: '🇪🇬' },
+  { code: '+212', country: 'Morocco', flag: '🇲🇦' },
+  { code: '+234', country: 'Nigeria', flag: '🇳🇬' },
+  { code: '+254', country: 'Kenya', flag: '🇰🇪' },
+  { code: '+233', country: 'Ghana', flag: '🇬🇭' },
+];
 
 interface BookingFormProps {
   checkIn?: Date;
@@ -55,30 +142,44 @@ const BookingForm: React.FC<BookingFormProps> = ({
 }) => {
   // Total guests calculation
   const totalGuests = adults + children;
+  
+  // Default to Greece country code (+30)
+  const [selectedCountryCode, setSelectedCountryCode] = useState('+30');
+
+  // Get booking data from the same hook used in AvailabilityCalendar
+  const { isDateBooked } = useBookings();
+  
+  // Parse phone number to separate country code and number
+  const getPhoneWithoutCode = () => {
+    // If phone already starts with a plus sign, try to extract the actual number
+    if (phone.startsWith('+')) {
+      // Find the first non-digit character after the plus sign
+      const match = phone.match(/^\+\d+\s*(.*)$/);
+      return match ? match[1] : '';
+    }
+    return phone;
+  };
 
   // Handle date change from picker
   const handleDateChange = (range: { from?: Date, to?: Date }) => {
     setCheckIn(range.from);
     setCheckOut(range.to);
   };
-
-  // Check if date is booked (in a real app, this would interact with a backend)
-  const isDateDisabled = (date: Date): boolean => {
-    // Add logic here to check if a specific date is already booked
-    // For now, this is just a placeholder implementation
-    const bookedDates = [
-      new Date(2025, 6, 15),  // July 15, 2025
-      new Date(2025, 6, 16),  // July 16, 2025
-      new Date(2025, 6, 17),  // July 17, 2025
-      new Date(2025, 7, 10),  // August 10, 2025
-      new Date(2025, 7, 11),  // August 11, 2025
-    ];
+  
+  // Handle country code change
+  const handleCountryCodeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newCode = e.target.value;
+    setSelectedCountryCode(newCode);
     
-    return bookedDates.some(bookedDate => 
-      bookedDate.getDate() === date.getDate() &&
-      bookedDate.getMonth() === date.getMonth() &&
-      bookedDate.getFullYear() === date.getFullYear()
-    );
+    // Update the full phone number with the new country code
+    setPhone(`${newCode} ${getPhoneWithoutCode()}`);
+  };
+  
+  // Handle phone number change
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const phoneNumber = e.target.value;
+    // Always combine the country code with the phone number
+    setPhone(`${selectedCountryCode} ${phoneNumber}`);
   };
 
   // Helper function for rendering guest counter
@@ -167,7 +268,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
 
   return (
     <div className="p-6 md:p-8 bg-white rounded-xl shadow-md border border-gray-200">
-      <div className="space-y-10">
+      <div className="space-y-3">
         {/* Section Header */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center rounded-full bg-[var(--sea-blue)]/10 p-2 mb-3">
@@ -188,7 +289,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <CustomDateRangePicker
               initialStartDate={checkIn}
               initialEndDate={checkOut}
-              isDateDisabled={isDateDisabled}
+              isDateDisabled={isDateBooked}
               onChange={handleDateChange}
               className="border-0 p-0 shadow-none"
             />
@@ -224,7 +325,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               max={5}
               label="Adults"
               icon={<Users className="h-4 w-4" />}
-              hint="Ages 13 and up"
+              hint="Ages 13+"
             />
             <GuestCounter
               value={children}
@@ -239,6 +340,103 @@ const BookingForm: React.FC<BookingFormProps> = ({
         </div>
         
         {/* Personal Information */}
+        <div className="bg-[var(--off-white)]/30 p-6 rounded-xl">
+          <h3 className="text-lg font-semibold text-[var(--deep-blue)] mb-4 flex items-center">
+            <Users className="h-5 w-5 mr-2 text-[var(--terracotta)]" />
+            Personal Information
+          </h3>
+          
+          <div className="bg-white p-4 rounded-lg shadow-sm space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="firstName" className="text-sm font-medium text-gray-700 mb-1.5 block">
+                  First Name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="firstName"
+                  type="text"
+                  placeholder="First name"
+                  value={name.split(' ')[0] || ''}
+                  onChange={(e) => {
+                    const lastName = name.split(' ').slice(1).join(' ');
+                    setName(`${e.target.value} ${lastName}`.trim());
+                  }}
+                  required
+                  className="w-full px-4 py-2 border-gray-200 rounded-md focus:ring-2 focus:ring-[var(--sea-blue)] focus:border-transparent"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="lastName" className="text-sm font-medium text-gray-700 mb-1.5 block">
+                  Last Name <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="Last name"
+                  value={name.split(' ').slice(1).join(' ')}
+                  onChange={(e) => {
+                    const firstName = name.split(' ')[0] || '';
+                    setName(`${firstName} ${e.target.value}`.trim());
+                  }}
+                  required
+                  className="w-full px-4 py-2 border-gray-200 rounded-md focus:ring-2 focus:ring-[var(--sea-blue)] focus:border-transparent"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="email" className="text-sm font-medium text-gray-700 mb-1.5 block">
+                Email Address <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full px-4 py-2 border-gray-200 rounded-md focus:ring-2 focus:ring-[var(--sea-blue)] focus:border-transparent"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="phone" className="text-sm font-medium text-gray-700 mb-1.5 block">
+                Phone Number <span className="text-red-500">*</span>
+              </Label>
+              <div className="flex rounded-md">
+                <div className="relative">
+                  <select 
+                    className="h-full py-2 pl-3 pr-8 bg-gray-50 border border-gray-200 border-r-0 rounded-l-md text-sm focus:ring-2 focus:ring-[var(--sea-blue)] focus:border-transparent"
+                    value={selectedCountryCode}
+                    onChange={handleCountryCodeChange}
+                  >
+                    {countryCodes.map(({ code, flag }) => (
+                      <option key={`${code}-${flag}`} value={code}>
+                        {flag} {code}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-1 pointer-events-none">
+                    <ChevronDown className="w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+                <Input
+                  id="phone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  value={getPhoneWithoutCode()}
+                  onChange={handlePhoneChange}
+                  required
+                  className="flex-grow rounded-l-none border-l-0 focus:ring-2 focus:ring-[var(--sea-blue)] focus:border-transparent"
+                />
+              </div>
+              <p className="text-xs text-gray-500 mt-1">We'll only contact you about your reservation</p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Special Requests */}
         <div className="bg-[var(--off-white)]/30 p-6 rounded-xl">
           <h3 className="text-lg font-semibold text-[var(--deep-blue)] mb-4 flex items-center">
             <span className="mr-2">
