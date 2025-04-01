@@ -10,7 +10,7 @@ type AvailabilityCalendarProps = {
 };
 
 const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }) => {
-  const { isLoading, error, isDateBooked } = useBookings();
+  const { isLoading, error, bookings } = useBookings();
   const [month, setMonth] = useState<Date>(new Date());
   const [days, setDays] = useState<{date: Date, isBooked: boolean, isPast: boolean, isCurrentMonth: boolean}[]>([]);
   
@@ -20,6 +20,18 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
   const [selectionPhase, setSelectionPhase] = useState<'start' | 'end'>('start');
   const [showBookButton, setShowBookButton] = useState(false);
   const [animateButton, setAnimateButton] = useState(false);
+  
+  // Create isDateBooked function within component to prevent dependency issues
+  const isDateBooked = (date: Date): boolean => {
+    return bookings.some(booking => 
+      isWithinInterval(date, { 
+        start: booking.startDate, 
+        end: booking.endDate 
+      }) || 
+      isSameDay(date, booking.startDate) || 
+      isSameDay(date, booking.endDate)
+    );
+  };
   
   // Calculate days for the current month with booking status
   useEffect(() => {
@@ -41,7 +53,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
     }));
     
     setDays(daysWithStatus);
-  }, [month, isDateBooked]);
+  }, [month, bookings]); // Only depend on month and bookings, not the function
 
   // Handle date selection
   const handleDateClick = (day: {date: Date, isBooked: boolean, isPast: boolean, isCurrentMonth: boolean}) => {
