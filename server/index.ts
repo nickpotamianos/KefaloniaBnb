@@ -3,11 +3,22 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import * as bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 // Load environment variables from .env file
 dotenv.config();
 
 const app = express();
+
+// Configure CORS to allow requests from localhost during development
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173', 
+    'https://villakefalonia.potamianosgroup.com'
+  ],
+  credentials: true
+}));
 
 // Parse JSON for regular routes
 app.use((req, res, next) => {
