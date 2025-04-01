@@ -1,9 +1,24 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import * as bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
-app.use(express.json());
+
+// Parse JSON for regular routes
+app.use((req, res, next) => {
+  // Skip body parsing for Stripe webhook route
+  if (req.originalUrl === '/api/stripe-webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
 app.use(express.urlencoded({ extended: false }));
 
 app.use((req, res, next) => {

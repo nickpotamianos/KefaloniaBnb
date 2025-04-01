@@ -10,9 +10,9 @@ import { cn } from '@/lib/utils';
 import { useBookings } from '@/hooks/use-bookings';
 
 // Constants that can be imported by Booking.tsx
-export const BASE_PRICE_PER_NIGHT = 150;
-export const CLEANING_FEE = 50;
-export const ADDITIONAL_GUEST_FEE = 25;
+export const BASE_PRICE_PER_NIGHT = 200; // Updated to €200 per night
+export const CLEANING_FEE = 60;         // Updated to €60 cleaning fee
+export const ADDITIONAL_GUEST_FEE = 0;   // No additional guest fee
 export const MIN_NIGHTS = 2;
 
 // Country codes for phone numbers - comprehensive worldwide list

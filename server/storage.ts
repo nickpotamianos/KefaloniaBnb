@@ -1,8 +1,10 @@
 import { 
-  users, contacts, newsletter,
+  users, contacts, newsletter, bookings,
   type User, type InsertUser,
-  type Contact, type Newsletter
+  type Contact, type Newsletter,
+  type Booking, type InsertBooking
 } from "@shared/schema";
+import { randomUUID } from "crypto";
 
 // modify the interface with any CRUD methods
 // you might need
@@ -20,12 +22,21 @@ export interface IStorage {
   // Newsletter methods
   getNewsletterByEmail(email: string): Promise<Newsletter | undefined>;
   createNewsletterSubscription(data: Omit<Newsletter, "id">): Promise<Newsletter>;
+  
+  // Booking methods
+  getBooking(id: string): Promise<Booking | undefined>;
+  getBookingByStripeSession(sessionId: string): Promise<Booking | undefined>;
+  createBooking(bookingData: InsertBooking): Promise<Booking>;
+  updateBookingStatus(id: string, status: string): Promise<Booking | undefined>;
+  getAllBookings(): Promise<Booking[]>;
+  getBookingsBetweenDates(startDate: Date, endDate: Date): Promise<Booking[]>;
 }
 
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private contactsList: Map<number, Contact>;
   private newsletterList: Map<number, Newsletter>;
+  private bookingsList: Map<string, Booking>;
   
   private userCurrentId: number;
   private contactCurrentId: number;
@@ -35,6 +46,7 @@ export class MemStorage implements IStorage {
     this.users = new Map();
     this.contactsList = new Map();
     this.newsletterList = new Map();
+    this.bookingsList = new Map();
     
     this.userCurrentId = 1;
     this.contactCurrentId = 1;
@@ -83,6 +95,55 @@ export class MemStorage implements IStorage {
     const subscription = { ...data, id };
     this.newsletterList.set(id, subscription);
     return subscription;
+  }
+  
+  // Booking methods
+  async getBooking(id: string): Promise<Booking | undefined> {
+    return this.bookingsList.get(id);
+  }
+  
+  async getBookingByStripeSession(sessionId: string): Promise<Booking | undefined> {
+    return Array.from(this.bookingsList.values()).find(
+      (booking) => booking.stripeSessionId === sessionId
+    );
+  }
+  
+  async createBooking(bookingData: InsertBooking): Promise<Booking> {
+    const id = randomUUID();
+    const booking: Booking = { 
+      ...bookingData, 
+      id, 
+      createdAt: new Date() 
+    };
+    this.bookingsList.set(id, booking);
+    return booking;
+  }
+  
+  async updateBookingStatus(id: string, status: string): Promise<Booking | undefined> {
+    const booking = this.bookingsList.get(id);
+    if (!booking) return undefined;
+    
+    const updatedBooking = { ...booking, paymentStatus: status };
+    this.bookingsList.set(id, updatedBooking);
+    return updatedBooking;
+  }
+  
+  async getAllBookings(): Promise<Booking[]> {
+    return Array.from(this.bookingsList.values());
+  }
+  
+  async getBookingsBetweenDates(startDate: Date, endDate: Date): Promise<Booking[]> {
+    return Array.from(this.bookingsList.values()).filter(booking => {
+      const bookingStart = new Date(booking.checkIn);
+      const bookingEnd = new Date(booking.checkOut);
+      
+      // Check if there's any overlap between the date ranges
+      return (
+        (bookingStart <= endDate && bookingEnd >= startDate) ||
+        (bookingStart >= startDate && bookingStart <= endDate) ||
+        (bookingEnd >= startDate && bookingEnd <= endDate)
+      );
+    });
   }
 }
 

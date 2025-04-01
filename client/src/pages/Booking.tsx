@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, useRoute } from "wouter";
 import { format, differenceInDays } from "date-fns";
 import { Button } from "@/components/ui/button";
-import { loadStripe } from "@stripe/stripe-js";
-import { ChevronLeft, CheckCircle } from "lucide-react";
+import { ChevronLeft, CheckCircle, Loader2 } from "lucide-react";
 import { useBookings } from "@/hooks/use-bookings";
 import { motion } from "framer-motion";
 import BookingForm, { 
@@ -13,24 +12,34 @@ import BookingForm, {
   MIN_NIGHTS 
 } from "@/components/BookingForm";
 import { Helmet } from "react-helmet";
+import axios from "axios";
+import { API_ENDPOINTS, STRIPE_CONFIG } from "@/lib/api-config";
 
-// Initialize Stripe - replace with your publishable key
-const stripePromise = loadStripe("pk_test_REPLACE_WITH_YOUR_STRIPE_KEY");
+// Get Stripe publishable key from configuration
+const STRIPE_PUBLIC_KEY = STRIPE_CONFIG.PUBLISHABLE_KEY;
 
 const BookingPage: React.FC = () => {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
+  const [, params] = useRoute("/booking/success");
   const { isLoading } = useBookings();
   
-  // Parse URL params manually since wouter doesn't have a built-in hook for this
+  // Parse URL params manually for initial dates
   const getParams = () => {
     const params = new URLSearchParams(window.location.search);
     return {
       checkIn: params.get("checkIn"),
-      checkOut: params.get("checkOut")
+      checkOut: params.get("checkOut"),
+      sessionId: params.get("session_id"),
+      cancelled: params.get("cancelled") === "true"
     };
   };
   
-  const { checkIn: checkInParam, checkOut: checkOutParam } = getParams();
+  const { 
+    checkIn: checkInParam, 
+    checkOut: checkOutParam, 
+    sessionId, 
+    cancelled 
+  } = getParams();
   
   // Booking state
   const [checkIn, setCheckIn] = useState<Date | undefined>(
@@ -49,13 +58,44 @@ const BookingPage: React.FC = () => {
   const [bookingComplete, setBookingComplete] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<"stripe" | "paypal" | null>(null);
+  const [bookingDetails, setBookingDetails] = useState<any>(null);
+  const [isCheckingSession, setIsCheckingSession] = useState(false);
+  
+  // For success page
+  useEffect(() => {
+    // If we're on the success page with a session ID, fetch booking details
+    if (sessionId) {
+      setIsCheckingSession(true);
+      axios.get(`${API_ENDPOINTS.CHECKOUT_SESSION}/${sessionId}`)
+        .then(response => {
+          if (response.data.success && response.data.booking) {
+            setBookingDetails(response.data.booking);
+            setBookingComplete(true);
+          } else {
+            setBookingError("We couldn't find your booking. Please contact support.");
+            setTimeout(() => setLocation("/booking"), 5000);
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching booking:", error);
+          setBookingError("There was an error loading your booking details.");
+        })
+        .finally(() => {
+          setIsCheckingSession(false);
+        });
+    }
+
+    // If booking was cancelled, show an error
+    if (cancelled) {
+      setBookingError("Your booking was cancelled. Please try again when you're ready.");
+    }
+  }, [sessionId, cancelled, setLocation]);
   
   // Derived values
   const guests = adults + children;
   const nights = checkIn && checkOut ? differenceInDays(checkOut, checkIn) : 0;
   const subtotal = nights * BASE_PRICE_PER_NIGHT;
-  const additionalGuestFee = Math.max(0, guests - 2) * ADDITIONAL_GUEST_FEE * nights;
-  const total = subtotal + CLEANING_FEE + additionalGuestFee;
+  const total = subtotal + CLEANING_FEE;
   
   // Form validation
   const isFormValid = checkIn && checkOut && nights >= MIN_NIGHTS && name && email && phone && adults > 0 && guests <= 8 && paymentMethod !== null;
@@ -75,6 +115,24 @@ const BookingPage: React.FC = () => {
     }
   }, [checkIn, checkOut, adults, children, guests]);
   
+  // Check if dates are available
+  useEffect(() => {
+    if (checkIn && checkOut && nights >= MIN_NIGHTS) {
+      axios.post(API_ENDPOINTS.CHECK_AVAILABILITY, {
+        checkIn: checkIn.toISOString(),
+        checkOut: checkOut.toISOString()
+      })
+      .then(response => {
+        if (response.data.success && !response.data.available) {
+          setBookingError("Selected dates are not available. Please choose different dates.");
+        }
+      })
+      .catch(error => {
+        console.error("Availability check error:", error);
+      });
+    }
+  }, [checkIn, checkOut, nights]);
+  
   // Handle booking submission
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,74 +145,84 @@ const BookingPage: React.FC = () => {
     setIsProcessing(true);
     
     try {
-      // Example implementation using Stripe Checkout
-      const stripe = await stripePromise;
+      // Create booking data
+      const bookingData = {
+        checkIn: checkIn?.toISOString(),
+        checkOut: checkOut?.toISOString(),
+        name,
+        email,
+        phone,
+        adults,
+        children,
+        guests: adults + children,
+        specialRequests
+      };
       
-      // Normally, you'd call your serverless function or API to create a checkout session
-      // Since this is a static site, we'll simulate the process
-      // In a real implementation, you would:
-      // 1. Call a serverless function (e.g., Netlify, Vercel, AWS Lambda)
-      // 2. Create a Stripe checkout session there
-      // 3. Redirect to the session URL
-      const checkoutSessionUrl = `https://checkout.stripe.com/c/pay/cs_test_SIMULATE_STRIPE_SESSION
-?amount=${Math.round(total * 100)}
-&currency=eur
-&name=Villa+Kefalonia+Booking
-&description=${encodeURIComponent(`${nights} nights, ${adults} adults, ${children} children, Check-in: ${format(checkIn as Date, 'MMM d, yyyy')}`)}`;
+      // Create checkout session
+      const response = await axios.post(API_ENDPOINTS.CREATE_CHECKOUT, bookingData);
       
-      // For demo purposes, we'll just simulate success after 2 seconds
-      setTimeout(() => {
+      if (response.data.success && response.data.sessionUrl) {
+        // Redirect to Stripe checkout
+        window.location.href = response.data.sessionUrl;
+      } else {
+        setBookingError("Failed to create booking. Please try again.");
         setIsProcessing(false);
-        setBookingComplete(true);
-        
-        // In a real implementation, you would send booking details to your email or a database
-        // This could be done via a serverless function or a service like EmailJS
-        console.log("Booking completed:", {
-          checkIn,
-          checkOut,
-          adults,
-          children,
-          guests,
-          name,
-          email,
-          phone,
-          specialRequests,
-          total
-        });
-      }, 2000);
-      
-      // In production, you'd redirect to Stripe:
-      // if (stripe) window.location.href = checkoutSessionUrl;
-      
-    } catch (error) {
+      }
+    } catch (error: any) {
       console.error("Booking error:", error);
-      setBookingError("There was an error processing your booking. Please try again.");
+      setBookingError(error.response?.data?.message || "There was an error processing your booking. Please try again.");
       setIsProcessing(false);
     }
   };
   
+  // Render loading state
+  if (isCheckingSession) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-[var(--primary-blue)] mx-auto" />
+          <h2 className="text-xl font-bold mt-4">Verifying your booking...</h2>
+          <p className="text-gray-600 mt-2">Please wait while we check your reservation status.</p>
+        </div>
+      </div>
+    );
+  }
+  
   // Render confirmation screen
-  if (bookingComplete) {
+  if (bookingComplete && bookingDetails) {
+    const bDetails = bookingDetails;
+    const checkInDate = new Date(bDetails.checkIn);
+    const checkOutDate = new Date(bDetails.checkOut);
+    const stayNights = differenceInDays(checkOutDate, checkInDate);
+    const totalAmount = (bDetails.totalAmount / 100).toFixed(2); // Convert cents to euros
+    
     return (
       <div className="max-w-3xl mx-auto p-6 md:p-10">
+        <Helmet>
+          <title>Booking Confirmed | Kefalonia Vintage Home</title>
+        </Helmet>
+        
         <div className="text-center mb-10 p-8 bg-green-50 rounded-xl">
           <div className="flex justify-center mb-4">
             <CheckCircle size={64} className="text-green-500" />
           </div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Booking Confirmed!</h1>
           <p className="mt-4 text-gray-600">
-            Thank you {name}! Your reservation is being processed. You should receive a confirmation email shortly.
+            Thank you {bDetails.name}! Your reservation has been confirmed. A confirmation email has been sent to {bDetails.email}.
           </p>
           <div className="mt-6 p-6 bg-white rounded-lg shadow-sm">
             <h2 className="font-bold text-lg text-gray-800 mb-4">Booking Details:</h2>
             <div className="space-y-2 text-left">
-              <p><strong>Check-in:</strong> {format(checkIn as Date, 'MMMM d, yyyy')}</p>
-              <p><strong>Check-out:</strong> {format(checkOut as Date, 'MMMM d, yyyy')}</p>
-              <p><strong>Nights:</strong> {nights}</p>
-              <p><strong>Adults:</strong> {adults}</p>
-              <p><strong>Children:</strong> {children}</p>
-              <p><strong>Total Guests:</strong> {guests}</p>
-              <p><strong>Total Amount:</strong> €{total}</p>
+              <p><strong>Check-in:</strong> {format(checkInDate, 'MMMM d, yyyy')}</p>
+              <p><strong>Check-out:</strong> {format(checkOutDate, 'MMMM d, yyyy')}</p>
+              <p><strong>Nights:</strong> {stayNights}</p>
+              <p><strong>Adults:</strong> {bDetails.adults}</p>
+              <p><strong>Children:</strong> {bDetails.children}</p>
+              <p><strong>Total Guests:</strong> {bDetails.guests}</p>
+              <p><strong>Total Amount:</strong> €{totalAmount}</p>
+              {bDetails.specialRequests && (
+                <p><strong>Special Requests:</strong> {bDetails.specialRequests}</p>
+              )}
             </div>
           </div>
           <Button 
@@ -309,13 +377,6 @@ const BookingPage: React.FC = () => {
                     <span className="text-gray-600">Cleaning fee</span>
                     <span>€{CLEANING_FEE}</span>
                   </div>
-                  
-                  {additionalGuestFee > 0 && (
-                    <div className="flex justify-between text-sm mt-2">
-                      <span className="text-gray-600">Additional guest fee</span>
-                      <span>€{additionalGuestFee}</span>
-                    </div>
-                  )}
                   
                   <div className="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-gray-200">
                     <span>Total</span>

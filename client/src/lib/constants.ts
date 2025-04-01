@@ -86,7 +86,7 @@ export const experiences: Experience[] = [
   },
   {
     title: "Nature Hikes",
-    description: "Scenic trails from Foki to Dafnoudi lead through pine forests and sea views, with stops near Fiskardo and hidden coves along the way.",
+    description: "Scenic trails from Foki to Dafnoudi lead through pine forests and sea views, with stops near Fiskardo and hidden coves.",
     image: "/images/hikepng.png"
   },
   {
