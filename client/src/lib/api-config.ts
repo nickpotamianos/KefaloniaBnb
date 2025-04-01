@@ -1,11 +1,12 @@
 // API configuration for development and production environments
 
-// Determine the current environment
+// For testing purposes, we'll use the Render backend even in development
+const USE_RENDER_API = true;
 const isProduction = import.meta.env.PROD;
 
 // Base URL for API calls
-export const API_BASE_URL = isProduction 
-  ? 'https://kefalonia-api.onrender.com' // Replace with your actual Render URL when deployed
+export const API_BASE_URL = USE_RENDER_API 
+  ? 'https://kefalonia-api.onrender.com' // Your Render deployment URL
   : 'http://localhost:3000';
 
 // API endpoints

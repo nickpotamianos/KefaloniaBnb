@@ -10,13 +10,20 @@ dotenv.config();
 
 const app = express();
 
-// Configure CORS to allow requests from localhost during development
+// Get the environment
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Configure CORS based on environment
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:5173', 
-    'https://villakefalonia.potamianosgroup.com'
-  ],
+  // In production, only allow the actual production domain
+  // In development, also allow localhost URLs
+  origin: isProduction 
+    ? ['https://villakefalonia.potamianosgroup.com']
+    : [
+        'http://localhost:3000',
+        'http://localhost:5173', 
+        'https://villakefalonia.potamianosgroup.com'
+      ],
   credentials: true
 }));
 
