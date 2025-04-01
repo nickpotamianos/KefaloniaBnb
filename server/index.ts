@@ -13,17 +13,21 @@ const app = express();
 // Get the environment
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Configure CORS based on environment
+// Add explicit CORS headers for all routes
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  next();
+});
+
+// Still use the cors middleware as a fallback
 app.use(cors({
-  // In production, only allow the actual production domain
-  // In development, also allow localhost URLs
-  origin: isProduction 
-    ? ['https://villakefalonia.potamianosgroup.com']
-    : [
-        'http://localhost:3000',
-        'http://localhost:5173', 
-        'https://villakefalonia.potamianosgroup.com'
-      ],
+  origin: '*',  // Allow all origins for now to troubleshoot
   credentials: true
 }));
 
