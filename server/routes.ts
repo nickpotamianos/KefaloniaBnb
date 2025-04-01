@@ -245,7 +245,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const session = await getCheckoutSession(sessionId);
-      const booking = await storage.getBookingByStripeSession(sessionId);
+      let booking = await storage.getBookingByStripeSession(sessionId);
+      
+      // If the booking isn't found in storage (e.g., after server restart),
+      // reconstruct it from Stripe session metadata
+      if (!booking && session && session.metadata) {
+        // Create a booking object from Stripe metadata
+        booking = {
+          id: `stripe-${sessionId}`,
+          stripeSessionId: sessionId,
+          checkIn: session.metadata.checkIn,
+          checkOut: session.metadata.checkOut,
+          name: session.metadata.name,
+          email: session.metadata.email,
+          phone: session.metadata.phone,
+          adults: parseInt(session.metadata.adults || '2', 10),
+          children: parseInt(session.metadata.children || '0', 10),
+          specialRequests: session.metadata.specialRequests,
+          paymentStatus: session.payment_status,
+          totalAmount: parseInt(session.metadata.totalAmount || '0', 10),
+          createdAt: new Date(session.created * 1000) // Convert UNIX timestamp to Date
+        };
+
+        // Optionally save this reconstructed booking to memory
+        // This isn't strictly necessary but helps with consistency
+        try {
+          await storage.createBooking(booking);
+        } catch (error) {
+          console.warn("Could not save reconstructed booking to storage:", error);
+          // Continue anyway since we already have the booking data
+        }
+      }
       
       res.json({
         success: true,
@@ -253,10 +283,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         booking: booking || null
       });
     } catch (error) {
-      console.error("Session status error:", error);
-      res.status(500).json({ 
+      console.error('Session retrieval error:', error);
+      return res.status(400).json({ 
         success: false, 
-        message: "Failed to get session status. Please try again later."
+        message: "Could not retrieve booking details" 
       });
     }
   });
