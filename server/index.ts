@@ -15,21 +15,21 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 // Add explicit CORS headers for all routes
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  // Get the origin from the request or use a wildcard as fallback
+  const origin = req.headers.origin || '*';
   
+  // Allow the specific origin that made the request (or all origins with *)
+  res.header("Access-Control-Allow-Origin", origin);
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, stripe-signature");
+  res.header("Access-Control-Allow-Credentials", "true");
+  
+  // Handle preflight requests
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
   }
   next();
 });
-
-// Still use the cors middleware as a fallback
-app.use(cors({
-  origin: '*',  // Allow all origins for now to troubleshoot
-  credentials: true
-}));
 
 // Parse JSON for regular routes
 app.use((req, res, next) => {

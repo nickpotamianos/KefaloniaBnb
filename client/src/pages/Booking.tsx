@@ -66,18 +66,40 @@ const BookingPage: React.FC = () => {
     // If we're on the success page with a session ID, fetch booking details
     if (sessionId) {
       setIsCheckingSession(true);
-      axios.get(`${API_ENDPOINTS.CHECKOUT_SESSION}/${sessionId}`)
+      console.log("Fetching session details for sessionId:", sessionId);
+      console.log("API endpoint being called:", `${API_ENDPOINTS.CHECKOUT_SESSION}/${sessionId}`);
+      
+      axios.get(`${API_ENDPOINTS.CHECKOUT_SESSION}/${sessionId}`, {
+        // Force credentials to be sent with the request
+        withCredentials: false,
+        // Add custom headers for debugging
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest',
+          'Accept': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      })
         .then(response => {
+          console.log("API Response received:", response);
           if (response.data.success && response.data.booking) {
+            console.log("Booking details found:", response.data.booking);
             setBookingDetails(response.data.booking);
             setBookingComplete(true);
           } else {
+            console.error("API returned success but no booking data:", response.data);
             setBookingError("We couldn't find your booking. Please contact support.");
             setTimeout(() => setLocation("/booking"), 5000);
           }
         })
         .catch(error => {
-          console.error("Error fetching booking:", error);
+          console.error("Error fetching booking details:", error);
+          console.error("Error details:", {
+            message: error.message,
+            status: error.response?.status,
+            statusText: error.response?.statusText,
+            responseData: error.response?.data,
+            config: error.config
+          });
           setBookingError("There was an error loading your booking details.");
         })
         .finally(() => {
