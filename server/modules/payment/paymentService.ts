@@ -296,32 +296,19 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
             breakdown: {
               item_total: {
                 currency_code: 'EUR',
-                value: basePrice.toFixed(2)
-              },
-              shipping: {
-                currency_code: 'EUR',
-                value: CLEANING_FEE.toFixed(2)
+                value: totalAmount // Use the total amount here, not just basePrice
               }
             }
           },
           description: `Kefalonia Vintage Home Booking - ${nights} nights, ${adults} adults, ${children || 0} children`,
           items: [
             {
-              name: 'Accommodation',
-              description: `${nights} nights, Check-in: ${formattedCheckIn}, Check-out: ${formattedCheckOut}`,
+              name: 'Accommodation Package',
+              description: `${nights} nights (€${BASE_PRICE_PER_NIGHT}/night) + Cleaning Fee (€${CLEANING_FEE})`,
               quantity: '1',
               unit_amount: {
                 currency_code: 'EUR',
-                value: basePrice.toFixed(2)
-              },
-              category: 'DIGITAL_GOODS'
-            },
-            {
-              name: 'Cleaning Fee',
-              quantity: '1',
-              unit_amount: {
-                currency_code: 'EUR',
-                value: CLEANING_FEE.toFixed(2)
+                value: totalAmount // Use the total amount to avoid mismatch
               },
               category: 'DIGITAL_GOODS'
             }
