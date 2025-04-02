@@ -45,6 +45,11 @@ const TESTING_FRONTEND_URL = process.env.TESTING_FRONTEND_URL || FRONTEND_URL;
 // Check if we're running on Render's development environment
 const isRenderDev = process.env.RENDER && process.env.NODE_ENV === 'development';
 
+// Set a hard-coded localhost URL for testing, regardless of environment
+// This ensures PayPal always redirects to localhost during development
+const PAYPAL_RETURN_URL = 'http://localhost:3000/booking/paypal-success';
+const PAYPAL_CANCEL_URL = 'http://localhost:3000/booking?cancelled=true';
+
 /**
  * Gets a PayPal access token for API calls
  * @returns PayPal access token
@@ -334,16 +339,8 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
       ],
       application_context: {
         brand_name: 'Kefalonia Vintage Home',
-        return_url: isRenderDev 
-          ? 'https://kefalonia-api.onrender.com/booking/paypal-success'
-          : process.env.NODE_ENV === 'production'
-              ? `${TESTING_FRONTEND_URL}/booking/paypal-success`
-              : 'http://localhost:3000/booking/paypal-success',
-        cancel_url: isRenderDev
-          ? 'https://kefalonia-api.onrender.com/booking?cancelled=true'
-          : process.env.NODE_ENV === 'production'
-              ? `${TESTING_FRONTEND_URL}/booking?cancelled=true`
-              : 'http://localhost:3000/booking?cancelled=true',
+        return_url: PAYPAL_RETURN_URL, // Always use localhost URL for testing
+        cancel_url: PAYPAL_CANCEL_URL, // Always use localhost URL for testing
         user_action: 'PAY_NOW',
         shipping_preference: 'NO_SHIPPING'
       }
