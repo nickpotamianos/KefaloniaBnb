@@ -1,7 +1,7 @@
 // API configuration for development and production environments
 
 // To test with Render during development, change this to true
-const USE_RENDER_FOR_TESTING = false;
+const USE_RENDER_FOR_TESTING = true;
 
 // For production, we'll use the Render API
 const USE_PRODUCTION_API = import.meta.env.PROD || USE_RENDER_FOR_TESTING;

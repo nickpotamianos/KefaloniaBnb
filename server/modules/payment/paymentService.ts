@@ -260,8 +260,25 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
   const totalInEuros = basePrice + CLEANING_FEE;
   const totalAmount = totalInEuros.toFixed(2);
   
+  // Debug PayPal API credentials
+  console.log('=== PAYPAL DEBUG INFO ===');
+  console.log(`PayPal API URL: ${PAYPAL_API_URL}`);
+  console.log(`Base price: €${basePrice.toFixed(2)}`);
+  console.log(`Cleaning fee: €${CLEANING_FEE.toFixed(2)}`);
+  console.log(`Item total: €${totalAmount}`);
+  console.log('=========================');
+  
+  // Check credentials
+  if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+    console.error('PayPal credentials are not defined. Check environment variables.');
+    throw new Error('PayPal configuration error: Missing API credentials');
+  }
+  
   try {
     const accessToken = await getPayPalAccessToken();
+    
+    // Debug token request
+    console.log('PayPal access token obtained successfully');
     
     const payload = {
       intent: 'CAPTURE',
