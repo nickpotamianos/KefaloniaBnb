@@ -334,8 +334,16 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
       ],
       application_context: {
         brand_name: 'Kefalonia Vintage Home',
-        return_url: 'http://localhost:3000/booking/paypal-success',
-        cancel_url: 'http://localhost:3000/booking?cancelled=true',
+        return_url: isRenderDev 
+          ? 'https://kefalonia-api.onrender.com/booking/paypal-success'
+          : process.env.NODE_ENV === 'production'
+              ? `${TESTING_FRONTEND_URL}/booking/paypal-success`
+              : 'http://localhost:3000/booking/paypal-success',
+        cancel_url: isRenderDev
+          ? 'https://kefalonia-api.onrender.com/booking?cancelled=true'
+          : process.env.NODE_ENV === 'production'
+              ? `${TESTING_FRONTEND_URL}/booking?cancelled=true`
+              : 'http://localhost:3000/booking?cancelled=true',
         user_action: 'PAY_NOW',
         shipping_preference: 'NO_SHIPPING'
       }
