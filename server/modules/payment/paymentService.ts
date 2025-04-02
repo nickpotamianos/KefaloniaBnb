@@ -12,9 +12,8 @@ const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 // Get PayPal credentials
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
-const PAYPAL_API_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://api-m.paypal.com' 
-  : 'https://api-m.sandbox.paypal.com';
+// Force sandbox mode for testing
+const PAYPAL_API_URL = 'https://api-m.sandbox.paypal.com';
 
 if (!STRIPE_SECRET_KEY) {
   console.error('ERROR: STRIPE_SECRET_KEY is not defined in environment variables');
@@ -47,6 +46,13 @@ const FRONTEND_URL = process.env.NODE_ENV === 'production'
 async function getPayPalAccessToken(): Promise<string> {
   try {
     const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64');
+    
+    // Debug info - Log partial credentials (securely)
+    console.log('PayPal Auth Debug:');
+    console.log(`Client ID: ${PAYPAL_CLIENT_ID?.substring(0, 5)}...${PAYPAL_CLIENT_ID?.substring(PAYPAL_CLIENT_ID.length - 5)}`);
+    console.log(`Client Secret Length: ${PAYPAL_CLIENT_SECRET?.length || 0} characters`);
+    console.log(`Auth URL: ${PAYPAL_API_URL}/v1/oauth2/token`);
+    
     const response = await fetch(`${PAYPAL_API_URL}/v1/oauth2/token`, {
       method: 'POST',
       headers: {
