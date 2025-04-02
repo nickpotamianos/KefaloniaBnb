@@ -156,18 +156,32 @@ const BookingPage: React.FC = () => {
         adults,
         children,
         guests: adults + children,
-        specialRequests
+        specialRequests,
+        total: total // Add total amount to booking data
       };
       
-      // Create checkout session
-      const response = await axios.post(API_ENDPOINTS.CREATE_CHECKOUT, bookingData);
-      
-      if (response.data.success && response.data.sessionUrl) {
-        // Redirect to Stripe checkout
-        window.location.href = response.data.sessionUrl;
-      } else {
-        setBookingError("Failed to create booking. Please try again.");
-        setIsProcessing(false);
+      if (paymentMethod === 'stripe') {
+        // Stripe payment flow
+        const response = await axios.post(API_ENDPOINTS.CREATE_CHECKOUT, bookingData);
+        
+        if (response.data.success && response.data.sessionUrl) {
+          // Redirect to Stripe checkout
+          window.location.href = response.data.sessionUrl;
+        } else {
+          setBookingError("Failed to create booking. Please try again.");
+          setIsProcessing(false);
+        }
+      } else if (paymentMethod === 'paypal') {
+        // PayPal payment flow
+        const response = await axios.post(API_ENDPOINTS.CREATE_PAYPAL_ORDER, bookingData);
+        
+        if (response.data.success && response.data.orderId && response.data.approvalUrl) {
+          // Redirect the user to PayPal to approve the payment
+          window.location.href = response.data.approvalUrl;
+        } else {
+          setBookingError("Failed to create PayPal order. Please try again.");
+          setIsProcessing(false);
+        }
       }
     } catch (error: any) {
       console.error("Booking error:", error);
@@ -229,6 +243,7 @@ const BookingPage: React.FC = () => {
           <Button 
             className="mt-8 bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90"
             onClick={() => window.location.href = "/"}
+
           >
             Back to Homepage
           </Button>

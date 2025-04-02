@@ -10,26 +10,12 @@ import { randomUUID } from "crypto";
 // you might need
 
 export interface IStorage {
-  // User methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  
-  // Contact methods
-  getContact(id: number): Promise<Contact | undefined>;
-  createContact(contactData: Omit<Contact, "id">): Promise<Contact>;
-  
-  // Newsletter methods
-  getNewsletterByEmail(email: string): Promise<Newsletter | undefined>;
-  createNewsletterSubscription(data: Omit<Newsletter, "id">): Promise<Newsletter>;
-  
-  // Booking methods
-  getBooking(id: string): Promise<Booking | undefined>;
-  getBookingByStripeSession(sessionId: string): Promise<Booking | undefined>;
-  createBooking(bookingData: InsertBooking): Promise<Booking>;
+  createBooking(data: InsertBooking): Promise<Booking>;
   updateBookingStatus(id: string, status: string): Promise<Booking | undefined>;
   getAllBookings(): Promise<Booking[]>;
-  getBookingsBetweenDates(startDate: Date, endDate: Date): Promise<Booking[]>;
+  getBookingByStripeSession(sessionId: string): Promise<Booking | undefined>;
+  getBookingByPayPalOrder(orderId: string): Promise<Booking | undefined>;
+  // Other methods...
 }
 
 export class MemStorage implements IStorage {
@@ -105,6 +91,12 @@ export class MemStorage implements IStorage {
   async getBookingByStripeSession(sessionId: string): Promise<Booking | undefined> {
     return Array.from(this.bookingsList.values()).find(
       (booking) => booking.stripeSessionId === sessionId
+    );
+  }
+  
+  async getBookingByPayPalOrder(orderId: string): Promise<Booking | undefined> {
+    return Array.from(this.bookingsList.values()).find(
+      (booking) => booking.paypalOrderId === orderId
     );
   }
   

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
 import BookingPage from "@/pages/Booking";
 import BookingSuccessPage from "@/pages/booking/success";
+import PayPalSuccessPage from "@/pages/booking/PayPalSuccess";
 
 function Router() {
   return (
@@ -12,6 +13,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/booking" component={BookingPage} />
       <Route path="/booking/success" component={BookingSuccessPage} />
+      <Route path="/booking/paypal-success" component={PayPalSuccessPage} />
       <Route path="*">
         <Home />
       </Route>

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { differenceInDays } from 'date-fns';
 import dotenv from 'dotenv';
+import fetch from 'node-fetch';
 
 // Ensure environment variables are loaded
 dotenv.config();
@@ -8,16 +9,25 @@ dotenv.config();
 // Get the Stripe API key
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
+// Get PayPal credentials
+const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
+const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
+const PAYPAL_API_URL = process.env.NODE_ENV === 'production' 
+  ? 'https://api-m.paypal.com' 
+  : 'https://api-m.sandbox.paypal.com';
+
 if (!STRIPE_SECRET_KEY) {
   console.error('ERROR: STRIPE_SECRET_KEY is not defined in environment variables');
+}
+
+if (!PAYPAL_CLIENT_ID || !PAYPAL_CLIENT_SECRET) {
+  console.error('ERROR: PayPal credentials are not defined in environment variables');
 }
 
 // Initialize Stripe with the secret key from environment variables
 const stripe = new Stripe(STRIPE_SECRET_KEY || '', {
   apiVersion: '2023-10-16', // Specify a fixed API version
 });
-
-console.log(`Stripe initialized with key ${STRIPE_SECRET_KEY ? 'starting with: ' + STRIPE_SECRET_KEY.substring(0, 8) + '...' : 'NOT FOUND (undefined)'}`);
 
 // Updated pricing constants
 const BASE_PRICE_PER_NIGHT = 200; // €200 per night
@@ -26,17 +36,35 @@ const ADDITIONAL_GUEST_FEE = 0;   // No additional guest fee
 const MIN_NIGHTS = 2;
 
 // Frontend URL for redirects
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+const FRONTEND_URL = "http://localhost:3000";
 
-interface BookingData {
-  checkIn?: string;
-  checkOut?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
-  adults?: number;
-  children?: number;
-  specialRequests?: string;
+/**
+ * Gets a PayPal access token for API calls
+ * @returns PayPal access token
+ */
+async function getPayPalAccessToken(): Promise<string> {
+  try {
+    const auth = Buffer.from(`${PAYPAL_CLIENT_ID}:${PAYPAL_CLIENT_SECRET}`).toString('base64');
+    const response = await fetch(`${PAYPAL_API_URL}/v1/oauth2/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${auth}`
+      },
+      body: 'grant_type=client_credentials'
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      console.error('Error getting PayPal access token:', data);
+      throw new Error('Failed to get PayPal access token');
+    }
+
+    return data.access_token;
+  } catch (error) {
+    console.error('Error in getPayPalAccessToken:', error);
+    throw error;
+  }
 }
 
 /**
@@ -205,4 +233,187 @@ export function verifyWebhookSignature(payload: string, signature: string): Stri
  */
 export async function getCheckoutSession(sessionId: string): Promise<Stripe.Checkout.Session> {
   return await stripe.checkout.sessions.retrieve(sessionId);
+}
+
+/**
+ * Creates a PayPal order for a booking
+ * @param bookingData The booking data
+ * @returns PayPal order details
+ */
+export async function createPayPalOrder(bookingData: BookingData): Promise<any> {
+  const { checkIn, checkOut, name, email, adults, children } = bookingData;
+  
+  if (!checkIn || !checkOut || !name || !email || !adults) {
+    throw new Error('Missing required booking information');
+  }
+  
+  const startDate = new Date(checkIn);
+  const endDate = new Date(checkOut);
+  const nights = differenceInDays(endDate, startDate);
+  const formattedCheckIn = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const formattedCheckOut = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  
+  // Calculate base price and total amount the same way as Stripe
+  const basePrice = nights * BASE_PRICE_PER_NIGHT;
+  const totalInEuros = basePrice + CLEANING_FEE;
+  
+  // For PayPal, we need to ensure item_total matches exactly the sum of individual items
+  const basePriceFormatted = basePrice.toFixed(2);
+  const cleaningFeeFormatted = CLEANING_FEE.toFixed(2);
+  // Calculate item_total as the precise sum to avoid floating point issues
+  const itemTotal = (parseFloat(basePriceFormatted) + parseFloat(cleaningFeeFormatted)).toFixed(2);
+  
+  console.log('=== PAYPAL DEBUG INFO ===');
+  console.log(`Base price: €${basePriceFormatted}`);
+  console.log(`Cleaning fee: €${cleaningFeeFormatted}`);
+  console.log(`Item total: €${itemTotal}`);
+  console.log('=========================');
+  
+  try {
+    const accessToken = await getPayPalAccessToken();
+    
+    const payload = {
+      intent: 'CAPTURE',
+      purchase_units: [
+        {
+          amount: {
+            currency_code: 'EUR',
+            value: itemTotal,
+            breakdown: {
+              item_total: {
+                currency_code: 'EUR',
+                value: itemTotal
+              }
+            }
+          },
+          description: `Kefalonia Vintage Home Booking - ${nights} nights, ${adults} adults, ${children || 0} children`,
+          items: [
+            {
+              name: 'Accommodation',
+              description: `${nights} nights, Check-in: ${formattedCheckIn}, Check-out: ${formattedCheckOut}`,
+              quantity: '1',
+              unit_amount: {
+                currency_code: 'EUR',
+                value: basePriceFormatted
+              },
+              category: 'DIGITAL_GOODS'
+            },
+            {
+              name: 'Cleaning Fee',
+              quantity: '1',
+              unit_amount: {
+                currency_code: 'EUR',
+                value: cleaningFeeFormatted
+              },
+              category: 'DIGITAL_GOODS'
+            }
+          ],
+          custom_id: JSON.stringify({
+            checkIn,
+            checkOut,
+            name,
+            email,
+            phone: bookingData.phone || '',
+            adults: adults.toString(),
+            children: (children || 0).toString(),
+            specialRequests: bookingData.specialRequests || '',
+            totalAmount: Math.round(parseFloat(itemTotal) * 100).toString()
+          })
+        }
+      ],
+      application_context: {
+        brand_name: 'Kefalonia Vintage Home',
+        return_url: `${FRONTEND_URL}/booking/paypal-success`,
+        cancel_url: `${FRONTEND_URL}/booking?cancelled=true`,
+        user_action: 'PAY_NOW',
+        shipping_preference: 'NO_SHIPPING'
+      }
+    };
+    
+    const response = await fetch(`${PAYPAL_API_URL}/v2/checkout/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      console.error('Error creating PayPal order:', data);
+      throw new Error('Failed to create PayPal order');
+    }
+    
+    // Find the approval URL to redirect the user to PayPal
+    const approvalUrl = data.links.find((link: any) => link.rel === 'approve')?.href;
+    
+    return {
+      ...data,
+      approvalUrl
+    };
+  } catch (error) {
+    console.error('Error in createPayPalOrder:', error);
+    throw error;
+  }
+}
+
+/**
+ * Captures payment for a PayPal order
+ * @param orderId The PayPal order ID
+ * @returns The captured payment details
+ */
+export async function capturePayPalPayment(orderId: string): Promise<any> {
+  try {
+    const accessToken = await getPayPalAccessToken();
+    
+    const response = await fetch(`${PAYPAL_API_URL}/v2/checkout/orders/${orderId}/capture`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      console.error('Error capturing PayPal payment:', data);
+      throw new Error('Failed to capture PayPal payment');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error in capturePayPalPayment:', error);
+    throw error;
+  }
+}
+
+/**
+ * Gets PayPal order details
+ * @param orderId The PayPal order ID
+ * @returns The order details
+ */
+export async function getPayPalOrderDetails(orderId: string): Promise<any> {
+  try {
+    const accessToken = await getPayPalAccessToken();
+    
+    const response = await fetch(`${PAYPAL_API_URL}/v2/checkout/orders/${orderId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      console.error('Error getting PayPal order details:', data);
+      throw new Error('Failed to get PayPal order details');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error in getPayPalOrderDetails:', error);
+    throw error;
+  }
 }

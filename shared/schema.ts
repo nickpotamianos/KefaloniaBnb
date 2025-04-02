@@ -37,6 +37,7 @@ export const bookings = pgTable("bookings", {
   specialRequests: text("special_requests"),
   totalAmount: integer("total_amount").notNull(),  // in cents
   stripeSessionId: text("stripe_session_id"),
+  paypalOrderId: text("paypal_order_id"),
   paymentStatus: text("payment_status").default("pending").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull()
 });

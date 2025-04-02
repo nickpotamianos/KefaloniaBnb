@@ -15,13 +15,17 @@ import {
   validateBooking, 
   createCheckoutSession,
   verifyWebhookSignature,
-  getCheckoutSession
+  getCheckoutSession,
+  createPayPalOrder,
+  capturePayPalPayment,
+  getPayPalOrderDetails
 } from "./modules/payment/paymentService";
 import { 
   sendBookingConfirmation,
   sendOwnerNotification 
 } from "./modules/email/emailService";
 import bodyParser from 'body-parser';
+import { differenceInDays } from 'date-fns';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Availability calendar endpoint
@@ -182,6 +186,200 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to create checkout session. Please try again later."
+      });
+    }
+  });
+  
+  // Create PayPal order for booking
+  app.post("/api/create-paypal-order", async (req, res) => {
+    try {
+      // Validate booking request
+      const bookingData = req.body;
+      const validation = await validateBooking(bookingData);
+      
+      if (!validation.valid) {
+        return res.status(400).json({
+          success: false,
+          message: validation.message
+        });
+      }
+      
+      // Create PayPal order
+      const order = await createPayPalOrder(bookingData);
+      
+      if (!order || !order.id) {
+        return res.status(500).json({
+          success: false,
+          message: "Failed to create PayPal order"
+        });
+      }
+      
+      // Create a pending booking in database
+      const checkIn = new Date(bookingData.checkIn);
+      const checkOut = new Date(bookingData.checkOut);
+      
+      // Get the total amount from booking data calculation instead of relying on the order structure
+      const startDate = new Date(bookingData.checkIn);
+      const endDate = new Date(bookingData.checkOut);
+      const nights = differenceInDays(endDate, startDate);
+      const basePrice = nights * 200; // €200 per night (BASE_PRICE_PER_NIGHT)
+      const totalInEuros = basePrice + 60; // +€60 cleaning fee (CLEANING_FEE)
+      const totalAmount = Math.round(totalInEuros * 100); // Convert to cents
+      
+      const booking = await storage.createBooking({
+        checkIn,
+        checkOut,
+        name: bookingData.name!,
+        email: bookingData.email!,
+        phone: bookingData.phone,
+        guests: (bookingData.adults || 0) + (bookingData.children || 0),
+        adults: bookingData.adults!,
+        children: bookingData.children || 0,
+        specialRequests: bookingData.specialRequests,
+        totalAmount,
+        paypalOrderId: order.id,
+        paymentStatus: 'pending'
+      });
+      
+      res.json({
+        success: true,
+        orderId: order.id,
+        bookingId: booking.id,
+        approvalUrl: order.approvalUrl, // Send the PayPal approval URL to the client
+        links: order.links
+      });
+    } catch (error) {
+      console.error("PayPal order creation error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to create PayPal order. Please try again later."
+      });
+    }
+  });
+  
+  // Capture PayPal payment
+  app.post("/api/capture-paypal-payment", async (req, res) => {
+    try {
+      const { orderId } = req.body;
+      
+      if (!orderId) {
+        return res.status(400).json({
+          success: false,
+          message: "Order ID is required"
+        });
+      }
+      
+      // Capture the payment
+      const captureData = await capturePayPalPayment(orderId);
+      
+      if (captureData.status === "COMPLETED") {
+        // Find the booking with this order ID
+        const booking = await storage.getBookingByPayPalOrder(orderId);
+        
+        if (booking) {
+          // Update booking status
+          const updatedBooking = await storage.updateBookingStatus(booking.id, 'confirmed');
+          
+          if (updatedBooking) {
+            // Send confirmation emails
+            await Promise.all([
+              sendBookingConfirmation(updatedBooking),
+              sendOwnerNotification(updatedBooking)
+            ]);
+          }
+        }
+        
+        return res.json({
+          success: true,
+          captureData: captureData
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Payment capture failed"
+        });
+      }
+    } catch (error) {
+      console.error("PayPal payment capture error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to capture PayPal payment. Please try again later."
+      });
+    }
+  });
+  
+  // Get PayPal order details endpoint (for frontend to check if payment was successful)
+  app.get("/api/paypal-order/:orderId", async (req, res) => {
+    try {
+      const { orderId } = req.params;
+      
+      if (!orderId) {
+        return res.status(400).json({
+          success: false,
+          message: "Order ID is required"
+        });
+      }
+      
+      // Try to get booking from storage first
+      let booking = await storage.getBookingByPayPalOrder(orderId);
+      
+      if (!booking) {
+        // If booking not found in memory storage (e.g., after server restart)
+        // retrieve it from PayPal directly
+        try {
+          const orderDetails = await getPayPalOrderDetails(orderId);
+          
+          if (orderDetails && orderDetails.status) {
+            // Extract booking data from custom_id
+            const customData = JSON.parse(orderDetails.purchase_units[0].custom_id);
+            
+            // Create a booking object from PayPal order data
+            booking = {
+              id: `paypal-${orderId}`,
+              paypalOrderId: orderId,
+              checkIn: new Date(customData.checkIn),
+              checkOut: new Date(customData.checkOut),
+              name: customData.name,
+              email: customData.email,
+              phone: customData.phone,
+              adults: parseInt(customData.adults, 10),
+              children: parseInt(customData.children, 10),
+              guests: parseInt(customData.adults, 10) + parseInt(customData.children, 10),
+              specialRequests: customData.specialRequests,
+              paymentStatus: orderDetails.status === "COMPLETED" ? "confirmed" : "pending",
+              totalAmount: parseInt(customData.totalAmount, 10),
+              createdAt: new Date()
+            };
+            
+            // Save this reconstructed booking to memory
+            try {
+              await storage.createBooking(booking);
+            } catch (error) {
+              // Continue anyway since we already have the booking data
+              console.warn("Could not save reconstructed booking to storage");
+            }
+          }
+        } catch (paypalError) {
+          console.error('Error retrieving PayPal order', paypalError);
+        }
+      }
+      
+      if (booking) {
+        return res.json({
+          success: true,
+          booking: booking
+        });
+      } else {
+        return res.status(404).json({ 
+          success: false, 
+          message: "Could not retrieve booking details. Please contact support." 
+        });
+      }
+    } catch (error) {
+      console.error('PayPal order retrieval error', error);
+      return res.status(500).json({ 
+        success: false, 
+        message: "Could not retrieve booking details. Please contact support." 
       });
     }
   });
