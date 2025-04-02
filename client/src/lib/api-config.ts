@@ -1,7 +1,7 @@
 // API configuration for development and production environments
 
 // To test with Render during development, change this to true
-const USE_RENDER_FOR_TESTING = true;
+const USE_RENDER_FOR_TESTING = false;
 
 // For production, we'll use the Render API
 const USE_PRODUCTION_API = import.meta.env.PROD || USE_RENDER_FOR_TESTING;
@@ -25,4 +25,9 @@ export const API_ENDPOINTS = {
   CREATE_PAYPAL_ORDER: `${API_BASE_URL}/api/create-paypal-order`,
   CAPTURE_PAYPAL_PAYMENT: `${API_BASE_URL}/api/capture-paypal-payment`,
   PAYPAL_ORDER_DETAILS: `${API_BASE_URL}/api/paypal-order`,
+};
+
+// Stripe configuration
+export const STRIPE_CONFIG = {
+  PUBLISHABLE_KEY: import.meta.env.VITE_STRIPE_PUBLIC_KEY || ''
 };
