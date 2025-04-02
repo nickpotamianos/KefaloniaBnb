@@ -36,7 +36,9 @@ const ADDITIONAL_GUEST_FEE = 0;   // No additional guest fee
 const MIN_NIGHTS = 2;
 
 // Frontend URL for redirects
-const FRONTEND_URL = "http://localhost:3000";
+const FRONTEND_URL = process.env.NODE_ENV === 'production'
+  ? 'https://villakefalonia.potamianosgroup.com' // Production site URL
+  : 'http://localhost:3000';    // Development URL
 
 /**
  * Gets a PayPal access token for API calls
@@ -183,7 +185,7 @@ export async function createCheckoutSession(bookingData: BookingData): Promise<S
           product_data: {
             name: 'Kefalonia Vintage Home Booking',
             description: `${nights} nights, ${adults} adults, ${children || 0} children, Check-in: ${formattedCheckIn}, Check-out: ${formattedCheckOut}`,
-            images: ['https://kefalonia-bnb.com/images/logokef1.png'],
+            images: ['https://villakefalonia.potamianosgroup.com/images/logokef1.png'],
           },
           unit_amount: totalAmount,
         },
@@ -256,18 +258,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
   // Calculate base price and total amount the same way as Stripe
   const basePrice = nights * BASE_PRICE_PER_NIGHT;
   const totalInEuros = basePrice + CLEANING_FEE;
-  
-  // For PayPal, we need to ensure item_total matches exactly the sum of individual items
-  const basePriceFormatted = basePrice.toFixed(2);
-  const cleaningFeeFormatted = CLEANING_FEE.toFixed(2);
-  // Calculate item_total as the precise sum to avoid floating point issues
-  const itemTotal = (parseFloat(basePriceFormatted) + parseFloat(cleaningFeeFormatted)).toFixed(2);
-  
-  console.log('=== PAYPAL DEBUG INFO ===');
-  console.log(`Base price: €${basePriceFormatted}`);
-  console.log(`Cleaning fee: €${cleaningFeeFormatted}`);
-  console.log(`Item total: €${itemTotal}`);
-  console.log('=========================');
+  const totalAmount = totalInEuros.toFixed(2);
   
   try {
     const accessToken = await getPayPalAccessToken();
@@ -278,11 +269,15 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
         {
           amount: {
             currency_code: 'EUR',
-            value: itemTotal,
+            value: totalAmount,
             breakdown: {
               item_total: {
                 currency_code: 'EUR',
-                value: itemTotal
+                value: basePrice.toFixed(2)
+              },
+              shipping: {
+                currency_code: 'EUR',
+                value: CLEANING_FEE.toFixed(2)
               }
             }
           },
@@ -294,7 +289,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
               quantity: '1',
               unit_amount: {
                 currency_code: 'EUR',
-                value: basePriceFormatted
+                value: basePrice.toFixed(2)
               },
               category: 'DIGITAL_GOODS'
             },
@@ -303,7 +298,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
               quantity: '1',
               unit_amount: {
                 currency_code: 'EUR',
-                value: cleaningFeeFormatted
+                value: CLEANING_FEE.toFixed(2)
               },
               category: 'DIGITAL_GOODS'
             }
@@ -317,7 +312,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
             adults: adults.toString(),
             children: (children || 0).toString(),
             specialRequests: bookingData.specialRequests || '',
-            totalAmount: Math.round(parseFloat(itemTotal) * 100).toString()
+            totalAmount: Math.round(parseFloat(totalAmount) * 100).toString()
           })
         }
       ],

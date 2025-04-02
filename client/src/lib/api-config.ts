@@ -1,13 +1,19 @@
 // API configuration for development and production environments
 
-// For testing purposes, we'll use the Render backend even in development
-const USE_RENDER_API = true;
+// To test with Render during development, change this to true
+const USE_RENDER_FOR_TESTING = true;
+
+// For production, we'll use the Render API
+const USE_PRODUCTION_API = import.meta.env.PROD || USE_RENDER_FOR_TESTING;
 const isProduction = import.meta.env.PROD;
 
 // Base URL for API calls
-export const API_BASE_URL = USE_RENDER_API 
+export const API_BASE_URL = USE_PRODUCTION_API 
   ? 'https://kefalonia-api.onrender.com' // Your Render deployment URL
-  : 'http://localhost:3000';
+  : 'http://localhost:3000';             // Local development URL
+
+// Production domain for redirects
+export const PRODUCTION_DOMAIN = 'https://villakefalonia.potamianosgroup.com';
 
 // API endpoints
 export const API_ENDPOINTS = {
@@ -19,10 +25,4 @@ export const API_ENDPOINTS = {
   CREATE_PAYPAL_ORDER: `${API_BASE_URL}/api/create-paypal-order`,
   CAPTURE_PAYPAL_PAYMENT: `${API_BASE_URL}/api/capture-paypal-payment`,
   PAYPAL_ORDER_DETAILS: `${API_BASE_URL}/api/paypal-order`,
-};
-
-// Stripe configuration
-export const STRIPE_CONFIG = {
-  // Stripe public key will be injected from environment variables
-  PUBLISHABLE_KEY: import.meta.env.VITE_STRIPE_PUBLIC_KEY || '',
 };

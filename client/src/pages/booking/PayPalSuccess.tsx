@@ -16,8 +16,7 @@ const PayPalSuccess: React.FC = () => {
   useEffect(() => {
     const capturePayment = async () => {
       try {
-        // Get orderId from URL params 
-        // (note: bookingId is no longer needed as we'll get the booking by orderId)
+        // Get orderId from URL params (PayPal provides it as the "token" parameter)
         const params = new URLSearchParams(window.location.search);
         const orderId = params.get("token"); // PayPal sends token parameter after approval
         
@@ -27,12 +26,15 @@ const PayPalSuccess: React.FC = () => {
           return;
         }
         
+        console.log("Processing PayPal payment with order ID:", orderId);
+        
         // Capture the PayPal payment
         const captureResponse = await axios.post(API_ENDPOINTS.CAPTURE_PAYPAL_PAYMENT, {
           orderId
         });
         
         if (captureResponse.data.success) {
+          console.log("Payment captured successfully, fetching booking details");
           // Payment capture successful, get booking details
           const bookingResponse = await axios.get(`${API_ENDPOINTS.PAYPAL_ORDER_DETAILS}/${orderId}`);
           
