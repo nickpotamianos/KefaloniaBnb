@@ -237,11 +237,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { sessionId } = req.params;
       
-      console.log(`============ CHECKOUT SESSION REQUEST ============`);
-      console.log(`Received request for session: ${sessionId}`);
-      
       if (!sessionId) {
-        console.log(`No session ID provided in request`);
         return res.status(400).json({
           success: false,
           message: "Session ID is required"
@@ -249,28 +245,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       // Try to get booking from storage first
-      console.log(`Checking for booking in memory storage...`);
       let booking = await storage.getBookingByStripeSession(sessionId);
       
-      if (booking) {
-        console.log(`Booking found in memory storage:`, booking);
-      } else {
-        console.log(`No booking found in memory storage, fetching from Stripe...`);
-        
-        // Fetch session from Stripe
+      if (!booking) {
+        // If booking not found in memory storage (e.g., after server restart)
+        // retrieve it from Stripe directly
         try {
           const session = await getCheckoutSession(sessionId);
-          console.log(`Stripe session retrieved:`, {
-            id: session.id,
-            payment_status: session.payment_status,
-            metadata: session.metadata
-          });
           
-          // If the booking isn't found in storage (e.g., after server restart),
-          // reconstruct it from Stripe session metadata
+          // Reconstruct it from Stripe session metadata
           if (session && session.metadata) {
-            console.log(`Reconstructing booking from Stripe metadata...`);
-            
             // Create a booking object from Stripe metadata
             booking = {
               id: `stripe-${sessionId}`,
@@ -289,39 +273,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
               createdAt: new Date(session.created * 1000) // Convert UNIX timestamp to Date
             };
 
-            console.log(`Reconstructed booking:`, booking);
-
-            // Optionally save this reconstructed booking to memory
+            // Save this reconstructed booking to memory
             try {
               await storage.createBooking(booking);
-              console.log(`Saved reconstructed booking to memory storage`);
             } catch (error) {
-              console.warn(`Could not save reconstructed booking to storage:`, error);
               // Continue anyway since we already have the booking data
+              console.warn("Could not save reconstructed booking to storage");
             }
-          } else {
-            console.log(`Session metadata missing or incomplete:`, session);
           }
         } catch (stripeError) {
-          console.error(`Error retrieving Stripe session:`, stripeError);
+          console.error('Error retrieving Stripe session');
         }
       }
       
       if (booking) {
-        console.log(`Success: Returning booking details to client`);
         return res.json({
           success: true,
           booking: booking
         });
       } else {
-        console.log(`Error: No booking data found to return to client`);
         return res.status(404).json({ 
           success: false, 
           message: "Could not retrieve booking details. Please contact support." 
         });
       }
     } catch (error) {
-      console.error('Session retrieval error:', error);
+      console.error('Session retrieval error');
       return res.status(500).json({ 
         success: false, 
         message: "Could not retrieve booking details. Please contact support." 
