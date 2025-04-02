@@ -39,6 +39,9 @@ const FRONTEND_URL = process.env.NODE_ENV === 'production'
   ? 'https://villakefalonia.potamianosgroup.com' // Production site URL
   : 'http://localhost:3000';    // Development URL
 
+// Override FRONTEND_URL if testing with Render locally
+const TESTING_FRONTEND_URL = process.env.TESTING_FRONTEND_URL || FRONTEND_URL;
+
 /**
  * Gets a PayPal access token for API calls
  * @returns PayPal access token
@@ -328,8 +331,8 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
       ],
       application_context: {
         brand_name: 'Kefalonia Vintage Home',
-        return_url: `${FRONTEND_URL}/booking/paypal-success`,
-        cancel_url: `${FRONTEND_URL}/booking?cancelled=true`,
+        return_url: `${TESTING_FRONTEND_URL}/booking/paypal-success`,
+        cancel_url: `${TESTING_FRONTEND_URL}/booking?cancelled=true`,
         user_action: 'PAY_NOW',
         shipping_preference: 'NO_SHIPPING'
       }
