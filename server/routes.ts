@@ -187,6 +187,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Fetch the iCal feed
       const icalData = await fetchIcalFeed(url);
       
+      // Set CORS headers explicitly for this endpoint
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      
       // Return the raw iCal data
       res.setHeader('Content-Type', 'text/calendar');
       res.send(icalData);
