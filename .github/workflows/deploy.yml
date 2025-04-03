@@ -64,7 +64,7 @@ jobs:
           echo "CLEANING_FEE=60" >> .env
           echo "ADDITIONAL_GUEST_FEE=0" >> .env
           echo "MIN_NIGHTS=2" >> .env
-          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL || 'https://kefalonia-bnb.com' }}" >> .env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL || 'https://villakefalonia.potamianosgroup.com' }}" >> .env
       
       - name: Build application
         run: npm run build
