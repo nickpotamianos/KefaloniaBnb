@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
 import BookingPage from "@/pages/Booking";
 import BookingSuccessPage from "@/pages/booking/success";
-import PayPalSuccessPage from "@/pages/booking/PayPalSuccess";
+import PayPalSuccessPage from "@/pages/booking/paypal-success"; // Updated to use the enhanced version
 
 function Router() {
   return (

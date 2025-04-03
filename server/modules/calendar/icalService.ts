@@ -204,14 +204,14 @@ export async function generateICalFile(): Promise<string> {
       
       // Set start and end dates - for iCal export, end date should be exclusive
       // (the day after the last booked night)
-      const startDate = new ICAL.Time.fromJSDate(range.start, false);
+      const startDate = ICAL.Time.fromJSDate(range.start, false);
       // Add 1 day to end date to make it exclusive (standard for iCal format)
-      const endDate = new ICAL.Time.fromJSDate(addDays(range.end, 1), false);
+      const endDate = ICAL.Time.fromJSDate(addDays(range.end, 1), false);
       
       event.updatePropertyWithValue('dtstart', startDate);
       event.updatePropertyWithValue('dtend', endDate);
-      event.updatePropertyWithValue('dtstamp', new ICAL.Time.fromJSDate(new Date(), false));
-      event.updatePropertyWithValue('created', new ICAL.Time.fromJSDate(new Date(), false));
+      event.updatePropertyWithValue('dtstamp', ICAL.Time.fromJSDate(new Date(), false));
+      event.updatePropertyWithValue('created', ICAL.Time.fromJSDate(new Date(), false));
       
       // Set status
       event.updatePropertyWithValue('status', 'CONFIRMED');

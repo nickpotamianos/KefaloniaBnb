@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'wouter';
 import { format, differenceInDays } from 'date-fns';
-import { CheckCircle, Loader2, ChevronLeft, AlertCircle } from 'lucide-react';
+import { CheckCircle, Loader2, ChevronLeft, AlertCircle, Calendar, MapPin, Users, Phone, Mail, CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
@@ -16,12 +16,11 @@ const PayPalSuccessPage: React.FC = () => {
   
   useEffect(() => {
     const capturePayment = async () => {
-      // Extract order ID and booking ID from URL
+      // Extract order ID from URL - PayPal provides it as the "token" parameter
       const params = new URLSearchParams(window.location.search);
-      const orderId = params.get('orderId');
-      const bookingId = params.get('bookingId');
+      const orderId = params.get('token'); // PayPal sends token parameter after approval
       
-      if (!orderId || !bookingId) {
+      if (!orderId) {
         setError('Missing order information. Please contact support.');
         setLoading(false);
         return;
@@ -30,13 +29,12 @@ const PayPalSuccessPage: React.FC = () => {
       try {
         // Capture the PayPal payment
         const captureResponse = await axios.post(API_ENDPOINTS.CAPTURE_PAYPAL_PAYMENT, {
-          orderId,
-          bookingId
+          orderId
         });
         
         if (captureResponse.data.success) {
           // Get the booking details
-          const bookingResponse = await axios.get(`${API_ENDPOINTS.PAYPAL_ORDER}/${orderId}`);
+          const bookingResponse = await axios.get(`${API_ENDPOINTS.PAYPAL_ORDER_DETAILS}/${orderId}`);
           
           if (bookingResponse.data.success && bookingResponse.data.booking) {
             setBooking(bookingResponse.data.booking);
@@ -71,8 +69,22 @@ const PayPalSuccessPage: React.FC = () => {
   
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center bg-gray-50">
+        {/* Background video with overlay */}
+        <div className="absolute inset-0 z-0 overflow-hidden opacity-40">
+          <video
+            autoPlay
+            muted
+            loop
+            className="w-full h-full object-cover"
+            poster="/images/myrtos.jpg"
+          >
+            <source src="/images/booking.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gray-900 opacity-40"></div>
+        </div>
+        
+        <div className="relative z-10 text-center max-w-md mx-auto p-8 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-white/20">
           <div className="flex justify-center mb-4">
             <AlertCircle size={64} className="text-red-500" />
           </div>
@@ -95,40 +107,163 @@ const PayPalSuccessPage: React.FC = () => {
     const stayNights = differenceInDays(checkOutDate, checkInDate);
     
     return (
-      <div className="max-w-3xl mx-auto p-6 md:p-10">
+      <div className="min-h-screen relative overflow-hidden pb-12">
         <Helmet>
           <title>Booking Confirmed | Kefalonia Vintage Home</title>
         </Helmet>
         
-        <div className="text-center mb-10 p-8 bg-green-50 rounded-xl">
-          <div className="flex justify-center mb-4">
-            <CheckCircle size={64} className="text-green-500" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Booking Confirmed!</h1>
-          <p className="mt-4 text-gray-600">
-            Thank you {booking.name}! Your reservation has been confirmed. A confirmation email has been sent to {booking.email}.
-          </p>
-          <div className="mt-6 p-6 bg-white rounded-lg shadow-sm">
-            <h2 className="font-bold text-lg text-gray-800 mb-4">Booking Details:</h2>
-            <div className="space-y-2 text-left">
-              <p><strong>Check-in:</strong> {format(checkInDate, 'MMMM d, yyyy')}</p>
-              <p><strong>Check-out:</strong> {format(checkOutDate, 'MMMM d, yyyy')}</p>
-              <p><strong>Nights:</strong> {stayNights}</p>
-              <p><strong>Adults:</strong> {booking.adults}</p>
-              <p><strong>Children:</strong> {booking.children}</p>
-              <p><strong>Total Guests:</strong> {booking.guests}</p>
-              <p><strong>Total Amount:</strong> €{booking.total}</p>
-              {booking.specialRequests && (
-                <p><strong>Special Requests:</strong> {booking.specialRequests}</p>
-              )}
-            </div>
-          </div>
-          <Button 
-            className="mt-8 bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90"
-            onClick={() => window.location.href = "/"}
+        {/* Background video with overlay */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            className="w-full h-full object-cover"
+            poster="/images/myrtos.jpg"
           >
-            Back to Homepage
-          </Button>
+            <source src="/images/booking.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-[var(--primary-blue)] opacity-50"></div>
+        </div>
+        
+        {/* Content */}
+        <div className="container relative z-10 max-w-4xl mx-auto px-4 pt-10">
+          {/* Back link */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-6"
+          >
+            <a 
+              href="/"
+              className="inline-flex items-center text-sm text-white hover:text-gray-100 mb-6 bg-white/10 backdrop-blur-sm py-2 px-4 rounded-full"
+            >
+              <ChevronLeft className="h-4 w-4 mr-1" />
+              Back to home
+            </a>
+          </motion.div>
+
+          {/* Main confirmation card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="bg-white/95 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden border border-white/20"
+          >
+            {/* Success header */}
+            <div className="p-8 md:p-10 bg-gradient-to-r from-green-50 to-blue-50 flex flex-col items-center text-center">
+              <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center mb-6 shadow-md">
+                <CheckCircle size={48} className="text-green-500" />
+              </div>
+              <h1 className="text-3xl md:text-4xl font-bold text-[var(--deep-blue)]">Booking Confirmed!</h1>
+              <p className="mt-3 text-lg text-gray-700">
+                Thank you for booking with Kefalonia Vintage Home.
+              </p>
+              <div className="mt-6 py-2 px-4 bg-blue-50 rounded-full text-sm text-[var(--primary-blue)] font-medium inline-flex items-center">
+                <Mail className="h-4 w-4 mr-2" /> A confirmation email has been sent to {booking.email}
+              </div>
+            </div>
+            
+            {/* Booking details */}
+            <div className="p-8 md:p-10">
+              <div className="mb-10">
+                <h2 className="text-2xl font-semibold text-[var(--deep-blue)] mb-6 border-b pb-3">Your Booking Details</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex items-start space-x-4">
+                    <Calendar className="h-5 w-5 text-[var(--terracotta)] mt-1" />
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">Check-in</h3>
+                      <p className="text-lg font-medium text-gray-800">{format(checkInDate, 'EEEE, MMMM d, yyyy')}</p>
+                      <p className="text-sm text-gray-600">After 3:00 PM</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <Calendar className="h-5 w-5 text-[var(--terracotta)] mt-1" />
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">Check-out</h3>
+                      <p className="text-lg font-medium text-gray-800">{format(checkOutDate, 'EEEE, MMMM d, yyyy')}</p>
+                      <p className="text-sm text-gray-600">Before 11:00 AM</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <Users className="h-5 w-5 text-[var(--terracotta)] mt-1" />
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">Guests</h3>
+                      <p className="text-gray-800">{booking.adults} adult{booking.adults !== 1 ? 's' : ''}, {booking.children} child{booking.children !== 1 ? 'ren' : ''}</p>
+                      <p className="text-sm text-gray-600">{stayNights} night{stayNights !== 1 ? 's' : ''} stay</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4">
+                    <MapPin className="h-5 w-5 text-[var(--terracotta)] mt-1" />
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">Property</h3>
+                      <p className="text-gray-800">Kefalonia Vintage Home</p>
+                      <p className="text-sm text-gray-600">Fiscardo, Kefalonia, Greece</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-4 md:col-span-2">
+                    <CreditCard className="h-5 w-5 text-[var(--terracotta)] mt-1" />
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500">Payment</h3>
+                      <p className="text-xl font-bold text-[var(--deep-blue)]">€{booking.total}</p>
+                      <p className="text-sm text-gray-600">Paid with PayPal</p>
+                    </div>
+                  </div>
+                  
+                  {booking.specialRequests && (
+                    <div className="md:col-span-2 mt-2 p-4 bg-gray-50 rounded-lg">
+                      <h3 className="text-sm font-medium text-gray-500 mb-2">Your Special Requests</h3>
+                      <p className="text-gray-700 italic">"{booking.specialRequests}"</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              {/* What's next information */}
+              <div className="bg-blue-50 p-6 rounded-xl">
+                <h2 className="text-xl font-semibold text-[var(--deep-blue)] mb-4">What's Next?</h2>
+                <ul className="space-y-4">
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 mt-0.5">
+                      <span className="text-[var(--primary-blue)] text-sm font-bold">1</span>
+                    </div>
+                    <p className="text-gray-700">You'll receive a <strong>detailed confirmation email</strong> with your booking details.</p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 mt-0.5">
+                      <span className="text-[var(--primary-blue)] text-sm font-bold">2</span>
+                    </div>
+                    <p className="text-gray-700"><strong>Three days before your arrival</strong>, we'll send check-in instructions and directions to the property.</p>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="flex-shrink-0 h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center mr-3 mt-0.5">
+                      <span className="text-[var(--primary-blue)] text-sm font-bold">3</span>
+                    </div>
+                    <p className="text-gray-700">A <strong>welcome basket</strong> with local Kefalonian treats will be waiting for you upon arrival.</p>
+                  </li>
+                </ul>
+              </div>
+              
+              {/* Contact and action buttons */}
+              <div className="mt-8 flex flex-col md:flex-row md:justify-between items-center">
+                <div className="text-center md:text-left mb-6 md:mb-0">
+                  <p className="text-sm text-gray-500">Questions about your booking?</p>
+                  <p className="text-[var(--primary-blue)]">Contact us at <a href="mailto:nick.potamianos@gmail.com" className="font-medium">nick.potamianos@gmail.com</a></p>
+                </div>
+                <Button 
+                  className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 min-w-[200px]"
+                  onClick={() => window.location.href = "/"}
+                >
+                  Return to Homepage
+                </Button>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     );
