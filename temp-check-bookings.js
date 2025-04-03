@@ -1,1 +1,0 @@
-console.log('Checking stored bookings...'); require('./server/storage').storage.getAllBookings().then(bookings => console.log(JSON.stringify(bookings, null, 2))).catch(err => console.error('Error:', err));

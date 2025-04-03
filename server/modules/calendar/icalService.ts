@@ -236,6 +236,18 @@ export async function isDateRangeAvailable(startDate: Date, endDate: Date): Prom
  * @returns Array of blocked date ranges
  */
 export async function getBlockedDateRanges(): Promise<DateRange[]> {
+  // Debug: print all direct bookings including non-confirmed ones
+  try {
+    const allDirectBookings = await storage.getAllBookings();
+    console.log('===== DEBUG: ALL DIRECT BOOKINGS IN STORAGE =====');
+    allDirectBookings.forEach(booking => {
+      console.log(`Booking ID: ${booking.id}, Name: ${booking.name}, Check-in: ${new Date(booking.checkIn).toLocaleDateString()}, Check-out: ${new Date(booking.checkOut).toLocaleDateString()}, Status: ${booking.paymentStatus}`);
+    });
+    console.log('=================================================');
+  } catch (error) {
+    console.error('Error in debug log:', error);
+  }
+  
   return await getAllBookedDateRanges();
 }
 
