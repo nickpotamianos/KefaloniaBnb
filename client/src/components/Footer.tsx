@@ -265,7 +265,14 @@ const Footer = () => {
                       href="tel:+306948201383" 
                       className="text-white hover:text-[var(--sea-blue)] transition-colors duration-300"
                     >
-                      +30 694 820 1383
+                      +30 694 820 1383 (Alex)
+                    </a>
+                    <br />
+                    <a 
+                      href="tel:+306986792378" 
+                      className="text-white hover:text-[var(--sea-blue)] transition-colors duration-300"
+                    >
+                      +30 698 679 2378 (Nick)
                     </a>
                   </div>
                 </li>

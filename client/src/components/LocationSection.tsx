@@ -148,7 +148,7 @@ const LocationSection = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Transportation</h4>
-                      <p className="text-gray-600">Car rental recommended for exploring the island. We can arrange airport transfers upon request.</p>
+                      <p className="text-gray-600">Car rental recommended for exploring the island.</p>
                     </div>
                   </div>
                 </div>
