@@ -13,23 +13,19 @@ const app = express();
 // Get the environment
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Add explicit CORS headers for all routes
-app.use((req, res, next) => {
-  // Get the origin from the request or use a wildcard as fallback
-  const origin = req.headers.origin || '*';
-  
-  // Allow the specific origin that made the request (or all origins with *)
-  res.header("Access-Control-Allow-Origin", origin);
-  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization, stripe-signature");
-  res.header("Access-Control-Allow-Credentials", "true");
-  
-  // Handle preflight requests
-  if (req.method === 'OPTIONS') {
-    return res.status(204).end();
-  }
-  next();
-});
+// Configure CORS
+const corsOptions = {
+  origin: isProduction 
+    ? ['https://kefalonia-bnb.gr', 'https://www.kefalonia-bnb.gr']
+    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'stripe-signature'],
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+// Use the cors middleware with our options
+app.use(cors(corsOptions));
 
 // Parse JSON for regular routes
 app.use((req, res, next) => {

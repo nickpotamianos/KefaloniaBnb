@@ -12,7 +12,8 @@ import {
   isDateRangeAvailable,
   syncBookingToExternalCalendars,
   syncFromExternalCalendars,
-  cancelBookingInCalendar
+  cancelBookingInCalendar,
+  fetchIcalFeed
 } from "./modules/calendar/icalService";
 import { 
   validateBooking, 
@@ -167,6 +168,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to check availability. Please try again later."
+      });
+    }
+  });
+  
+  // Calendar proxy endpoint to avoid CORS issues
+  app.get("/api/calendar/proxy", async (req, res) => {
+    try {
+      const url = req.query.url as string;
+      
+      if (!url) {
+        return res.status(400).json({
+          success: false,
+          message: "URL parameter is required"
+        });
+      }
+      
+      // Fetch the iCal feed
+      const icalData = await fetchIcalFeed(url);
+      
+      // Return the raw iCal data
+      res.setHeader('Content-Type', 'text/calendar');
+      res.send(icalData);
+    } catch (error) {
+      console.error("Calendar proxy error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch calendar data. Please try again later."
       });
     }
   });

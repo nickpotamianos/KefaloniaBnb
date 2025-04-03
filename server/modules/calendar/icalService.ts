@@ -3,6 +3,7 @@ import ICAL from 'ical.js';
 import fetch from 'node-fetch';
 import { differenceInDays, addDays, isBefore, isAfter, isEqual } from 'date-fns';
 import { Booking } from '@shared/schema';
+import axios from 'axios';
 
 // External calendar URLs (these could be moved to environment variables)
 const CALENDAR_URLS = [
@@ -26,6 +27,29 @@ interface DateRange {
 }
 
 /**
+ * Fetches an iCal feed from a given URL
+ * 
+ * @param url The URL of the iCal feed to fetch
+ * @returns The iCal data as a string
+ */
+export async function fetchIcalFeed(url: string): Promise<string> {
+  try {
+    const response = await axios.get(url, {
+      timeout: 10000, // 10 second timeout
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/calendar,text/plain,application/octet-stream'
+      }
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching iCal feed from ${url}:`, error);
+    throw new Error(`Failed to fetch iCal feed: ${(error as Error).message}`);
+  }
+}
+
+/**
  * Fetches iCal data from all external calendars
  * @returns Array of iCal data as strings
  */
@@ -33,12 +57,8 @@ async function fetchExternalCalendars(): Promise<string[]> {
   try {
     const icalPromises = CALENDAR_URLS.map(async (url) => {
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          console.error(`Failed to fetch from ${url}: ${response.statusText}`);
-          return "";
-        }
-        return response.text();
+        const response = await fetchIcalFeed(url);
+        return response;
       } catch (error) {
         console.error(`Error fetching from ${url}:`, error);
         return "";

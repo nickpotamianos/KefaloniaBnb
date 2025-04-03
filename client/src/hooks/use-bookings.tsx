@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { isWithinInterval, isSameDay } from "date-fns";
 import ICAL from "ical.js";
+import { API_BASE_URL } from "../lib/api-config";
 
 export type BookingEvent = {
   startDate: Date;
@@ -16,8 +17,8 @@ const CALENDAR_URLS = [
   //"https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
 ];
 
-// For development, use AllOrigins as a CORS proxy
-const corsProxyUrl = "https://api.allorigins.win/raw?url=";
+// Use our server-side proxy instead of AllOrigins
+const useServerProxy = true;
 
 export const useBookings = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -36,16 +37,30 @@ export const useBookings = () => {
         // Process each calendar URL
         for (const url of CALENDAR_URLS) {
           try {
-            // Use the CORS proxy to fetch the iCal feed
-            const encodedUrl = encodeURIComponent(url);
-            const response = await fetch(`${corsProxyUrl}${encodedUrl}`);
+            let icalData: string;
             
-            if (!response.ok) {
-              console.error(`Failed to fetch from ${url}: ${response.statusText}`);
-              continue;
+            if (useServerProxy) {
+              // Use our server-side proxy endpoint
+              const encodedUrl = encodeURIComponent(url);
+              const response = await fetch(`${API_BASE_URL}/api/calendar/proxy?url=${encodedUrl}`);
+              
+              if (!response.ok) {
+                console.error(`Failed to fetch from ${url} via server proxy: ${response.statusText}`);
+                continue;
+              }
+              
+              icalData = await response.text();
+            } else {
+              // Fallback to direct fetch (which will likely fail due to CORS)
+              const response = await fetch(url);
+              
+              if (!response.ok) {
+                console.error(`Failed to fetch from ${url}: ${response.statusText}`);
+                continue;
+              }
+              
+              icalData = await response.text();
             }
-            
-            const icalData = await response.text();
             
             // Parse the iCal data
             try {
