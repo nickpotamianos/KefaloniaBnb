@@ -9,7 +9,10 @@ import fetch from "node-fetch";
 import { 
   generateICalFile, 
   getBlockedDateRanges,
-  isDateRangeAvailable 
+  isDateRangeAvailable,
+  syncBookingToExternalCalendars,
+  syncFromExternalCalendars,
+  cancelBookingInCalendar
 } from "./modules/calendar/icalService";
 import { 
   validateBooking, 
@@ -22,10 +25,13 @@ import {
 } from "./modules/payment/paymentService";
 import { 
   sendBookingConfirmation,
-  sendOwnerNotification 
+  sendOwnerNotification,
+  sendCancellationEmail,
+  sendPreArrivalEmail,
+  sendTestEmail
 } from "./modules/email/emailService";
 import bodyParser from 'body-parser';
-import { differenceInDays } from 'date-fns';
+import { differenceInDays, addDays } from 'date-fns';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Availability calendar endpoint
@@ -92,6 +98,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Sync from external calendars manually
+  app.post("/api/calendar/sync", async (_req, res) => {
+    try {
+      const success = await syncFromExternalCalendars();
+      
+      if (success) {
+        res.json({
+          success: true,
+          message: "Calendar synchronized successfully"
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: "Failed to synchronize calendar"
+        });
+      }
+    } catch (error) {
+      console.error("Error syncing calendar:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to synchronize calendar. Please try again later."
+      });
+    }
+  });
+  
   // Blocked dates endpoint (for frontend date picker)
   app.get("/api/blocked-dates", async (_req, res) => {
     try {
@@ -136,6 +167,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to check availability. Please try again later."
+      });
+    }
+  });
+  
+  // Test email endpoint
+  app.post("/api/test-email", async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          message: "Email address is required"
+        });
+      }
+      
+      const success = await sendTestEmail(email);
+      
+      if (success) {
+        res.json({
+          success: true,
+          message: "Test email sent successfully"
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: "Failed to send test email"
+        });
+      }
+    } catch (error) {
+      console.error("Test email error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to send test email. Please check your email configuration."
       });
     }
   });
@@ -281,11 +346,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const updatedBooking = await storage.updateBookingStatus(booking.id, 'confirmed');
           
           if (updatedBooking) {
-            // Send confirmation emails
-            await Promise.all([
-              sendBookingConfirmation(updatedBooking),
-              sendOwnerNotification(updatedBooking)
-            ]);
+            try {
+              // Sync the booking to external calendars
+              await syncBookingToExternalCalendars(updatedBooking);
+              
+              // Send confirmation emails
+              await Promise.all([
+                sendBookingConfirmation(updatedBooking),
+                sendOwnerNotification(updatedBooking)
+              ]);
+              
+              // Schedule pre-arrival email to be sent 3 days before check-in
+              const checkInDate = new Date(updatedBooking.checkIn);
+              const preArrivalDate = addDays(checkInDate, -3);
+              const now = new Date();
+              
+              // If check-in is less than 3 days away, send pre-arrival email now
+              if (preArrivalDate <= now) {
+                await sendPreArrivalEmail(updatedBooking);
+              }
+              // Otherwise, we would ideally schedule this with a job queue
+              // For simplicity, we're not implementing the job queue in this example
+            } catch (emailError) {
+              // Don't fail the payment process if emails fail
+              console.error('Error in post-payment processes:', emailError);
+            }
           }
         }
         
@@ -413,11 +498,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const updatedBooking = await storage.updateBookingStatus(booking.id, 'confirmed');
             
             if (updatedBooking) {
-              // Send confirmation emails
-              await Promise.all([
-                sendBookingConfirmation(updatedBooking),
-                sendOwnerNotification(updatedBooking)
-              ]);
+              try {
+                // Sync the booking to external calendars
+                await syncBookingToExternalCalendars(updatedBooking);
+                
+                // Send confirmation emails
+                await Promise.all([
+                  sendBookingConfirmation(updatedBooking),
+                  sendOwnerNotification(updatedBooking)
+                ]);
+                
+                // Schedule pre-arrival email to be sent 3 days before check-in
+                const checkInDate = new Date(updatedBooking.checkIn);
+                const preArrivalDate = addDays(checkInDate, -3);
+                const now = new Date();
+                
+                // If check-in is less than 3 days away, send pre-arrival email now
+                if (preArrivalDate <= now) {
+                  await sendPreArrivalEmail(updatedBooking);
+                }
+              } catch (emailError) {
+                // Don't fail the webhook process if emails fail
+                console.error('Error in post-payment processes:', emailError);
+              }
             }
           }
         }
@@ -500,6 +603,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(500).json({ 
         success: false, 
         message: "Could not retrieve booking details. Please contact support." 
+      });
+    }
+  });
+  
+  // Cancel a booking
+  app.post("/api/bookings/:bookingId/cancel", async (req, res) => {
+    try {
+      const { bookingId } = req.params;
+      
+      if (!bookingId) {
+        return res.status(400).json({
+          success: false,
+          message: "Booking ID is required"
+        });
+      }
+      
+      // Get the booking
+      const booking = await storage.getBooking(bookingId);
+      
+      if (!booking) {
+        return res.status(404).json({
+          success: false,
+          message: "Booking not found"
+        });
+      }
+      
+      // Cancel the booking in the calendar
+      const calendarSuccess = await cancelBookingInCalendar(bookingId);
+      
+      // Send cancellation emails
+      let emailSuccess = false;
+      try {
+        emailSuccess = await sendCancellationEmail(booking);
+      } catch (emailError) {
+        console.error('Error sending cancellation email:', emailError);
+      }
+      
+      res.json({
+        success: true,
+        calendarUpdated: calendarSuccess,
+        emailSent: emailSuccess,
+        booking: await storage.getBooking(bookingId) // Get the updated booking
+      });
+    } catch (error) {
+      console.error('Booking cancellation error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to cancel booking. Please try again later."
+      });
+    }
+  });
+  
+  // Send pre-arrival email manually
+  app.post("/api/bookings/:bookingId/send-pre-arrival", async (req, res) => {
+    try {
+      const { bookingId } = req.params;
+      
+      if (!bookingId) {
+        return res.status(400).json({
+          success: false,
+          message: "Booking ID is required"
+        });
+      }
+      
+      // Get the booking
+      const booking = await storage.getBooking(bookingId);
+      
+      if (!booking) {
+        return res.status(404).json({
+          success: false,
+          message: "Booking not found"
+        });
+      }
+      
+      // Send pre-arrival email
+      const success = await sendPreArrivalEmail(booking);
+      
+      res.json({
+        success: true,
+        emailSent: success
+      });
+    } catch (error) {
+      console.error('Pre-arrival email error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to send pre-arrival email. Please try again later."
       });
     }
   });

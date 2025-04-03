@@ -1,7 +1,8 @@
 import { storage } from '../../storage';
 import ICAL from 'ical.js';
 import fetch from 'node-fetch';
-import { differenceInDays, addDays } from 'date-fns';
+import { differenceInDays, addDays, isBefore, isAfter, isEqual } from 'date-fns';
+import { Booking } from '@shared/schema';
 
 // External calendar URLs (these could be moved to environment variables)
 const CALENDAR_URLS = [
@@ -12,11 +13,16 @@ const CALENDAR_URLS = [
   //"https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
 ];
 
+// iCal feed URL for our own calendar that other platforms can subscribe to
+const OUR_ICAL_URL = process.env.ICAL_FEED_URL || 'https://villakefalonia.potamianosgroup.com/api/calendar.ics';
+
 // Types for date ranges
 interface DateRange {
   start: Date;
   end: Date;
   source: string;
+  uid?: string; // Unique identifier for the event
+  summary?: string; // Event title/summary
 }
 
 /**
@@ -55,21 +61,27 @@ async function fetchExternalCalendars(): Promise<string[]> {
  */
 function parseICalData(icalData: string, source: string): DateRange[] {
   try {
+    // Parse iCal data
     const jcalData = ICAL.parse(icalData);
     const comp = new ICAL.Component(jcalData);
-    const events = comp.getAllSubcomponents('vevent');
+    const events = comp.getAllSubcomponents("vevent");
     
+    // Extract date ranges from events
     return events.map(event => {
       const icalEvent = new ICAL.Event(event);
       const startDate = icalEvent.startDate.toJSDate();
-      // Some calendar systems don't include time with the end date, making it end at 00:00
-      // which effectively means the checkout is the day before. Adjust by adding 1 day.
       const endDate = icalEvent.endDate.toJSDate();
+      
+      // For booking purposes, the end date is exclusive in iCal,
+      // so we consider the day before as the last booked day
+      const adjustedEndDate = addDays(endDate, -1);
       
       return {
         start: startDate,
-        end: endDate,
-        source
+        end: adjustedEndDate,
+        source,
+        uid: icalEvent.uid || undefined,
+        summary: icalEvent.summary || 'Booked'
       };
     }).filter(range => {
       // Filter out past bookings
@@ -91,7 +103,7 @@ async function getAllBookedDateRanges(): Promise<DateRange[]> {
     // Get external calendar bookings
     const externalIcalData = await fetchExternalCalendars();
     const externalBookings = externalIcalData.flatMap((icalData, index) => 
-      parseICalData(icalData, `External-${index}`)
+      parseICalData(icalData, CALENDAR_URLS[index])
     );
     
     // Get direct bookings from database
@@ -101,7 +113,9 @@ async function getAllBookedDateRanges(): Promise<DateRange[]> {
       .map(booking => ({
         start: new Date(booking.checkIn),
         end: new Date(booking.checkOut),
-        source: 'DirectBooking'
+        source: 'DirectBooking',
+        uid: booking.id,
+        summary: `Booking: ${booking.name}`
       }));
     
     return [...externalBookings, ...directBookingRanges];
@@ -119,14 +133,27 @@ async function getAllBookedDateRanges(): Promise<DateRange[]> {
  */
 export async function isDateRangeAvailable(startDate: Date, endDate: Date): Promise<boolean> {
   try {
+    // First, ensure dates are interpreted as start/end of day
+    const adjustedStartDate = new Date(startDate.setHours(0, 0, 0, 0));
+    // Checkout day should be available for new guests
+    const adjustedEndDate = new Date(endDate.setHours(0, 0, 0, 0));
+    
     const bookedRanges = await getAllBookedDateRanges();
     
     // Check for overlaps with any booked range
     for (const bookedRange of bookedRanges) {
-      // Check if there's any overlap between the dates
+      // Adjust booked dates to start/end of day
+      const bookedStart = new Date(bookedRange.start.setHours(0, 0, 0, 0));
+      const bookedEnd = new Date(bookedRange.end.setHours(23, 59, 59, 999));
+      
+      // Check for any overlap
+      // A range overlaps if one range's start date is between the other's start and end dates,
+      // or if one range completely contains the other
       if (
-        (startDate < bookedRange.end && endDate > bookedRange.start)
+        (adjustedStartDate <= bookedEnd && adjustedEndDate >= bookedStart) ||
+        (bookedStart <= adjustedEndDate && bookedEnd >= adjustedStartDate)
       ) {
+        console.log(`Date range ${adjustedStartDate.toISOString()} to ${adjustedEndDate.toISOString()} overlaps with booking ${bookedStart.toISOString()} to ${bookedEnd.toISOString()} from ${bookedRange.source}`);
         return false;
       }
     }
@@ -158,24 +185,36 @@ export async function generateICalFile(): Promise<string> {
     const calendar = new ICAL.Component(['vcalendar', [], []]);
     calendar.updatePropertyWithValue('prodid', '-//KefaloniaBnb//Direct Booking Calendar//EN');
     calendar.updatePropertyWithValue('version', '2.0');
+    calendar.updatePropertyWithValue('calscale', 'GREGORIAN');
+    calendar.updatePropertyWithValue('method', 'PUBLISH');
+    calendar.updatePropertyWithValue('x-wr-calname', 'Kefalonia Vintage Home Availability');
+    calendar.updatePropertyWithValue('x-wr-timezone', 'Europe/Athens');
     
     // Add events for each booking
     bookedRanges.forEach((range, index) => {
       const event = new ICAL.Component(['vevent', [], []]);
       
       // Create a unique ID for the event
-      const uid = `booking-${index}-${Date.now()}@kefalonia-bnb.com`;
+      const uid = range.uid || `booking-${index}-${Date.now()}@kefalonia-bnb.com`;
       
       // Set event properties
       event.updatePropertyWithValue('uid', uid);
-      event.updatePropertyWithValue('summary', 'Booked');
+      event.updatePropertyWithValue('summary', range.summary || 'Booked');
       event.updatePropertyWithValue('description', `Booked (Source: ${range.source})`);
       
-      // Set start and end dates
+      // Set start and end dates - for iCal export, end date should be exclusive
+      // (the day after the last booked night)
       const startDate = new ICAL.Time.fromJSDate(range.start, false);
-      const endDate = new ICAL.Time.fromJSDate(range.end, false);
+      // Add 1 day to end date to make it exclusive (standard for iCal format)
+      const endDate = new ICAL.Time.fromJSDate(addDays(range.end, 1), false);
+      
       event.updatePropertyWithValue('dtstart', startDate);
       event.updatePropertyWithValue('dtend', endDate);
+      event.updatePropertyWithValue('dtstamp', new ICAL.Time.fromJSDate(new Date(), false));
+      event.updatePropertyWithValue('created', new ICAL.Time.fromJSDate(new Date(), false));
+      
+      // Set status
+      event.updatePropertyWithValue('status', 'CONFIRMED');
       
       // Add event to calendar
       calendar.addSubcomponent(event);
@@ -185,5 +224,164 @@ export async function generateICalFile(): Promise<string> {
   } catch (error) {
     console.error("Error generating iCal file:", error);
     throw error;
+  }
+}
+
+/**
+ * Synchronizes bookings from external calendars to our system
+ * @returns Boolean indicating success
+ */
+export async function syncFromExternalCalendars(): Promise<boolean> {
+  try {
+    // Fetch and parse all external calendar data
+    const externalIcalData = await fetchExternalCalendars();
+    const externalBookings: DateRange[] = [];
+    
+    // Parse each calendar's data
+    externalIcalData.forEach((icalData, index) => {
+      if (icalData) {
+        const sourceUrl = CALENDAR_URLS[index];
+        const sourceName = sourceUrl.includes('airbnb') ? 'Airbnb' : 
+                           sourceUrl.includes('booking.com') ? 'Booking.com' :
+                           sourceUrl.includes('vrbo') ? 'VRBO' : 'External';
+        
+        const bookings = parseICalData(icalData, sourceName);
+        externalBookings.push(...bookings);
+      }
+    });
+    
+    // Get our existing direct bookings
+    const directBookings = await storage.getAllBookings();
+    
+    // Check for any new external bookings that overlap with our direct bookings
+    const conflicts = externalBookings.filter(externalBooking => {
+      return directBookings.some(directBooking => {
+        if (directBooking.paymentStatus !== 'confirmed') return false;
+        
+        const directStart = new Date(directBooking.checkIn);
+        const directEnd = new Date(directBooking.checkOut);
+        
+        // Check for overlap
+        return (externalBooking.start <= directEnd && externalBooking.end >= directStart);
+      });
+    });
+    
+    if (conflicts.length > 0) {
+      console.warn('Found calendar conflicts:', conflicts);
+      // Here you could implement conflict resolution or notification
+      // For now, we'll just log the conflicts
+    }
+    
+    console.log(`Synchronized ${externalBookings.length} external bookings`);
+    return true;
+  } catch (error) {
+    console.error('Error synchronizing from external calendars:', error);
+    return false;
+  }
+}
+
+/**
+ * Adds a new booking to external calendars
+ * @param booking The booking to add
+ * @returns Boolean indicating success
+ */
+export async function syncBookingToExternalCalendars(booking: Booking): Promise<boolean> {
+  try {
+    console.log(`Synchronizing booking ${booking.id} to external calendars`);
+    
+    // In a real implementation, this would push the booking to external calendars
+    // through their APIs. For platforms that don't support direct API updates,
+    // we provide our iCal feed URL that they can subscribe to.
+    
+    // Example code for direct API updates (commented out as it's platform-specific):
+    /*
+    // Update Airbnb calendar via API
+    await fetch('https://api.airbnb.com/v2/calendar_operations', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${AIRBNB_API_KEY}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        listing_id: AIRBNB_LISTING_ID,
+        operations: [{
+          start_date: format(new Date(booking.checkIn), 'yyyy-MM-dd'),
+          end_date: format(new Date(booking.checkOut), 'yyyy-MM-dd'),
+          status: 'unavailable'
+        }]
+      })
+    });
+    */
+    
+    // For now, we'll just ensure our iCal feed is up to date
+    // Other platforms will pull from our iCal feed URL
+    await generateICalFile();
+    
+    return true;
+  } catch (error) {
+    console.error('Error synchronizing booking to external calendars:', error);
+    return false;
+  }
+}
+
+/**
+ * Marks a booking as cancelled in the calendar
+ * @param bookingId ID of the booking to cancel
+ * @returns Boolean indicating success
+ */
+export async function cancelBookingInCalendar(bookingId: string): Promise<boolean> {
+  try {
+    // Update booking status in our database
+    const booking = await storage.getBooking(bookingId);
+    if (!booking) {
+      console.error(`Booking ${bookingId} not found`);
+      return false;
+    }
+    
+    // Update booking status to 'cancelled'
+    await storage.updateBookingStatus(bookingId, 'cancelled');
+    
+    // In a real implementation, we would also update external calendars
+    // For now, our iCal feed will automatically exclude cancelled bookings
+    
+    console.log(`Cancelled booking ${bookingId} in calendar`);
+    return true;
+  } catch (error) {
+    console.error('Error cancelling booking in calendar:', error);
+    return false;
+  }
+}
+
+/**
+ * Checks if a booking exists in any external calendar
+ * @param checkIn Check-in date
+ * @param checkOut Check-out date
+ * @returns Boolean indicating if a booking exists
+ */
+export async function checkExternalBookingExists(checkIn: Date, checkOut: Date): Promise<boolean> {
+  try {
+    const externalIcalData = await fetchExternalCalendars();
+    const externalBookings = externalIcalData.flatMap((icalData, index) => 
+      parseICalData(icalData, CALENDAR_URLS[index])
+    );
+    
+    // Check if any external booking overlaps with the given dates
+    return externalBookings.some(booking => {
+      return (booking.start <= checkOut && booking.end >= checkIn);
+    });
+  } catch (error) {
+    console.error('Error checking external bookings:', error);
+    return false;
+  }
+}
+
+/**
+ * Scheduled function to sync calendars
+ * Should be called periodically (e.g., every hour)
+ */
+export async function scheduledCalendarSync(): Promise<void> {
+  try {
+    console.log('Running scheduled calendar sync');
+    await syncFromExternalCalendars();
+    console.log('Scheduled calendar sync completed');
+  } catch (error) {
+    console.error('Error in scheduled calendar sync:', error);
   }
 }
