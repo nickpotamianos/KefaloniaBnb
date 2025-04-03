@@ -35,17 +35,55 @@ interface DateRange {
 export async function fetchIcalFeed(url: string): Promise<string> {
   try {
     const response = await axios.get(url, {
-      timeout: 10000, // 10 second timeout
+      timeout: 15000, // Increased timeout to 15 seconds
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/calendar,text/plain,application/octet-stream'
-      }
+      },
+      maxRedirects: 5, // Explicitly handle up to 5 redirects
+      validateStatus: status => status < 500 // Consider only 500+ errors as axios errors
     });
     
-    return response.data;
+    // Even if we get a non-200 status, we'll handle it ourselves
+    if (response.status !== 200) {
+      console.warn(`Received non-200 status (${response.status}) from ${url}`);
+      if (response.status === 404) {
+        throw new Error(`Calendar feed not found at ${url}`);
+      }
+      // For 400-level errors other than 404, log but return empty calendar
+      if (response.status >= 400 && response.status < 500) {
+        console.error(`Client error (${response.status}) fetching from ${url}`);
+        return "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//KefaloniaBnb//Failed Calendar//EN\nEND:VCALENDAR";
+      }
+    }
+    
+    // Validate that we received valid iCal data (should start with BEGIN:VCALENDAR)
+    const data = response.data.toString();
+    if (!data.includes('BEGIN:VCALENDAR')) {
+      console.error(`Invalid iCal data received from ${url}`);
+      console.debug(`First 100 chars: ${data.substring(0, 100)}`);
+      return "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//KefaloniaBnb//Invalid Calendar//EN\nEND:VCALENDAR";
+    }
+    
+    return data;
   } catch (error) {
-    console.error(`Error fetching iCal feed from ${url}:`, error);
-    throw new Error(`Failed to fetch iCal feed: ${(error as Error).message}`);
+    // More detailed error logging
+    if (axios.isAxiosError(error)) {
+      if (error.code === 'ECONNABORTED') {
+        console.error(`Timeout fetching iCal feed from ${url}`);
+      } else if (error.response) {
+        console.error(`Error response fetching from ${url}: ${error.response.status}`);
+      } else if (error.request) {
+        console.error(`No response received from ${url}`);
+      } else {
+        console.error(`Error fetching iCal feed from ${url}: ${error.message}`);
+      }
+    } else {
+      console.error(`Non-axios error fetching iCal feed from ${url}:`, error);
+    }
+    
+    // Return an empty calendar instead of throwing
+    return "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//KefaloniaBnb//Error Calendar//EN\nEND:VCALENDAR";
   }
 }
 
@@ -153,31 +191,39 @@ async function getAllBookedDateRanges(): Promise<DateRange[]> {
  */
 export async function isDateRangeAvailable(startDate: Date, endDate: Date): Promise<boolean> {
   try {
+    console.log(`Checking availability for date range: ${startDate.toISOString()} to ${endDate.toISOString()}`);
+    
     // First, ensure dates are interpreted as start/end of day
-    const adjustedStartDate = new Date(startDate.setHours(0, 0, 0, 0));
-    // Checkout day should be available for new guests
-    const adjustedEndDate = new Date(endDate.setHours(0, 0, 0, 0));
+    const adjustedStartDate = new Date(new Date(startDate).setHours(0, 0, 0, 0));
+    // Checkout day should be available for new guests (use previous day as last booked day)
+    const adjustedEndDate = new Date(new Date(endDate).setHours(0, 0, 0, 0));
     
     const bookedRanges = await getAllBookedDateRanges();
+    console.log(`Found ${bookedRanges.length} booked ranges to check against`);
+    
+    // Log direct bookings specifically for debugging
+    const directBookings = await storage.getAllBookings();
+    console.log(`Direct bookings in storage: ${directBookings.length}`);
+    directBookings.forEach(booking => {
+      console.log(`Direct booking: ${booking.id}, ${booking.name}, ${new Date(booking.checkIn).toISOString()} to ${new Date(booking.checkOut).toISOString()}, status: ${booking.paymentStatus}`);
+    });
     
     // Check for overlaps with any booked range
     for (const bookedRange of bookedRanges) {
-      // Adjust booked dates to start/end of day
-      const bookedStart = new Date(bookedRange.start.setHours(0, 0, 0, 0));
-      const bookedEnd = new Date(bookedRange.end.setHours(23, 59, 59, 999));
+      // Create new Date objects to avoid modifying the original objects
+      const bookedStart = new Date(new Date(bookedRange.start).setHours(0, 0, 0, 0));
+      const bookedEnd = new Date(new Date(bookedRange.end).setHours(0, 0, 0, 0));
       
-      // Check for any overlap
-      // A range overlaps if one range's start date is between the other's start and end dates,
-      // or if one range completely contains the other
+      // Standard overlap check: one range starts before the other ends and ends after the other starts
       if (
-        (adjustedStartDate <= bookedEnd && adjustedEndDate >= bookedStart) ||
-        (bookedStart <= adjustedEndDate && bookedEnd >= adjustedStartDate)
+        (adjustedStartDate < bookedEnd && adjustedEndDate > bookedStart)
       ) {
         console.log(`Date range ${adjustedStartDate.toISOString()} to ${adjustedEndDate.toISOString()} overlaps with booking ${bookedStart.toISOString()} to ${bookedEnd.toISOString()} from ${bookedRange.source}`);
         return false;
       }
     }
     
+    console.log(`Date range ${adjustedStartDate.toISOString()} to ${adjustedEndDate.toISOString()} is available`);
     return true;
   } catch (error) {
     console.error("Error checking date availability:", error);

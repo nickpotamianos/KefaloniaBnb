@@ -35,70 +35,75 @@ import bodyParser from 'body-parser';
 import { differenceInDays, addDays } from 'date-fns';
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Availability calendar endpoint
+  // Calendar proxy endpoint for frontend to fetch external calendars
+  app.get("/api/calendar/proxy", async (req, res) => {
+    try {
+      const { url } = req.query;
+      
+      if (!url || typeof url !== 'string') {
+        return res.status(400).json({ 
+          success: false, 
+          message: "Missing or invalid URL parameter" 
+        });
+      }
+      
+      const icalData = await fetchIcalFeed(url);
+      res.set('Content-Type', 'text/calendar');
+      res.send(icalData);
+    } catch (error) {
+      console.error("Calendar proxy error:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch calendar data" 
+      });
+    }
+  });
+  
+  // Calendar availability endpoint - fetches all external calendars
   app.get("/api/calendar/availability", async (_req, res) => {
     try {
-      const calendarUrls = [
-        //"https://api.host.holidu.com/pmc/rest/apartments/62738918/ical.ics?key=133c7bc35012e5825e06b5cd503c77e8",
-        "https://ical.booking.com/v1/export?t=ae535b52-549f-4976-bffd-dd05f7121b9c",
-        "https://www.airbnb.com/calendar/ical/936140466545331330.ics?s=4db5df46d02514f399d3cc9362b00162",
-        "http://www.vrbo.com/icalendar/a5f9a9c10a434d21a93c76b054037556.ics?nonTentative",
-        //"https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
-      ];
-      
-      // Fetch all iCal feeds
-      const icalPromises = calendarUrls.map(async (url) => {
-        try {
-          const response = await fetch(url);
-          if (!response.ok) {
-            console.error(`Failed to fetch from ${url}: ${response.statusText}`);
-            return "";
+      // Fetch all external calendar data
+      const icalDataArray = await Promise.all(
+        [
+          "https://ical.booking.com/v1/export?t=ae535b52-549f-4976-bffd-dd05f7121b9c",
+          "https://www.airbnb.com/calendar/ical/936140466545331330.ics?s=4db5df46d02514f399d3cc9362b00162",
+          "http://www.vrbo.com/icalendar/a5f9a9c10a434d21a93c76b054037556.ics?nonTentative"
+        ].map(async (url) => {
+          try {
+            return await fetchIcalFeed(url);
+          } catch (err) {
+            console.error(`Error fetching calendar from ${url}:`, err);
+            // Return empty calendar on error
+            return "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//KefaloniaBnb//Error Calendar//EN\nEND:VCALENDAR";
           }
-          return response.text();
-        } catch (error) {
-          console.error(`Error fetching from ${url}:`, error);
-          return "";
-        }
-      });
-      
-      const icalResults = await Promise.all(icalPromises);
-      
-      // Process the data and extract booking dates
-      // We'll send this raw data to the client and process there
-      // to avoid adding ical.js as a server dependency
+        })
+      );
       
       res.json({
         success: true,
-        icalData: icalResults.filter(data => data !== "")
+        icalData: icalDataArray
       });
     } catch (error) {
       console.error("Calendar availability error:", error);
       res.status(500).json({ 
         success: false, 
-        message: "Failed to fetch availability data. Please try again later."
+        message: "Failed to fetch calendar availability" 
       });
     }
   });
-
-  // Add new calendar endpoints
   
-  // Combined iCal calendar (for external calendars to consume)
+  // iCal feed endpoint for external services to pull our availability
   app.get("/api/calendar.ics", async (_req, res) => {
     try {
       const icalData = await generateICalFile();
-      
-      res.setHeader('Content-Type', 'text/calendar');
-      res.setHeader('Content-Disposition', 'attachment; filename="kefalonia-bnb-calendar.ics"');
+      res.set('Content-Type', 'text/calendar');
       res.send(icalData);
     } catch (error) {
-      console.error("Error generating calendar:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to generate calendar. Please try again later."
-      });
+      console.error("iCal feed error:", error);
+      res.status(500).send("Error generating calendar data");
     }
   });
-  
+
   // Sync from external calendars manually
   app.post("/api/calendar/sync", async (_req, res) => {
     try {
@@ -141,6 +146,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+
+  // NEW ENDPOINT: Calendar blocked dates (for the client-side calendar component)
+  app.get("/api/calendar/blocked-dates", async (_req, res) => {
+    try {
+      const blockedRanges = await getBlockedDateRanges();
+      
+      // Map the server format to the client format
+      const formattedDates = blockedRanges.map(range => ({
+        start: range.start,
+        end: range.end,
+        summary: range.summary || 'Booked',
+        source: range.source
+      }));
+      
+      res.json(formattedDates);
+    } catch (error) {
+      console.error("Error fetching calendar blocked dates:", error);
+      res.status(500).json({ 
+        success: false, 
+        message: "Failed to fetch blocked dates. Please try again later."
+      });
+    }
+  });
   
   // Check date availability endpoint
   app.post("/api/check-availability", async (req, res) => {
@@ -168,38 +196,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ 
         success: false, 
         message: "Failed to check availability. Please try again later."
-      });
-    }
-  });
-  
-  // Calendar proxy endpoint to avoid CORS issues
-  app.get("/api/calendar/proxy", async (req, res) => {
-    try {
-      const url = req.query.url as string;
-      
-      if (!url) {
-        return res.status(400).json({
-          success: false,
-          message: "URL parameter is required"
-        });
-      }
-      
-      // Fetch the iCal feed
-      const icalData = await fetchIcalFeed(url);
-      
-      // Set CORS headers explicitly for this endpoint
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-      
-      // Return the raw iCal data
-      res.setHeader('Content-Type', 'text/calendar');
-      res.send(icalData);
-    } catch (error) {
-      console.error("Calendar proxy error:", error);
-      res.status(500).json({ 
-        success: false, 
-        message: "Failed to fetch calendar data. Please try again later."
       });
     }
   });
