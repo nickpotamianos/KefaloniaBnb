@@ -16,8 +16,8 @@ const isProduction = process.env.NODE_ENV === 'production';
 // Configure CORS
 const corsOptions = {
   origin: isProduction 
-    ? ['https://kefalonia-bnb.gr', 'https://www.kefalonia-bnb.gr']
-    : ['http://localhost:3000', 'http://127.0.0.1:3000', 'http://localhost:5173', 'http://127.0.0.1:5173'],
+    ? ['https://kefalonia-bnb.gr', 'https://www.kefalonia-bnb.gr', 'http://localhost:3000', 'http://localhost:5173']
+    : '*', // Allow all origins in development
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'stripe-signature'],
   credentials: true,
