@@ -6,6 +6,7 @@ import Home from "@/pages/Home";
 import BookingPage from "@/pages/Booking";
 import BookingSuccessPage from "@/pages/booking/success";
 import PayPalSuccessPage from "@/pages/booking/paypal-success"; // Updated to use the enhanced version
+import AdminPage from "@/pages/admin"; // Import the Admin page
 
 function Router() {
   return (
@@ -14,6 +15,7 @@ function Router() {
       <Route path="/booking" component={BookingPage} />
       <Route path="/booking/success" component={BookingSuccessPage} />
       <Route path="/booking/paypal-success" component={PayPalSuccessPage} />
+      <Route path="/admin" component={AdminPage} /> {/* Add the admin route */}
       <Route path="*">
         <Home />
       </Route>

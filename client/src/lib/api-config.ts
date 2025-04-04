@@ -25,6 +25,9 @@ export const API_ENDPOINTS = {
   CREATE_PAYPAL_ORDER: `${API_BASE_URL}/api/create-paypal-order`,
   CAPTURE_PAYPAL_PAYMENT: `${API_BASE_URL}/api/capture-paypal-payment`,
   PAYPAL_ORDER_DETAILS: `${API_BASE_URL}/api/paypal-order`,
+  // Admin endpoints
+  ADMIN_BOOKINGS: `${API_BASE_URL}/api/admin/bookings`,
+  ADMIN_CANCEL_BOOKING: `${API_BASE_URL}/api/admin/bookings`,
 };
 
 // Stripe configuration

@@ -722,6 +722,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Admin endpoints with basic protection
+  
+  // Simple admin secret key - in production, use a proper authentication system
+  const ADMIN_SECRET = process.env.ADMIN_SECRET || 'kefalonia-admin-2025';
+  
+  // Admin middleware to check for authorization
+  const requireAdmin = (req: any, res: any, next: any) => {
+    const adminKey = req.headers['x-admin-key'] || req.query.adminKey;
+    
+    if (!adminKey || adminKey !== ADMIN_SECRET) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized. Admin access required."
+      });
+    }
+    
+    next();
+  };
+  
+  // Admin: List all bookings
+  app.get("/api/admin/bookings", requireAdmin, async (_req, res) => {
+    try {
+      const bookings = await storage.getAllBookings();
+      
+      res.json({
+        success: true,
+        bookings
+      });
+    } catch (error) {
+      console.error('Error fetching bookings:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch bookings."
+      });
+    }
+  });
+  
+  // Admin: Cancel booking manually (e.g., when someone calls)
+  app.post("/api/admin/bookings/:bookingId/cancel", requireAdmin, async (req, res) => {
+    try {
+      const { bookingId } = req.params;
+      const { reason } = req.body;
+      
+      if (!bookingId) {
+        return res.status(400).json({
+          success: false,
+          message: "Booking ID is required"
+        });
+      }
+      
+      // Get the booking
+      const booking = await storage.getBooking(bookingId);
+      
+      if (!booking) {
+        return res.status(404).json({
+          success: false,
+          message: "Booking not found"
+        });
+      }
+      
+      // Cancel the booking in the calendar
+      const calendarSuccess = await cancelBookingInCalendar(bookingId);
+      
+      // Send cancellation emails if requested
+      let emailSuccess = false;
+      const sendEmail = req.query.sendEmail === 'true';
+      
+      if (sendEmail) {
+        try {
+          emailSuccess = await sendCancellationEmail(booking);
+        } catch (emailError) {
+          console.error('Error sending cancellation email:', emailError);
+        }
+      }
+      
+      const updatedBooking = await storage.getBooking(bookingId);
+      
+      res.json({
+        success: true,
+        message: "Booking cancelled successfully",
+        calendarUpdated: calendarSuccess,
+        emailSent: emailSuccess,
+        booking: updatedBooking
+      });
+    } catch (error) {
+      console.error('Admin booking cancellation error:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to cancel booking. Please try again later."
+      });
+    }
+  });
+
   // Contact form submission
   app.post("/api/contact", async (req, res) => {
     try {
