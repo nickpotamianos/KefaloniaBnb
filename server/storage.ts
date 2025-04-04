@@ -5,6 +5,11 @@ import {
   type Booking, type InsertBooking
 } from "@shared/schema";
 import { randomUUID } from "crypto";
+import fs from "fs";
+import path from "path";
+
+// Data file path for persistence
+const DATA_FILE_PATH = path.join(process.cwd(), 'data.json');
 
 // modify the interface with any CRUD methods
 // you might need
@@ -37,6 +42,59 @@ export class MemStorage implements IStorage {
     this.userCurrentId = 1;
     this.contactCurrentId = 1;
     this.newsletterCurrentId = 1;
+
+    // Load existing data from file if it exists
+    this.loadFromFile();
+  }
+
+  // File persistence methods
+  private saveToFile(): void {
+    try {
+      const data = {
+        users: Array.from(this.users.entries()),
+        contacts: Array.from(this.contactsList.entries()),
+        newsletter: Array.from(this.newsletterList.entries()),
+        bookings: Array.from(this.bookingsList.entries()),
+        counters: {
+          userCurrentId: this.userCurrentId,
+          contactCurrentId: this.contactCurrentId,
+          newsletterCurrentId: this.newsletterCurrentId
+        }
+      };
+      
+      fs.writeFileSync(DATA_FILE_PATH, JSON.stringify(data, null, 2));
+      console.log(`Data successfully saved to ${DATA_FILE_PATH}`);
+    } catch (error) {
+      console.error('Error saving data to file:', error);
+    }
+  }
+
+  private loadFromFile(): void {
+    try {
+      if (fs.existsSync(DATA_FILE_PATH)) {
+        console.log(`Loading data from ${DATA_FILE_PATH}`);
+        const jsonData = fs.readFileSync(DATA_FILE_PATH, 'utf8');
+        const data = JSON.parse(jsonData);
+        
+        // Restore maps from file data
+        this.users = new Map(data.users);
+        this.contactsList = new Map(data.contacts);
+        this.newsletterList = new Map(data.newsletter);
+        this.bookingsList = new Map(data.bookings);
+        
+        // Restore counters
+        this.userCurrentId = data.counters.userCurrentId;
+        this.contactCurrentId = data.counters.contactCurrentId;
+        this.newsletterCurrentId = data.counters.newsletterCurrentId;
+        
+        console.log(`Successfully loaded ${this.bookingsList.size} bookings from storage file.`);
+      } else {
+        console.log('No persistent data file found. Starting with empty storage.');
+      }
+    } catch (error) {
+      console.error('Error loading data from file:', error);
+      // Continue with empty maps if file reading fails
+    }
   }
 
   // User methods
@@ -54,6 +112,7 @@ export class MemStorage implements IStorage {
     const id = this.userCurrentId++;
     const user: User = { ...insertUser, id };
     this.users.set(id, user);
+    this.saveToFile();
     return user;
   }
   
@@ -66,6 +125,7 @@ export class MemStorage implements IStorage {
     const id = this.contactCurrentId++;
     const contact = { ...contactData, id };
     this.contactsList.set(id, contact);
+    this.saveToFile();
     return contact;
   }
   
@@ -80,6 +140,7 @@ export class MemStorage implements IStorage {
     const id = this.newsletterCurrentId++;
     const subscription = { ...data, id };
     this.newsletterList.set(id, subscription);
+    this.saveToFile();
     return subscription;
   }
   
@@ -108,6 +169,7 @@ export class MemStorage implements IStorage {
       createdAt: new Date() 
     };
     this.bookingsList.set(id, booking);
+    this.saveToFile();
     return booking;
   }
   
@@ -117,6 +179,7 @@ export class MemStorage implements IStorage {
     
     const updatedBooking = { ...booking, paymentStatus: status };
     this.bookingsList.set(id, updatedBooking);
+    this.saveToFile();
     return updatedBooking;
   }
   
