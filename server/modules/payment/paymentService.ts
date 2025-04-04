@@ -36,7 +36,7 @@ const MIN_NIGHTS = 2;
 
 // Frontend URL for redirects
 const FRONTEND_URL = process.env.NODE_ENV === 'production'
-  ? 'https://villakefalonia.potamianosgroup.com' // Production site URL
+  ? (process.env.FRONTEND_URL || 'https://kefalonia-bnb-tiq7j.ondigitalocean.app') // Production site URL
   : 'http://localhost:3000';    // Development URL
 
 // Override FRONTEND_URL if testing with Render locally
@@ -45,10 +45,9 @@ const TESTING_FRONTEND_URL = process.env.TESTING_FRONTEND_URL || FRONTEND_URL;
 // Check if we're running on Render's development environment
 const isRenderDev = process.env.RENDER && process.env.NODE_ENV === 'development';
 
-// Set a hard-coded localhost URL for testing, regardless of environment
-// This ensures PayPal always redirects to localhost during development
-const PAYPAL_RETURN_URL = 'http://localhost:3000/booking/paypal-success';
-const PAYPAL_CANCEL_URL = 'http://localhost:3000/booking?cancelled=true';
+// Dynamic PayPal return URLs based on the current environment
+const PAYPAL_RETURN_URL = `${FRONTEND_URL}/booking/paypal-success`;
+const PAYPAL_CANCEL_URL = `${FRONTEND_URL}/booking?cancelled=true`;
 
 /**
  * Gets a PayPal access token for API calls
