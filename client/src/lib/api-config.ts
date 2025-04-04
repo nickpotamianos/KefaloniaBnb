@@ -1,19 +1,20 @@
 // API configuration for development and production environments
 
-// To test with Render during development, change this to true
-const USE_RENDER_FOR_TESTING = true;
+// Digital Ocean deployment URL (your new combined frontend+backend)
+const DIGITAL_OCEAN_API = 'https://kefalonia-bnb-tiq7j.ondigitalocean.app';
 
-// For production, we'll use the Render API
-const USE_PRODUCTION_API = import.meta.env.PROD || USE_RENDER_FOR_TESTING;
+// For production, we'll use Digital Ocean API
+const USE_PRODUCTION_API = import.meta.env.PROD;
 const isProduction = import.meta.env.PROD;
 
+// Choose which API endpoint to use
+const API_ENDPOINT = USE_PRODUCTION_API ? DIGITAL_OCEAN_API : 'http://localhost:3000';
+
 // Base URL for API calls
-export const API_BASE_URL = USE_PRODUCTION_API 
-  ? 'https://kefalonia-api.onrender.com' // Your Render deployment URL
-  : 'http://localhost:3000';             // Local development URL
+export const API_BASE_URL = API_ENDPOINT;
 
 // Production domain for redirects
-export const PRODUCTION_DOMAIN = 'https://villakefalonia.potamianosgroup.com';
+export const PRODUCTION_DOMAIN = 'https://kefalonia-bnb-tiq7j.ondigitalocean.app';
 
 // API endpoints
 export const API_ENDPOINTS = {
