@@ -5,18 +5,17 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, CheckCircle, Loader2 } from "lucide-react";
 import { useBookings } from "@/hooks/use-bookings";
 import { motion } from "framer-motion";
-import BookingForm, { 
-  BASE_PRICE_PER_NIGHT, 
-  CLEANING_FEE, 
-  ADDITIONAL_GUEST_FEE, 
-  MIN_NIGHTS 
-} from "@/components/BookingForm";
+import BookingForm from "@/components/BookingForm";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 import { API_ENDPOINTS, STRIPE_CONFIG } from "@/lib/api-config";
+import pricingService from "@/lib/pricingService";
 
 // Get Stripe publishable key from configuration
 const STRIPE_PUBLIC_KEY = STRIPE_CONFIG.PUBLISHABLE_KEY;
+
+// Import MIN_NIGHTS from BookingForm
+import { MIN_NIGHTS } from "@/components/BookingForm";
 
 const BookingPage: React.FC = () => {
   const [location, setLocation] = useLocation();
@@ -95,8 +94,8 @@ const BookingPage: React.FC = () => {
   // Derived values
   const guests = adults + children;
   const nights = checkIn && checkOut ? differenceInDays(checkOut, checkIn) : 0;
-  const subtotal = nights * BASE_PRICE_PER_NIGHT;
-  const total = subtotal + CLEANING_FEE;
+  const subtotal = pricingService.calculateSubtotal(nights);
+  const total = pricingService.calculateTotal(subtotal);
   
   // Form validation
   const isFormValid = checkIn && checkOut && nights >= MIN_NIGHTS && name && email && phone && adults > 0 && guests <= 8 && paymentMethod !== null;
@@ -384,14 +383,14 @@ const BookingPage: React.FC = () => {
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">
-                      €{BASE_PRICE_PER_NIGHT} x {nights} nights
+                      €{pricingService.BASE_PRICE_PER_NIGHT} x {nights} nights
                     </span>
                     <span>€{subtotal}</span>
                   </div>
                   
                   <div className="flex justify-between text-sm mt-2">
                     <span className="text-gray-600">Cleaning fee</span>
-                    <span>€{CLEANING_FEE}</span>
+                    <span>€{pricingService.CLEANING_FEE}</span>
                   </div>
                   
                   <div className="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-gray-200">
