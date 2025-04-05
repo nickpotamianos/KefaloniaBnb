@@ -22,8 +22,9 @@ const PricingAdmin: React.FC = () => {
     } else if (adminKey) {
       // If admin key exists in local storage, consider the user authenticated
       setIsAuthenticated(true);
+      loadPricingData(); // Load data immediately when authenticated via localStorage
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, adminKey]);
 
   // Load pricing data from service
   const loadPricingData = () => {

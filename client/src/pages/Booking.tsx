@@ -94,8 +94,17 @@ const BookingPage: React.FC = () => {
   // Derived values
   const guests = adults + children;
   const nights = checkIn && checkOut ? differenceInDays(checkOut, checkIn) : 0;
-  const subtotal = pricingService.calculateSubtotal(nights);
-  const total = pricingService.calculateTotal(subtotal);
+  
+  // Calculate pricing correctly with date objects
+  const pricingInfo = checkIn && checkOut ? pricingService.calculateTotal(checkIn, checkOut) : {
+    basePrice: 0,
+    nights: 0,
+    discount: 0,
+    discountPercentage: 0,
+    discountText: '',
+    cleaningFee: 0,
+    totalPrice: 0
+  };
   
   // Form validation
   const isFormValid = checkIn && checkOut && nights >= MIN_NIGHTS && name && email && phone && adults > 0 && guests <= 8 && paymentMethod !== null;
@@ -156,7 +165,7 @@ const BookingPage: React.FC = () => {
         children,
         guests: adults + children,
         specialRequests,
-        total: total // Add total amount to booking data
+        totalAmount: pricingInfo.totalPrice * 100 // Convert to cents for the payment processor
       };
       
       if (paymentMethod === 'stripe') {
@@ -383,19 +392,26 @@ const BookingPage: React.FC = () => {
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">
-                      €{pricingService.BASE_PRICE_PER_NIGHT} x {nights} nights
+                      €{pricingInfo.nights > 0 ? Math.round(pricingInfo.basePrice / pricingInfo.nights) : 0} × {pricingInfo.nights} nights
                     </span>
-                    <span>€{subtotal}</span>
+                    <span>€{pricingInfo.basePrice}</span>
                   </div>
+                  
+                  {pricingInfo.discount > 0 && (
+                    <div className="flex justify-between text-sm mt-2 text-green-600">
+                      <span>{pricingInfo.discountText} ({pricingInfo.discountPercentage}% off)</span>
+                      <span>-€{pricingInfo.discount}</span>
+                    </div>
+                  )}
                   
                   <div className="flex justify-between text-sm mt-2">
                     <span className="text-gray-600">Cleaning fee</span>
-                    <span>€{pricingService.CLEANING_FEE}</span>
+                    <span>€{pricingInfo.cleaningFee}</span>
                   </div>
                   
                   <div className="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-gray-200">
                     <span>Total</span>
-                    <span>€{total}</span>
+                    <span>€{pricingInfo.totalPrice}</span>
                   </div>
                 </div>
 
