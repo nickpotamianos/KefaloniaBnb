@@ -292,6 +292,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               isDateDisabled={isDateBooked}
               onChange={handleDateChange}
               className="border-0 p-0 shadow-none"
+              showPrices={true}
             />
           </div>
           

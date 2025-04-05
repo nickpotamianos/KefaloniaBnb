@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { addMonths, format, isSameDay, isWithinInterval, startOfMonth, 
   endOfMonth, eachDayOfInterval, isBefore, isToday, compareAsc,
-  addDays, subDays, getDay, startOfWeek, endOfWeek } from 'date-fns';
+  addDays, subDays, getDay, startOfWeek, endOfWeek, getMonth } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +17,24 @@ interface CustomDateRangePickerProps {
   onChange: (range: { from?: Date, to?: Date }) => void;
   className?: string;
   numberOfMonths?: number;
+  showPrices?: boolean;
 }
+
+// Price configuration per night based on seasons
+const getPriceForDate = (date: Date): number => {
+  const month = getMonth(date);
+  
+  // June
+  if (month === 5) return 180;
+  // July and August - peak season
+  if (month === 6 || month === 7) return 200; 
+  // April and May - early season
+  if (month === 3 || month === 4) return 170;
+  // September - late summer
+  if (month === 8) return 180;
+  // Rest of the year - off-season
+  return 150;
+};
 
 const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   initialStartDate = null,
@@ -25,7 +42,8 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   isDateDisabled = () => false,
   onChange,
   className,
-  numberOfMonths = 2
+  numberOfMonths = 2,
+  showPrices = false
 }) => {
   const [currentMonth, setCurrentMonth] = useState<Date>(initialStartDate || new Date());
   const [dateRange, setDateRange] = useState<DateRange>({
@@ -43,7 +61,8 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
     
     return eachDayOfInterval({ start: startDate, end: endDate }).map(date => ({
       date,
-      isCurrentMonth: date.getMonth() === month.getMonth()
+      isCurrentMonth: date.getMonth() === month.getMonth(),
+      price: getPriceForDate(date)
     }));
   };
 
@@ -158,7 +177,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
               <div className="grid grid-cols-7 gap-1">
                 {/* All days including those from previous/next months */}
                 {calendarDays.map((dayInfo, i) => {
-                  const { date, isCurrentMonth } = dayInfo;
+                  const { date, isCurrentMonth, price } = dayInfo;
                   const isDisabled = isDateDisabled(date);
                   const isSelected = (dateRange.startDate && isSameDay(date, dateRange.startDate)) || 
                                     (dateRange.endDate && isSameDay(date, dateRange.endDate));
@@ -170,7 +189,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
                     <div 
                       key={i} 
                       className={cn(
-                        "h-10 w-full flex items-center justify-center rounded-md text-sm transition-all",
+                        "h-10 w-full flex flex-col items-center justify-center rounded-md text-sm transition-all",
                         !isCurrentMonth && "opacity-40",
                         isToday(date) && !isSelected && "border-2 border-[var(--sea-blue)]",
                         isDisabled ? "bg-red-100 text-red-700 line-through cursor-not-allowed" : (
@@ -185,6 +204,11 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
                       onClick={() => !isDisabled && !isBefore(date, new Date()) && handleDateClick(date)}
                       onMouseEnter={() => handleDateHover(date)}
                     >
+                      {showPrices && isCurrentMonth && !isBefore(date, new Date()) && !isDisabled && (
+                        <div className="text-[8px] font-medium text-gray-600 -mt-1 mb-0.5">
+                          €{price}
+                        </div>
+                      )}
                       {format(date, "d")}
                     </div>
                   );
@@ -210,8 +234,6 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
           <span className="inline-block w-3 h-3 rounded-full bg-white border border-[var(--terracotta)]"></span>
           <span>In Range</span>
         </div>
-        
-
       </div>
     </div>
   );

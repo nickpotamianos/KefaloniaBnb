@@ -257,7 +257,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
             <div 
               onClick={() => handleDateClick(day)}
               className={cn(
-                "h-10 w-full flex items-center justify-center rounded-md text-sm transition-all",
+                "h-10 w-full flex flex-col items-center justify-center rounded-md text-sm transition-all",
                 !day.isCurrentMonth && "opacity-40",
                 isToday(day.date) && !isSelectedDate(day.date) && "border-2 border-[var(--sea-blue)]",
                 day.isPast 
@@ -274,13 +274,13 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                 "transition-all duration-200"
               )}
             >
+              {showPrices && day.isCurrentMonth && !day.isPast && !day.isBooked && (
+                <div className="text-[8px] font-medium text-gray-600 -mt-1 mb-0.5">
+                  €{day.price}
+                </div>
+              )}
               {format(day.date, "d")}
             </div>
-            {showPrices && day.isCurrentMonth && !day.isPast && !day.isBooked && (
-              <div className="text-[9px] text-center mt-1 font-medium text-gray-600">
-                €{day.price}
-              </div>
-            )}
           </div>
         ))}
       </div>
@@ -365,19 +365,6 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
             </button>
           )}
         </div>
-        
-        {/* Seasonal price info */}
-        {showPrices && (
-          <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-            <p className="font-medium mb-1">Seasonal Rates:</p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-1">
-              <div>Apr-May: <span className="font-medium">€170/night</span></div>
-              <div>Jun & Sep: <span className="font-medium">€180/night</span></div>
-              <div>Jul-Aug: <span className="font-medium">€200/night</span></div>
-              <div>Rest of year: <span className="font-medium">€150/night</span></div>
-            </div>
-          </div>
-        )}
         
         {/* Selection info */}
         {selectedStartDate && (
