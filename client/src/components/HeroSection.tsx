@@ -113,14 +113,6 @@ const HeroSection = () => {
                 <span className="w-1.5 h-1.5 bg-[var(--sea-blue)] rounded-full"></span>
                 <span>Near Famous Beaches</span>
               </div>
-              <div className="flex items-center gap-2 text-white/90">
-                <span className="w-1.5 h-1.5 bg-[var(--sea-blue)] rounded-full"></span>
-                <span>12% off for weekly stays</span>
-              </div>
-              <div className="flex items-center gap-2 text-white/90">
-                <span className="w-1.5 h-1.5 bg-[var(--sea-blue)] rounded-full"></span>
-                <span>20% off for monthly stays</span>
-              </div>
             </motion.div>
           </motion.div>
         </div>

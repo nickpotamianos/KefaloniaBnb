@@ -24,28 +24,28 @@ const HouseSection = () => {
   const seasons: Record<Season, SeasonInfo> = {
     spring: {
       title: "Spring (April-May)",
-      description: "Lush greenery, wildflowers, and comfortable temperatures make spring perfect for hiking and exploring the island without crowds. €170 per night during this period.",
+      description: "Lush greenery, wildflowers, and comfortable temperatures make spring perfect for hiking and exploring the island without crowds.",
       activities: ["Wildflower hiking", "Easter celebrations", "Village exploration"],
       temp: "15-24°C",
       icon: <Leaf className="h-5 w-5" />
     },
     summer: {
       title: "Summer (June-Sept)",
-      description: "Crystal clear waters, vibrant beach life, and warm evenings spent in village tavernas define the perfect Mediterranean summer. €180/night in June & September, €200/night in July-August.",
+      description: "Crystal clear waters, vibrant beach life, and warm evenings spent in village tavernas define the perfect Mediterranean summer.",
       activities: ["Beach days", "Boat trips", "Evening dining"],
       temp: "25-32°C",
       icon: <Sun className="h-5 w-5" />
     },
     autumn: {
       title: "Autumn (Oct-Nov)",
-      description: "Still-warm sea waters and fewer tourists create a peaceful atmosphere to enjoy authentic local experiences. €150 per night during this period.",
+      description: "Still-warm sea waters and fewer tourists create a peaceful atmosphere to enjoy authentic local experiences.",
       activities: ["Wine harvest", "Swimming", "Local festivals"],
       temp: "18-26°C",
       icon: <Leaf className="h-5 w-5" />
     },
     winter: {
       title: "Winter (Dec-Mar)",
-      description: "Experience the authentic local life as the island returns to its peaceful rhythm with mild temperatures and occasional rainfall. Our lowest rate of €150 per night applies during this period.",
+      description: "Experience the authentic local life as the island returns to its peaceful rhythm with mild temperatures and occasional rainfall.",
       activities: ["Local culture", "Olive harvest", "Nature photography"],
       temp: "10-15°C",
       icon: <Cloud className="h-5 w-5" />
