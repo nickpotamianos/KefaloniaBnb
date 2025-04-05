@@ -4,8 +4,13 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-// MongoDB connection string from environment variable or use the provided Atlas connection string
-const MONGODB_URI = process.env.MONGODB_URI 
+// MongoDB Atlas connection - properly URL-encode password to handle special characters
+const DB_PASSWORD = process.env.DB_PASSWORD || '20Nikol@s02';
+const ENCODED_PASSWORD = encodeURIComponent(DB_PASSWORD);
+
+// MongoDB connection string with encoded password
+const MONGODB_URI = process.env.MONGODB_URI || 
+  `mongodb+srv://kefalonia-bnb:${ENCODED_PASSWORD}@cluster0.uzob572.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // Create a connection to MongoDB
 async function connectToDatabase(): Promise<typeof mongoose> {
