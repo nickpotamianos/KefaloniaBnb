@@ -5,8 +5,9 @@ import { Toaster } from "@/components/ui/toaster";
 import Home from "@/pages/Home";
 import BookingPage from "@/pages/Booking";
 import BookingSuccessPage from "@/pages/booking/success";
-import PayPalSuccessPage from "@/pages/booking/paypal-success"; // Updated to use the enhanced version
-import AdminPage from "@/pages/admin"; // Import the Admin page
+import PayPalSuccessPage from "@/pages/booking/paypal-success";
+import AdminPage from "@/pages/admin";
+import PricingAdmin from "@/pages/admin/pricing"; // Import the admin pricing page
 
 function Router() {
   return (
@@ -15,7 +16,8 @@ function Router() {
       <Route path="/booking" component={BookingPage} />
       <Route path="/booking/success" component={BookingSuccessPage} />
       <Route path="/booking/paypal-success" component={PayPalSuccessPage} />
-      <Route path="/admin" component={AdminPage} /> {/* Add the admin route */}
+      <Route path="/admin" component={AdminPage} />
+      <Route path="/admin/pricing" component={PricingAdmin} /> {/* Add the admin pricing route */}
       <Route path="*">
         <Home />
       </Route>

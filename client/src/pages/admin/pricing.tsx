@@ -1,174 +1,237 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'wouter';
 import { Helmet } from 'react-helmet';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Loader2, Info, AlertCircle, CheckCircle, Euro, Percent, Calendar } from 'lucide-react';
-import pricingService, { SeasonalPrice, Discount } from '@/lib/pricingService';
+import { Input } from '@/components/ui/input';
+import { Loader2, Save, Plus, Trash, ArrowLeft, Calendar, Percent, Euro } from 'lucide-react';
+import axios from 'axios';
+import { API_ENDPOINTS } from '@/lib/api-config';
+
+type SeasonalPrice = {
+  id: string;
+  name: string;
+  startMonth: number;
+  endMonth: number;
+  pricePerNight: number;
+};
+
+type Discount = {
+  id: string;
+  name: string;
+  minNights: number;
+  discountPercentage: number;
+};
 
 const PricingAdmin: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminKey, setAdminKey] = useState(localStorage.getItem('adminKey') || '');
-  const [seasonalPrices, setSeasonalPrices] = useState<SeasonalPrice[]>([]);
-  const [discounts, setDiscounts] = useState<Discount[]>([]);
-  const [cleaningFee, setCleaningFee] = useState(0);
+  const [location, setLocation] = useLocation();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [adminKey, setAdminKey] = useState(localStorage.getItem('adminKey') || '');
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminKey'));
+  
+  // Pricing state
+  const [seasonalPrices, setSeasonalPrices] = useState<SeasonalPrice[]>([]);
+  const [discounts, setDiscounts] = useState<Discount[]>([]);
+  const [cleaningFee, setCleaningFee] = useState<number>(60);
 
-  // Load data on initial render if authenticated
+  // Month names for display
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  
+  // Load pricing configuration
   useEffect(() => {
     if (isAuthenticated) {
-      loadPricingData();
-    } else if (adminKey) {
-      // If admin key exists in local storage, consider the user authenticated
-      setIsAuthenticated(true);
-      loadPricingData(); // Load data immediately when authenticated via localStorage
+      fetchPricingConfiguration();
     }
-  }, [isAuthenticated, adminKey]);
-
-  // Load pricing data from service
-  const loadPricingData = () => {
-    setIsLoading(true);
-    try {
-      setSeasonalPrices(pricingService.getSeasonalPrices());
-      setDiscounts(pricingService.getDiscounts());
-      setCleaningFee(pricingService.getCleaningFee());
-    } catch (err) {
-      setError('Error loading pricing data');
-      console.error('Error loading pricing data:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Handle authentication
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!adminKey) {
-      setError('Admin key is required');
-      return;
-    }
+  }, [isAuthenticated]);
+  
+  const fetchPricingConfiguration = async () => {
+    setLoading(true);
+    setError(null);
     
-    // In a real app, you would verify the admin key with your backend
-    // Here we're just checking if it exists in localStorage as a simple example
-    if (adminKey === localStorage.getItem('adminKey')) {
-      setIsAuthenticated(true);
-      setError(null);
-    } else {
-      setError('Invalid admin key');
+    try {
+      const response = await axios.get(`${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`);
+      
+      if (response.data.success && response.data.pricing) {
+        const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
+        setSeasonalPrices(seasonalPrices || []);
+        setDiscounts(discounts || []);
+        setCleaningFee(cleaningFee || 60);
+      } else {
+        setError('Failed to load pricing configuration');
+      }
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setIsAuthenticated(false);
+        localStorage.removeItem('adminKey');
+        setError('Authentication failed. Please log in again.');
+      } else {
+        setError('Failed to load pricing configuration. Please try again.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
-
-  // Handle logout
-  const handleLogout = () => {
-    setIsAuthenticated(false);
+  
+  // Add a new seasonal price entry
+  const addSeasonalPrice = () => {
+    const newId = `season-${Date.now()}`;
+    setSeasonalPrices([
+      ...seasonalPrices,
+      {
+        id: newId,
+        name: "New Season",
+        startMonth: 0,
+        endMonth: 1,
+        pricePerNight: 150
+      }
+    ]);
   };
-
-  // Update a seasonal price
-  const handleUpdateSeasonalPrice = (index: number, field: keyof SeasonalPrice, value: any) => {
-    const updatedPrices = [...seasonalPrices];
-    updatedPrices[index] = { ...updatedPrices[index], [field]: value };
-    setSeasonalPrices(updatedPrices);
+  
+  // Add a new discount entry
+  const addDiscount = () => {
+    const newId = `discount-${Date.now()}`;
+    setDiscounts([
+      ...discounts,
+      {
+        id: newId,
+        name: "New Discount",
+        minNights: 7,
+        discountPercentage: 10
+      }
+    ]);
   };
-
-  // Update a discount
-  const handleUpdateDiscount = (index: number, field: keyof Discount, value: any) => {
-    const updatedDiscounts = [...discounts];
-    updatedDiscounts[index] = { ...updatedDiscounts[index], [field]: value };
-    setDiscounts(updatedDiscounts);
+  
+  // Delete a seasonal price entry
+  const deleteSeasonalPrice = (id: string) => {
+    setSeasonalPrices(seasonalPrices.filter(price => price.id !== id));
   };
-
-  // Save all pricing changes
-  const handleSavePricing = () => {
-    setIsLoading(true);
+  
+  // Delete a discount entry
+  const deleteDiscount = (id: string) => {
+    setDiscounts(discounts.filter(discount => discount.id !== id));
+  };
+  
+  // Update a seasonal price field
+  const updateSeasonalPrice = (id: string, field: keyof SeasonalPrice, value: string | number) => {
+    setSeasonalPrices(
+      seasonalPrices.map(price => 
+        price.id === id 
+          ? { ...price, [field]: field === 'name' ? value : Number(value) }
+          : price
+      )
+    );
+  };
+  
+  // Update a discount field
+  const updateDiscount = (id: string, field: keyof Discount, value: string | number) => {
+    setDiscounts(
+      discounts.map(discount => 
+        discount.id === id 
+          ? { ...discount, [field]: field === 'name' ? value : Number(value) }
+          : discount
+      )
+    );
+  };
+  
+  // Save pricing configuration
+  const savePricingConfiguration = async () => {
+    setSaving(true);
     setError(null);
     setSuccessMessage(null);
     
     try {
-      // Update all pricing data
-      pricingService.setSeasonalPrices(seasonalPrices);
-      pricingService.setDiscounts(discounts);
-      pricingService.setCleaningFee(cleaningFee);
+      const response = await axios.post(
+        `${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`,
+        {
+          seasonalPrices,
+          discounts,
+          cleaningFee: Math.round(cleaningFee) // Ensure integer values for the database
+        }
+      );
       
-      setSuccessMessage('Pricing updated successfully');
-    } catch (err) {
-      setError('Error saving pricing data');
-      console.error('Error saving pricing data:', err);
+      if (response.data.success) {
+        setSuccessMessage('Pricing configuration saved successfully');
+        // Reload the configuration to get the server-validated data
+        fetchPricingConfiguration();
+      } else {
+        setError(response.data.message || 'Failed to save pricing configuration');
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to save pricing configuration');
     } finally {
-      setIsLoading(false);
+      setSaving(false);
     }
   };
-
-  // Reset pricing to defaults
-  const handleResetPricing = () => {
-    if (window.confirm('Are you sure you want to reset all pricing to defaults?')) {
-      pricingService.resetToDefaults();
-      loadPricingData();
-      setSuccessMessage('Pricing reset to defaults');
+  
+  // Handle login submission
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!adminKey.trim()) {
+      setError('Admin key is required');
+      return;
     }
+    
+    localStorage.setItem('adminKey', adminKey);
+    setIsAuthenticated(true);
   };
-
-  // Format month name
-  const getMonthName = (monthIndex: number) => {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                   'July', 'August', 'September', 'October', 'November', 'December'];
-    return months[monthIndex];
+  
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('adminKey');
+    setIsAuthenticated(false);
+    setAdminKey('');
   };
-
-  // Show login form if not authenticated
+  
+  // Login form
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Helmet>
           <title>Admin Login | Kefalonia Vintage Home</title>
         </Helmet>
         
-        <div className="max-w-md mx-auto">
-          <div className="text-center">
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Admin Access</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Please enter your admin key to access the pricing management
-            </p>
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <img 
+              src="/images/logokef1.png" 
+              alt="Kefalonia Vintage Home" 
+              className="h-16 mx-auto mb-4"
+            />
+            <h1 className="text-2xl font-bold text-gray-800">Admin Login</h1>
+            <p className="text-gray-600 mt-2">Enter your admin key to access the pricing management</p>
           </div>
           
           {error && (
-            <div className="mt-4 bg-red-50 border border-red-200 rounded-md p-4">
-              <div className="flex">
-                <div className="flex-shrink-0">
-                  <AlertCircle className="h-5 w-5 text-red-400" />
-                </div>
-                <div className="ml-3">
-                  <p className="text-sm text-red-700">{error}</p>
-                </div>
-              </div>
+            <div className="bg-red-50 text-red-800 p-3 rounded-md mb-6 text-sm">
+              {error}
             </div>
           )}
           
-          <form className="mt-8 space-y-6" onSubmit={handleLogin}>
-            <div className="rounded-md shadow-sm -space-y-px">
-              <div>
-                <label htmlFor="admin-key" className="sr-only">Admin Key</label>
-                <input
-                  id="admin-key"
-                  name="adminKey"
-                  type="password"
-                  required
-                  className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                  placeholder="Admin Key"
-                  value={adminKey}
-                  onChange={(e) => setAdminKey(e.target.value)}
-                />
-              </div>
+          <form onSubmit={handleLogin}>
+            <div className="mb-6">
+              <label htmlFor="adminKey" className="block text-sm font-medium text-gray-700 mb-1">
+                Admin Key
+              </label>
+              <Input
+                id="adminKey"
+                type="password"
+                value={adminKey}
+                onChange={(e) => setAdminKey(e.target.value)}
+                placeholder="Enter your admin key"
+                required
+                className="w-full"
+              />
             </div>
             
-            <div>
-              <Button
-                type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[var(--primary-blue)] hover:bg-[var(--primary-blue)]/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Sign in
-              </Button>
-            </div>
+            <Button type="submit" className="w-full bg-[var(--primary-blue)]">
+              Login
+            </Button>
           </form>
         </div>
       </div>
@@ -176,241 +239,295 @@ const PricingAdmin: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 pb-12">
       <Helmet>
-        <title>Pricing Management | Kefalonia Vintage Home</title>
+        <title>Pricing Management | Admin Dashboard</title>
       </Helmet>
       
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Pricing Management</h1>
-          <div className="flex space-x-4">
+      {/* Header */}
+      <div className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center py-4">
+            <div className="flex items-center">
+              <img 
+                src="/images/logokef1.png" 
+                alt="Kefalonia Vintage Home" 
+                className="h-10 mr-4"
+              />
+              <h1 className="text-xl font-bold text-gray-800">Pricing Management</h1>
+            </div>
             <Button 
-              onClick={() => window.location.href = '/admin'}
-              className="bg-gray-100 text-gray-800 hover:bg-gray-200"
+              variant="outline" 
+              onClick={handleLogout}
+              className="text-gray-600"
             >
-              Back to Admin
-            </Button>
-            <Button onClick={handleLogout} className="bg-red-100 text-red-800 hover:bg-red-200">
               Logout
             </Button>
           </div>
         </div>
-        
-        {error && (
-          <div className="mb-4 bg-red-50 border border-red-200 rounded-md p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <AlertCircle className="h-5 w-5 text-red-400" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-700">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {successMessage && (
-          <div className="mb-4 bg-green-50 border border-green-200 rounded-md p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <CheckCircle className="h-5 w-5 text-green-400" />
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-green-700">{successMessage}</p>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-            <span className="ml-2 text-gray-500">Loading pricing data...</span>
+      </div>
+      
+      {/* Navigation */}
+      <div className="bg-gray-100 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+          <Button
+            variant="ghost"
+            onClick={() => setLocation('/admin')}
+            className="text-gray-600 hover:text-gray-900"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-[var(--primary-blue)]"></div>
+            <p className="mt-4 text-gray-600">Loading pricing configuration...</p>
           </div>
         ) : (
           <div className="space-y-8">
-            {/* Seasonal Pricing Section */}
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 flex items-center">
-                    <Calendar className="h-5 w-5 mr-2 text-[var(--terracotta)]" />
-                    Seasonal Pricing
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Info className="h-4 w-4 mr-1" />
-                    <span>Adjust prices for different seasons</span>
-                  </div>
-                </div>
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+                {error}
               </div>
-              <div className="bg-white px-4 py-5 sm:p-6">
-                <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 gap-x-4">
-                  <div className="sm:col-span-2 font-medium text-sm text-gray-600">Season</div>
-                  <div className="sm:col-span-3 font-medium text-sm text-gray-600">Time Period</div>
-                  <div className="sm:col-span-1 font-medium text-sm text-gray-600 text-right">Price per Night</div>
-                  
-                  {seasonalPrices.map((season, index) => (
-                    <React.Fragment key={season.id}>
-                      <div className="sm:col-span-2">
+            )}
+            
+            {successMessage && (
+              <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+                {successMessage}
+              </div>
+            )}
+            
+            {/* Seasonal Pricing Section */}
+            <div className="bg-white shadow rounded-lg overflow-hidden">
+              <div className="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
+                <div className="flex items-center">
+                  <Calendar className="h-5 w-5 text-[var(--primary-blue)] mr-2" />
+                  <h2 className="text-lg font-medium text-gray-800">Seasonal Pricing</h2>
+                </div>
+                <Button 
+                  onClick={addSeasonalPrice}
+                  size="sm"
+                  className="bg-[var(--primary-blue)]"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Season
+                </Button>
+              </div>
+              
+              <div className="p-6">
+                <div className="grid grid-cols-12 gap-4 font-medium text-sm text-gray-500 mb-2 px-2">
+                  <div className="col-span-3">Season Name</div>
+                  <div className="col-span-3">Start Month</div>
+                  <div className="col-span-3">End Month</div>
+                  <div className="col-span-2">Price per Night</div>
+                  <div className="col-span-1">Action</div>
+                </div>
+                
+                {seasonalPrices.map((price) => (
+                  <div key={price.id} className="grid grid-cols-12 gap-4 mb-4 items-center">
+                    <div className="col-span-3">
+                      <Input
+                        value={price.name}
+                        onChange={(e) => updateSeasonalPrice(price.id, 'name', e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <select
+                        value={price.startMonth}
+                        onChange={(e) => updateSeasonalPrice(price.id, 'startMonth', e.target.value)}
+                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      >
+                        {monthNames.map((month, index) => (
+                          <option key={`start-${index}`} value={index}>{month}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-span-3">
+                      <select
+                        value={price.endMonth}
+                        onChange={(e) => updateSeasonalPrice(price.id, 'endMonth', e.target.value)}
+                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                      >
+                        {monthNames.map((month, index) => (
+                          <option key={`end-${index}`} value={index}>{month}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="col-span-2">
+                      <div className="relative">
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                          €
+                        </span>
                         <Input
-                          value={season.name}
-                          onChange={(e) => handleUpdateSeasonalPrice(index, 'name', e.target.value)}
-                          className="w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
+                          type="number"
+                          value={price.pricePerNight}
+                          onChange={(e) => updateSeasonalPrice(price.id, 'pricePerNight', e.target.value)}
+                          className="w-full pl-8"
+                          min={1}
                         />
                       </div>
-                      <div className="sm:col-span-3 flex items-center gap-2">
-                        <span className="text-gray-500">From</span>
-                        <select
-                          value={season.startMonth}
-                          onChange={(e) => handleUpdateSeasonalPrice(index, 'startMonth', parseInt(e.target.value))}
-                          className="rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
-                        >
-                          {Array.from({ length: 12 }).map((_, i) => (
-                            <option key={i} value={i}>{getMonthName(i)}</option>
-                          ))}
-                        </select>
-                        <span className="text-gray-500">to</span>
-                        <select
-                          value={season.endMonth}
-                          onChange={(e) => handleUpdateSeasonalPrice(index, 'endMonth', parseInt(e.target.value))}
-                          className="rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
-                        >
-                          {Array.from({ length: 12 }).map((_, i) => (
-                            <option key={i} value={i}>{getMonthName(i)}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div className="sm:col-span-1">
-                        <div className="relative rounded-md shadow-sm">
-                          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <span className="text-gray-500 sm:text-sm">€</span>
-                          </div>
-                          <Input
-                            type="number"
-                            value={season.pricePerNight}
-                            onChange={(e) => handleUpdateSeasonalPrice(index, 'pricePerNight', parseInt(e.target.value))}
-                            className="pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
-                          />
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  ))}
+                    </div>
+                    <div className="col-span-1 text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteSeasonalPrice(price.id)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                {seasonalPrices.length === 0 && (
+                  <div className="text-center py-4 text-gray-500">
+                    No seasonal pricing configured. Add your first season.
+                  </div>
+                )}
+                
+                <div className="mt-4 text-sm text-gray-500">
+                  <p>Note: Seasonal pricing is based on calendar months. The system will use the highest applicable price if dates span multiple seasons.</p>
                 </div>
               </div>
             </div>
             
             {/* Discounts Section */}
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 flex items-center">
-                    <Percent className="h-5 w-5 mr-2 text-green-600" />
-                    Stay Discounts
-                  </h3>
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Info className="h-4 w-4 mr-1" />
-                    <span>Set discounts for longer stays</span>
-                  </div>
+            <div className="bg-white shadow rounded-lg overflow-hidden">
+              <div className="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
+                <div className="flex items-center">
+                  <Percent className="h-5 w-5 text-[var(--primary-blue)] mr-2" />
+                  <h2 className="text-lg font-medium text-gray-800">Length of Stay Discounts</h2>
                 </div>
+                <Button 
+                  onClick={addDiscount}
+                  size="sm"
+                  className="bg-[var(--primary-blue)]"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Discount
+                </Button>
               </div>
-              <div className="bg-white px-4 py-5 sm:p-6">
-                <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 gap-x-4">
-                  <div className="sm:col-span-3 font-medium text-sm text-gray-600">Discount Type</div>
-                  <div className="sm:col-span-1 font-medium text-sm text-gray-600 text-center">Minimum Nights</div>
-                  <div className="sm:col-span-2 font-medium text-sm text-gray-600 text-center">Discount Percentage</div>
-                  
-                  {discounts.map((discount, index) => (
-                    <React.Fragment key={discount.id}>
-                      <div className="sm:col-span-3">
-                        <Input
-                          value={discount.name}
-                          onChange={(e) => handleUpdateDiscount(index, 'name', e.target.value)}
-                          className="w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
-                        />
-                      </div>
-                      <div className="sm:col-span-1">
+              
+              <div className="p-6">
+                <div className="grid grid-cols-12 gap-4 font-medium text-sm text-gray-500 mb-2 px-2">
+                  <div className="col-span-4">Discount Name</div>
+                  <div className="col-span-3">Minimum Nights</div>
+                  <div className="col-span-4">Discount Percentage</div>
+                  <div className="col-span-1">Action</div>
+                </div>
+                
+                {discounts.map((discount) => (
+                  <div key={discount.id} className="grid grid-cols-12 gap-4 mb-4 items-center">
+                    <div className="col-span-4">
+                      <Input
+                        value={discount.name}
+                        onChange={(e) => updateDiscount(discount.id, 'name', e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <Input
+                        type="number"
+                        value={discount.minNights}
+                        onChange={(e) => updateDiscount(discount.id, 'minNights', e.target.value)}
+                        className="w-full"
+                        min={1}
+                      />
+                    </div>
+                    <div className="col-span-4">
+                      <div className="relative">
                         <Input
                           type="number"
-                          value={discount.minNights}
-                          onChange={(e) => handleUpdateDiscount(index, 'minNights', parseInt(e.target.value))}
-                          className="w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
+                          value={discount.discountPercentage}
+                          onChange={(e) => updateDiscount(discount.id, 'discountPercentage', e.target.value)}
+                          className="w-full pr-8"
+                          min={1}
+                          max={100}
                         />
+                        <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500">
+                          %
+                        </span>
                       </div>
-                      <div className="sm:col-span-2">
-                        <div className="relative rounded-md shadow-sm">
-                          <Input
-                            type="number"
-                            value={discount.discountPercentage}
-                            onChange={(e) => handleUpdateDiscount(index, 'discountPercentage', parseInt(e.target.value))}
-                            className="pr-12 w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
-                          />
-                          <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                            <span className="text-gray-500 sm:text-sm">%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </React.Fragment>
-                  ))}
+                    </div>
+                    <div className="col-span-1 text-center">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteDiscount(discount.id)}
+                        className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                {discounts.length === 0 && (
+                  <div className="text-center py-4 text-gray-500">
+                    No discounts configured. Add your first discount.
+                  </div>
+                )}
+                
+                <div className="mt-4 text-sm text-gray-500">
+                  <p>Note: Only the highest applicable discount will be applied to a booking.</p>
                 </div>
               </div>
             </div>
             
             {/* Cleaning Fee Section */}
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-              <div className="px-4 py-5 border-b border-gray-200 sm:px-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 flex items-center">
-                    <Euro className="h-5 w-5 mr-2 text-[var(--deep-blue)]" />
-                    Additional Fees
-                  </h3>
-                </div>
+            <div className="bg-white shadow rounded-lg overflow-hidden">
+              <div className="px-6 py-4 bg-gray-50 border-b flex items-center">
+                <Euro className="h-5 w-5 text-[var(--primary-blue)] mr-2" />
+                <h2 className="text-lg font-medium text-gray-800">Cleaning Fee</h2>
               </div>
-              <div className="bg-white px-4 py-5 sm:p-6">
-                <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 gap-x-4">
-                  <div className="sm:col-span-3 font-medium text-sm text-gray-600">Fee Type</div>
-                  <div className="sm:col-span-3 font-medium text-sm text-gray-600">Amount</div>
-                  
-                  <div className="sm:col-span-3">
-                    <span className="text-gray-700">Cleaning Fee</span>
+              
+              <div className="p-6">
+                <div className="max-w-md">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cleaning Fee (€)
+                  </label>
+                  <div className="relative">
+                    <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
+                      €
+                    </span>
+                    <Input
+                      type="number"
+                      value={cleaningFee}
+                      onChange={(e) => setCleaningFee(Number(e.target.value))}
+                      className="w-full pl-8"
+                      min={0}
+                    />
                   </div>
-                  <div className="sm:col-span-3">
-                    <div className="relative rounded-md shadow-sm">
-                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <span className="text-gray-500 sm:text-sm">€</span>
-                      </div>
-                      <Input
-                        type="number"
-                        value={cleaningFee}
-                        onChange={(e) => setCleaningFee(parseInt(e.target.value))}
-                        className="pl-7 w-full rounded-md border-gray-300 shadow-sm focus:border-[var(--primary-blue)] focus:ring-[var(--primary-blue)]"
-                      />
-                    </div>
-                  </div>
+                  <p className="mt-2 text-sm text-gray-500">
+                    This fee will be added to every booking regardless of length of stay.
+                  </p>
                 </div>
               </div>
             </div>
             
-            {/* Action Buttons */}
-            <div className="flex justify-end space-x-4">
+            {/* Save button */}
+            <div className="flex justify-end">
               <Button 
-                onClick={handleResetPricing}
-                className="bg-gray-100 text-gray-800 hover:bg-gray-200"
+                onClick={savePricingConfiguration}
+                className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90"
+                disabled={saving}
               >
-                Reset to Defaults
-              </Button>
-              <Button
-                onClick={handleSavePricing}
-                className="bg-[var(--terracotta)] text-white hover:bg-[var(--terracotta)]/90"
-                disabled={isLoading}
-              >
-                {isLoading ? (
+                {saving ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                     Saving...
                   </>
                 ) : (
-                  'Save Pricing Changes'
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Pricing Configuration
+                  </>
                 )}
               </Button>
             </div>

@@ -29,6 +29,7 @@ export const API_ENDPOINTS = {
   // Admin endpoints
   ADMIN_BOOKINGS: `${API_BASE_URL}/api/admin/bookings`,
   ADMIN_CANCEL_BOOKING: `${API_BASE_URL}/api/admin/bookings`,  // Keep this as is since we append the booking ID and /cancel in the admin page
+  ADMIN_PRICING: `${API_BASE_URL}/api/admin/pricing`,  // New endpoint for pricing management
 };
 
 // Stripe configuration

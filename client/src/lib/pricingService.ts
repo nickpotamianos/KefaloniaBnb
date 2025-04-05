@@ -1,4 +1,6 @@
 import { addDays, differenceInDays, startOfDay } from 'date-fns';
+import axios from 'axios';
+import { API_ENDPOINTS } from './api-config';
 
 // Types for pricing management
 export interface SeasonalPrice {
@@ -18,7 +20,7 @@ export interface Discount {
 
 // Centralized price management
 class PricingService {
-  // Seasonal pricing tiers
+  // Property to store the pricing data
   private seasonalPrices: SeasonalPrice[] = [
     { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 }, // July-August
     { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },  // June & September
@@ -34,6 +36,44 @@ class PricingService {
 
   // Cleaning fee is fixed
   private cleaningFee: number = 60;
+  
+  // Flag to indicate if pricing has been loaded from the server
+  private isInitialized: boolean = false;
+  
+  constructor() {
+    // Try to load pricing from the server
+    this.loadPricingFromServer().catch(err => {
+      console.warn("Could not load pricing from server, using defaults", err);
+    });
+  }
+  
+  // Initialize pricing from the server
+  public async loadPricingFromServer(): Promise<void> {
+    try {
+      const response = await axios.get(API_ENDPOINTS.ADMIN_PRICING);
+      
+      if (response.data.success && response.data.pricing) {
+        const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
+        
+        if (Array.isArray(seasonalPrices) && seasonalPrices.length > 0) {
+          this.seasonalPrices = seasonalPrices;
+        }
+        
+        if (Array.isArray(discounts) && discounts.length > 0) {
+          this.discounts = discounts;
+        }
+        
+        if (typeof cleaningFee === 'number') {
+          this.cleaningFee = cleaningFee;
+        }
+        
+        this.isInitialized = true;
+      }
+    } catch (error) {
+      console.error("Error loading pricing from server:", error);
+      // Keep using the default pricing
+    }
+  }
 
   // Get the base price for a specific date
   public getPriceForDate(date: Date): number {
@@ -158,7 +198,7 @@ class PricingService {
     const discount = Math.round(basePrice * discountPercentage);
     
     // Return the subtotal (base price minus discount)
-    return basePrice - discount;
+    return Math.round(basePrice - discount);
   }
   
   // Calculate total price (alias for calculateTotalPrice for compatibility)
@@ -196,12 +236,31 @@ class PricingService {
 
   // Update cleaning fee
   public setCleaningFee(fee: number): void {
-    this.cleaningFee = fee;
+    this.cleaningFee = Math.round(fee);
   }
 
   // Get cleaning fee
   public getCleaningFee(): number {
     return this.cleaningFee;
+  }
+
+  // Save all pricing to the server (admin function)
+  public async savePricingToServer(adminKey: string): Promise<boolean> {
+    try {
+      const response = await axios.post(
+        `${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`,
+        {
+          seasonalPrices: this.seasonalPrices,
+          discounts: this.discounts,
+          cleaningFee: this.cleaningFee
+        }
+      );
+      
+      return response.data.success === true;
+    } catch (error) {
+      console.error("Error saving pricing to server:", error);
+      return false;
+    }
   }
 
   // Reset all pricing to defaults

@@ -394,24 +394,24 @@ const BookingPage: React.FC = () => {
                     <span className="text-gray-600">
                       €{pricingInfo.nights > 0 ? Math.round(pricingInfo.basePrice / pricingInfo.nights) : 0} × {pricingInfo.nights} nights
                     </span>
-                    <span>€{pricingInfo.basePrice}</span>
+                    <span>€{Math.round(pricingInfo.basePrice)}</span>
                   </div>
                   
                   {pricingInfo.discount > 0 && (
                     <div className="flex justify-between text-sm mt-2 text-green-600">
-                      <span>{pricingInfo.discountText} ({pricingInfo.discountPercentage}% off)</span>
-                      <span>-€{pricingInfo.discount}</span>
+                      <span>{pricingInfo.discountText} ({Math.round(pricingInfo.discountPercentage)}% off)</span>
+                      <span>-€{Math.round(pricingInfo.discount)}</span>
                     </div>
                   )}
                   
                   <div className="flex justify-between text-sm mt-2">
                     <span className="text-gray-600">Cleaning fee</span>
-                    <span>€{pricingInfo.cleaningFee}</span>
+                    <span>€{Math.round(pricingInfo.cleaningFee)}</span>
                   </div>
                   
                   <div className="flex justify-between text-lg font-bold mt-4 pt-4 border-t border-gray-200">
                     <span>Total</span>
-                    <span>€{pricingInfo.totalPrice}</span>
+                    <span>€{Math.round(pricingInfo.totalPrice)}</span>
                   </div>
                 </div>
 

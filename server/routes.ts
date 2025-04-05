@@ -859,6 +859,95 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin: Get pricing configuration
+  app.get("/api/admin/pricing", requireAdmin, async (_req, res) => {
+    try {
+      // Import the pricing model
+      const PricingModel = require('./modules/database/models/pricing').default;
+      
+      // Try to get the pricing configuration from the database
+      let pricingConfig = await PricingModel.findOne({ id: 'default' });
+      
+      // If no configuration exists, create a default one
+      if (!pricingConfig) {
+        pricingConfig = new PricingModel({
+          id: 'default',
+          seasonalPrices: [
+            { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 },
+            { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },
+            { id: "shoulder-season", name: "Shoulder Season", startMonth: 3, endMonth: 4, pricePerNight: 170 },
+            { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 }
+          ],
+          discounts: [
+            { id: "monthly", name: "Monthly Discount", minNights: 30, discountPercentage: 20 },
+            { id: "weekly", name: "Weekly Discount", minNights: 7, discountPercentage: 12 }
+          ],
+          cleaningFee: 60,
+          updatedAt: new Date()
+        });
+        
+        await pricingConfig.save();
+      }
+      
+      res.json({
+        success: true,
+        pricing: pricingConfig
+      });
+    } catch (error) {
+      console.error('Error fetching pricing configuration:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch pricing configuration."
+      });
+    }
+  });
+  
+  // Admin: Update pricing configuration
+  app.post("/api/admin/pricing", requireAdmin, async (req, res) => {
+    try {
+      const { seasonalPrices, discounts, cleaningFee } = req.body;
+      
+      // Validate input
+      if (!Array.isArray(seasonalPrices) || !Array.isArray(discounts) || typeof cleaningFee !== 'number') {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid input format. Required: seasonalPrices (array), discounts (array), cleaningFee (number)"
+        });
+      }
+      
+      // Import the pricing model
+      const PricingModel = require('./modules/database/models/pricing').default;
+      
+      // Find the pricing configuration or create a new one
+      let pricingConfig = await PricingModel.findOne({ id: 'default' });
+      
+      if (!pricingConfig) {
+        pricingConfig = new PricingModel({ id: 'default' });
+      }
+      
+      // Update the configuration
+      pricingConfig.seasonalPrices = seasonalPrices;
+      pricingConfig.discounts = discounts;
+      pricingConfig.cleaningFee = Math.round(cleaningFee); // Ensure integer
+      pricingConfig.updatedAt = new Date();
+      
+      // Save the updated configuration
+      await pricingConfig.save();
+      
+      res.json({
+        success: true,
+        message: "Pricing configuration updated successfully",
+        pricing: pricingConfig
+      });
+    } catch (error) {
+      console.error('Error updating pricing configuration:', error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to update pricing configuration."
+      });
+    }
+  });
+
   // Contact form submission
   app.post("/api/contact", async (req, res) => {
     try {
