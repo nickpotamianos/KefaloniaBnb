@@ -773,7 +773,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Admin middleware to check for authorization
   const requireAdmin = (req: any, res: any, next: any) => {
-    const adminKey = req.headers['x-admin-key'] || req.query.adminKey;
+    const adminKey = req.headers['x-admin-key'] || req.query.adminKey || req.body.adminKey;
     
     if (!adminKey || adminKey !== ADMIN_SECRET) {
       return res.status(401).json({

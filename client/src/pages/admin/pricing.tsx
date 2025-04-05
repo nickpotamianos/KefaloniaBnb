@@ -54,13 +54,29 @@ const PricingAdmin: React.FC = () => {
     setError(null);
     
     try {
-      const response = await axios.get(`${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`);
+      // Use both query params and headers for better compatibility with the server auth middleware
+      const response = await axios.get(`${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`, {
+        headers: {
+          'x-admin-key': adminKey
+        }
+      });
       
       if (response.data.success && response.data.pricing) {
         const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
-        setSeasonalPrices(seasonalPrices || []);
+        
+        // Round all price values to whole numbers
+        if (Array.isArray(seasonalPrices)) {
+          const roundedPrices = seasonalPrices.map(price => ({
+            ...price,
+            pricePerNight: Math.round(price.pricePerNight)
+          }));
+          setSeasonalPrices(roundedPrices || []);
+        } else {
+          setSeasonalPrices([]);
+        }
+        
         setDiscounts(discounts || []);
-        setCleaningFee(cleaningFee || 60);
+        setCleaningFee(Math.round(cleaningFee || 60));
       } else {
         setError('Failed to load pricing configuration');
       }
@@ -145,12 +161,25 @@ const PricingAdmin: React.FC = () => {
     setSuccessMessage(null);
     
     try {
+      // Make sure all price values are integers
+      const roundedSeasonalPrices = seasonalPrices.map(price => ({
+        ...price,
+        pricePerNight: Math.round(price.pricePerNight)
+      }));
+      
+      // Include admin key in request headers, query params, and body for maximum compatibility
       const response = await axios.post(
         `${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`,
         {
-          seasonalPrices,
+          adminKey, // Include in body
+          seasonalPrices: roundedSeasonalPrices,
           discounts,
-          cleaningFee: Math.round(cleaningFee) // Ensure integer values for the database
+          cleaningFee: Math.round(cleaningFee)
+        },
+        {
+          headers: {
+            'x-admin-key': adminKey // Add to headers
+          }
         }
       );
       

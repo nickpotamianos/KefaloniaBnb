@@ -50,13 +50,19 @@ class PricingService {
   // Initialize pricing from the server
   public async loadPricingFromServer(): Promise<void> {
     try {
+      // First try to load without admin authentication - this will load just the public pricing data
+      // The server should have a route that returns pricing without requiring admin auth
       const response = await axios.get(API_ENDPOINTS.ADMIN_PRICING);
       
       if (response.data.success && response.data.pricing) {
         const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
         
         if (Array.isArray(seasonalPrices) && seasonalPrices.length > 0) {
-          this.seasonalPrices = seasonalPrices;
+          // Ensure all price values are whole numbers
+          this.seasonalPrices = seasonalPrices.map(price => ({
+            ...price,
+            pricePerNight: Math.round(price.pricePerNight)
+          }));
         }
         
         if (Array.isArray(discounts) && discounts.length > 0) {
@@ -64,7 +70,7 @@ class PricingService {
         }
         
         if (typeof cleaningFee === 'number') {
-          this.cleaningFee = cleaningFee;
+          this.cleaningFee = Math.round(cleaningFee);
         }
         
         this.isInitialized = true;
@@ -150,6 +156,9 @@ class PricingService {
       basePrice += this.getPriceForDate(currentDate);
       currentDate = addDays(currentDate, 1);
     }
+    
+    // Round basePrice to whole number
+    basePrice = Math.round(basePrice);
     
     // Apply discount if applicable
     const { discountPercentage, discountText } = this.calculateDiscount(nights);
@@ -247,12 +256,25 @@ class PricingService {
   // Save all pricing to the server (admin function)
   public async savePricingToServer(adminKey: string): Promise<boolean> {
     try {
+      // Ensure all prices are rounded to whole numbers
+      const roundedPrices = this.seasonalPrices.map(price => ({
+        ...price,
+        pricePerNight: Math.round(price.pricePerNight)
+      }));
+      
+      // Add the admin key to both query params and headers for better compatibility
       const response = await axios.post(
         `${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`,
         {
-          seasonalPrices: this.seasonalPrices,
+          adminKey, // Include in body as well
+          seasonalPrices: roundedPrices,
           discounts: this.discounts,
-          cleaningFee: this.cleaningFee
+          cleaningFee: Math.round(this.cleaningFee)
+        },
+        {
+          headers: {
+            'x-admin-key': adminKey // Add to headers
+          }
         }
       );
       

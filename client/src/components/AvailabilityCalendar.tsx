@@ -110,6 +110,9 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
       // Add cleaning fee (€60)
       totalCost += 60;
       
+      // Round the total to whole numbers
+      totalCost = Math.round(totalCost);
+      
       setTotalPrice(totalCost);
     } else {
       setTotalPrice(null);
@@ -256,7 +259,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
             >
               {showPrices && day.isCurrentMonth && !day.isPast && !day.isBooked && (
                 <div className="text-[8px] font-medium text-gray-600 -mt-1 mb-0.5">
-                  €{day.price}
+                  €{Math.round(day.price)}
                 </div>
               )}
               {format(day.date, "d")}
@@ -364,13 +367,13 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                 <div className="text-sm text-gray-600 mt-1">
                   <div className="flex justify-between">
                     <span>Nightly rate × {Math.round((selectedEndDate.getTime() - selectedStartDate.getTime()) / (1000 * 60 * 60 * 24))} nights</span>
-                    <span>€{totalPrice - 60}</span>
+                    <span>€{Math.round(totalPrice - 60)}</span>
                   </div>
                   
                   {discountInfo && (
                     <div className="flex justify-between text-green-600">
                       <span>{discountInfo.text}</span>
-                      <span>-{discountInfo.percentage}%</span>
+                      <span>-{Math.round(discountInfo.percentage)}%</span>
                     </div>
                   )}
                   
