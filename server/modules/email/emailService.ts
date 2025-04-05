@@ -172,22 +172,28 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
           
           <ul style="padding-left: 10px; list-style-type: none;">
             <li style="padding: 12px 0; display: flex; align-items: center; border-bottom: 1px dashed #f0f0f0;">
-              <div style="min-width: 32px; height: 32px; background-color: #e0f7fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; color: #2a609e; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">1</div>
+              <div style="min-width: 32px; height: 32px; background-color: #e0f7fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; color: #2a609e; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <span style="display: inline-block; text-align: center; width: 100%;">1</span>
+              </div>
               <span>Three days before your arrival, we'll send you detailed <strong>check-in instructions</strong>, directions, and local tips to help you navigate to our home.</span>
             </li>
             <li style="padding: 12px 0; display: flex; align-items: center; border-bottom: 1px dashed #f0f0f0;">
-              <div style="min-width: 32px; height: 32px; background-color: #e0f7fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; color: #2a609e; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">2</div>
+              <div style="min-width: 32px; height: 32px; background-color: #e0f7fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; color: #2a609e; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <span style="display: inline-block; text-align: center; width: 100%;">2</span>
+              </div>
               <span>Your home will be <strong>professionally cleaned and prepared</strong> with fresh linens, fluffy towels, and all amenities before your arrival.</span>
             </li>
             <li style="padding: 12px 0; display: flex; align-items: center;">
-              <div style="min-width: 32px; height: 32px; background-color: #e0f7fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; color: #2a609e; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">3</div>
+              <div style="min-width: 32px; height: 32px; background-color: #e0f7fa; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-weight: bold; color: #2a609e; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <span style="display: inline-block; text-align: center; width: 100%;">3</span>
+              </div>
               <span>Upon arrival, you'll find a <strong>welcome basket</strong> with local Kefalonian treats, including olive oil, wine, and homemade sweets to begin your holiday in style.</span>
             </li>
           </ul>
         </div>
         
         <div style="background: url('https://villakefalonia.potamianosgroup.com/images/fiskardo.jpeg') center center / cover no-repeat; padding: 40px; border-radius: 12px; margin: 30px 0; position: relative; overflow: hidden;">
-          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(42, 96, 158, 0.65);"></div>
+          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);"></div>
           <div style="position: relative; z-index: 1; color: white; text-align: center;">
             <h2 style="font-family: Georgia, serif; margin-top: 0; font-size: 26px;">A Taste of Kefalonia Awaits You</h2>
             <p style="font-size: 17px;">Crystal clear azure waters, charming fishing villages, and unforgettable Mediterranean sunsets.</p>
@@ -363,7 +369,7 @@ export async function sendPreArrivalEmail(booking: Booking): Promise<boolean> {
           <p><strong>Address:</strong> Kefalonia Vintage Home, Fiscardo, Kefalonia, Ionian Islands, Greece</p>
           
           <h3 style="color: #2a609e; margin-top: 20px;">Self Check-in Instructions</h3>
-          <p>Our home offers convenient self-check-in with a lockbox. The code for your stay is: <strong>1234</strong></p>
+          <p>Our home offers convenient self-check-in with a lockbox. The code for your stay is: <strong>2002</strong></p>
           <p>You'll find the lockbox next to the main entrance. Please remember to lock the door and secure the key in the lockbox whenever you leave the property.</p>
         </div>
         

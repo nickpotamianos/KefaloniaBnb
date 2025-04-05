@@ -519,12 +519,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const session = event.data.object as any;
           const sessionId = session.id;
           
+          console.log('Stripe webhook received - checkout.session.completed:', sessionId);
+          console.log('Payment status from Stripe:', session.payment_status);
+          
           // Find the booking with this session ID
           const booking = await storage.getBookingByStripeSession(sessionId);
           
           if (booking) {
-            // Update booking status - Ensure Stripe "paid" status gets converted to "confirmed"
-            const updatedBooking = await storage.updateBookingStatus(booking.id, session.payment_status === 'paid' ? 'confirmed' : session.payment_status);
+            // Update booking status
+            // Always set to 'confirmed' for completed checkout sessions
+            // Stripe uses 'paid' but our system uses 'confirmed'
+            const updatedBooking = await storage.updateBookingStatus(booking.id, 'confirmed');
+            
+            console.log('Booking status updated from webhook:', booking.id, 'New status: confirmed');
             
             if (updatedBooking) {
               try {
@@ -551,6 +558,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 console.error('Error in post-payment processes:', emailError);
               }
             }
+          } else {
+            console.error('No booking found for session ID:', sessionId);
           }
         }
         
@@ -613,6 +622,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         } catch (stripeError) {
           console.error('Error retrieving Stripe session');
+        }
+      } else if (booking.paymentStatus !== 'confirmed') {
+        // If the booking exists but still has pending status, check with Stripe for the latest status
+        try {
+          const session = await getCheckoutSession(sessionId);
+          if (session && session.payment_status === 'paid') {
+            // Update booking status to confirmed
+            booking = await storage.updateBookingStatus(booking.id, 'confirmed');
+            
+            // Sync booking to external calendars and send confirmation emails
+            try {
+              // Sync the booking to external calendars
+              await syncBookingToExternalCalendars(booking);
+              
+              // Send confirmation emails if not already sent
+              await Promise.all([
+                sendBookingConfirmation(booking),
+                sendOwnerNotification(booking)
+              ]);
+              
+              // Schedule pre-arrival email to be sent 3 days before check-in
+              const checkInDate = new Date(booking.checkIn);
+              const preArrivalDate = addDays(checkInDate, -3);
+              const now = new Date();
+              
+              // If check-in is less than 3 days away, send pre-arrival email now
+              if (preArrivalDate <= now) {
+                await sendPreArrivalEmail(booking);
+              }
+            } catch (emailError) {
+              console.error('Error in post-payment processes:', emailError);
+            }
+          }
+        } catch (stripeError) {
+          console.error('Error retrieving Stripe session status:', stripeError);
         }
       }
       
