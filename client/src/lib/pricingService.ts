@@ -43,16 +43,16 @@ class PricingService {
   constructor() {
     // Try to load pricing from the server
     this.loadPricingFromServer().catch(err => {
-      console.warn("Could not load pricing from server, using defaults", err);
+      // Just use the defaults, no need to log an error to console that might confuse users
+      this.isInitialized = true;
     });
   }
   
   // Initialize pricing from the server
   public async loadPricingFromServer(): Promise<void> {
     try {
-      // First try to load without admin authentication - this will load just the public pricing data
-      // The server should have a route that returns pricing without requiring admin auth
-      const response = await axios.get(API_ENDPOINTS.ADMIN_PRICING);
+      // Use the public endpoint that doesn't require admin authentication
+      const response = await axios.get(API_ENDPOINTS.PRICING);
       
       if (response.data.success && response.data.pricing) {
         const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
@@ -66,18 +66,22 @@ class PricingService {
         }
         
         if (Array.isArray(discounts) && discounts.length > 0) {
-          this.discounts = discounts;
+          this.discounts = discounts.map(discount => ({
+            ...discount,
+            discountPercentage: Math.round(discount.discountPercentage)
+          }));
         }
         
         if (typeof cleaningFee === 'number') {
           this.cleaningFee = Math.round(cleaningFee);
         }
-        
-        this.isInitialized = true;
       }
     } catch (error) {
-      console.error("Error loading pricing from server:", error);
-      // Keep using the default pricing
+      // For the public pricing endpoint, don't display errors in console
+      // Just silently fall back to default pricing
+      console.log("Using default pricing");
+    } finally {
+      this.isInitialized = true;
     }
   }
 

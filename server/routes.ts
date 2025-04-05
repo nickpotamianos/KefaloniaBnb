@@ -59,6 +59,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Public endpoint for pricing information (for booking form)
+  app.get("/api/pricing", async (_req, res) => {
+    try {
+      // Import the pricing model
+      const PricingModel = require('./modules/database/models/pricing').default;
+      
+      // Try to get the pricing configuration from the database
+      let pricingConfig = await PricingModel.findOne({ id: 'default' });
+      
+      // If no configuration exists, use default values
+      if (!pricingConfig) {
+        return res.json({
+          success: true,
+          pricing: {
+            seasonalPrices: [
+              { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 },
+              { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },
+              { id: "shoulder-season", name: "Shoulder Season", startMonth: 3, endMonth: 4, pricePerNight: 170 },
+              { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 }
+            ],
+            discounts: [
+              { id: "monthly", name: "Monthly Discount", minNights: 30, discountPercentage: 20 },
+              { id: "weekly", name: "Weekly Discount", minNights: 7, discountPercentage: 12 }
+            ],
+            cleaningFee: 60
+          }
+        });
+      }
+      
+      // Return the pricing configuration (without admin-only fields)
+      res.json({
+        success: true,
+        pricing: {
+          seasonalPrices: pricingConfig.seasonalPrices.map(price => ({
+            ...price,
+            pricePerNight: Math.round(price.pricePerNight) // Ensure integer prices
+          })),
+          discounts: pricingConfig.discounts,
+          cleaningFee: Math.round(pricingConfig.cleaningFee) // Ensure integer prices
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching public pricing configuration:', error);
+      // Return default pricing on error to prevent booking form failure
+      res.json({
+        success: true,
+        pricing: {
+          seasonalPrices: [
+            { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 },
+            { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },
+            { id: "shoulder-season", name: "Shoulder Season", startMonth: 3, endMonth: 4, pricePerNight: 170 },
+            { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 }
+          ],
+          discounts: [
+            { id: "monthly", name: "Monthly Discount", minNights: 30, discountPercentage: 20 },
+            { id: "weekly", name: "Weekly Discount", minNights: 7, discountPercentage: 12 }
+          ],
+          cleaningFee: 60
+        }
+      });
+    }
+  });
+
   // Calendar availability endpoint - fetches all external calendars
   app.get("/api/calendar/availability", async (_req, res) => {
     try {
