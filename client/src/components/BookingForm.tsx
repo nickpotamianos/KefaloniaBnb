@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -8,11 +8,9 @@ import CustomDateRangePicker from '@/components/CustomDateRangePicker';
 import { Users, Baby, Minus, Plus, Calendar, CheckCircle, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useBookings } from '@/hooks/use-bookings';
+import pricingService from '@/lib/pricingService';
 
-// Constants that can be imported by Booking.tsx
-export const BASE_PRICE_PER_NIGHT = 200; // Updated to €200 per night
-export const CLEANING_FEE = 60;         // Updated to €60 cleaning fee
-export const ADDITIONAL_GUEST_FEE = 0;   // No additional guest fee
+// Use centralized pricing service instead of hardcoded constants
 export const MIN_NIGHTS = 2;
 
 // Country codes for phone numbers - comprehensive worldwide list
@@ -39,7 +37,7 @@ const countryCodes = [
   { code: '+39', country: 'Italy', flag: '🇮🇹' },
   { code: '+371', country: 'Latvia', flag: '🇱🇻' },
   { code: '+370', country: 'Lithuania', flag: '🇱🇹' },
-  { code: '+352', country: 'Luxembourg', flag: '🇱🇺' },
+  { code: '+352', country: 'Luxembourg', flag: '🇬🇷' },
   { code: '+356', country: 'Malta', flag: '🇲🇹' },
   { code: '+373', country: 'Moldova', flag: '🇲🇩' },
   { code: '+377', country: 'Monaco', flag: '🇲🇨' },
@@ -146,8 +144,45 @@ const BookingForm: React.FC<BookingFormProps> = ({
   // Default to Greece country code (+30)
   const [selectedCountryCode, setSelectedCountryCode] = useState('+30');
 
+  // State for pricing information
+  const [priceSummary, setPriceSummary] = useState<{
+    basePrice: number;
+    nights: number;
+    discount: number;
+    discountPercentage: number;
+    discountText: string;
+    cleaningFee: number;
+    totalPrice: number;
+  }>({
+    basePrice: 0,
+    nights: 0,
+    discount: 0,
+    discountPercentage: 0,
+    discountText: '',
+    cleaningFee: 0,
+    totalPrice: 0
+  });
+
   // Get booking data from the same hook used in AvailabilityCalendar
   const { isDateBooked } = useBookings();
+  
+  // Update pricing information when dates change
+  useEffect(() => {
+    if (checkIn && checkOut) {
+      const pricing = pricingService.calculateTotalPrice(checkIn, checkOut);
+      setPriceSummary(pricing);
+    } else {
+      setPriceSummary({
+        basePrice: 0,
+        nights: 0,
+        discount: 0,
+        discountPercentage: 0,
+        discountText: '',
+        cleaningFee: 0,
+        totalPrice: 0
+      });
+    }
+  }, [checkIn, checkOut]);
   
   // Parse phone number to separate country code and number
   const getPhoneWithoutCode = () => {
@@ -307,6 +342,40 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 <span className="text-gray-600">Check-out</span>
                 <span className="font-semibold">{format(checkOut, 'MMMM d, yyyy')}</span>
               </div>
+              
+              {/* Price Summary - using pricing service data */}
+              {priceSummary.nights > 0 && (
+                <div className="mt-4 pt-3 border-t border-[var(--sand)]/30">
+                  <p className="font-medium text-[var(--deep-blue)] mb-2">Price Summary</p>
+                  <div className="space-y-1 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">
+                        €{Math.round(priceSummary.basePrice / priceSummary.nights)} × {priceSummary.nights} nights
+                      </span>
+                      <span>€{priceSummary.basePrice}</span>
+                    </div>
+                    
+                    {priceSummary.discount > 0 && (
+                      <div className="flex justify-between text-green-600">
+                        <span>{priceSummary.discountText} ({Math.round(priceSummary.discountPercentage * 100)}% off)</span>
+                        <span>-€{priceSummary.discount}</span>
+                      </div>
+                    )}
+                    
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Cleaning fee</span>
+                      <span>€{priceSummary.cleaningFee}</span>
+                    </div>
+                    
+                    <div className="flex justify-between font-medium pt-2 border-t border-[var(--sand)]/30 mt-2">
+                      <span>Total</span>
+                      <span className="text-[var(--deep-blue)]">€{priceSummary.totalPrice}</span>
+                    </div>
+                    
+                    <p className="text-xs text-gray-500 mt-1">Price includes all taxes and fees</p>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, 
-  isBefore, isToday, compareAsc, startOfWeek, endOfWeek, getMonth } from "date-fns";
+  isBefore, isToday, compareAsc, startOfWeek, endOfWeek } from "date-fns";
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBookings } from "@/hooks/use-bookings";
+import pricingService from "@/lib/pricingService";
 
 type AvailabilityCalendarProps = {
   className?: string;
@@ -11,30 +12,9 @@ type AvailabilityCalendarProps = {
   showHelpText?: boolean;
 };
 
-// Price configuration per night based on seasons
-const getPriceForDate = (date: Date): number => {
-  const month = getMonth(date);
-  
-  // June
-  if (month === 5) return 180;
-  // July and August - peak season
-  if (month === 6 || month === 7) return 200; 
-  // April and May - early season
-  if (month === 3 || month === 4) return 170;
-  // September - late summer
-  if (month === 8) return 180;
-  // Rest of the year - off-season
-  return 150;
-};
-
-// Calculate discounts based on length of stay
-const calculateDiscount = (nights: number): { discountPercentage: number, discountText: string } => {
-  // 20% off for stays of 30+ nights
-  if (nights >= 30) return { discountPercentage: 0.20, discountText: '20% monthly discount' };
-  // 12% off for stays of 7+ nights
-  if (nights >= 7) return { discountPercentage: 0.12, discountText: '12% weekly discount' };
-  // No discount
-  return { discountPercentage: 0, discountText: '' };
+// Calculate discounts based on length of stay - now using the pricing service
+const calculateDiscount = (nights: number) => {
+  return pricingService.calculateDiscount(nights);
 };
 
 const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ 
@@ -85,13 +65,13 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
     const daysInView = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
     const today = new Date();
     
-    // Calculate booking status for each day
+    // Calculate booking status for each day - using pricing service for prices
     const daysWithStatus = daysInView.map(day => ({
       date: day,
       isBooked: isDateBooked(day),
       isPast: isBefore(day, today) && !isToday(day),
       isCurrentMonth: day.getMonth() === month.getMonth(),
-      price: getPriceForDate(day)
+      price: pricingService.getPriceForDate(day)
     }));
     
     setDays(daysWithStatus);
@@ -111,7 +91,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
       
       // Sum up the price for each night
       datesInRange.forEach(date => {
-        totalCost += getPriceForDate(date);
+        totalCost += pricingService.getPriceForDate(date);
       });
       
       // Apply discount based on length of stay

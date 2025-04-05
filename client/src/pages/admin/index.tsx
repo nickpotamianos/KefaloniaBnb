@@ -261,6 +261,12 @@ const AdminPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Booking Management</h1>
           <div className="flex space-x-4">
             <Button 
+              onClick={() => window.location.href = '/admin/pricing'}
+              className="bg-[var(--sea-blue)] text-white hover:bg-[var(--sea-blue)]/90"
+            >
+              Manage Pricing
+            </Button>
+            <Button 
               onClick={fetchBookings} 
               className="bg-gray-100 text-gray-800 hover:bg-gray-200"
               disabled={isLoading}

@@ -4,6 +4,7 @@ import { addMonths, format, isSameDay, isWithinInterval, startOfMonth,
   addDays, subDays, getDay, startOfWeek, endOfWeek, getMonth } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import pricingService from '@/lib/pricingService';
 
 interface DateRange {
   startDate: Date | null;
@@ -20,20 +21,9 @@ interface CustomDateRangePickerProps {
   showPrices?: boolean;
 }
 
-// Price configuration per night based on seasons
+// Now using the pricing service for date prices
 const getPriceForDate = (date: Date): number => {
-  const month = getMonth(date);
-  
-  // June
-  if (month === 5) return 180;
-  // July and August - peak season
-  if (month === 6 || month === 7) return 200; 
-  // April and May - early season
-  if (month === 3 || month === 4) return 170;
-  // September - late summer
-  if (month === 8) return 180;
-  // Rest of the year - off-season
-  return 150;
+  return pricingService.getPriceForDate(date);
 };
 
 const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
