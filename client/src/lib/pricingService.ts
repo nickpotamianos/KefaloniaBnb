@@ -89,14 +89,26 @@ class PricingService {
   public getPriceForDate(date: Date): number {
     const month = date.getMonth();
     
-    // Find the season pricing tier for this month
-    const season = this.seasonalPrices.find(s => 
-      (s.startMonth <= s.endMonth && month >= s.startMonth && month <= s.endMonth) || 
-      (s.startMonth > s.endMonth && (month >= s.startMonth || month <= s.endMonth))
-    );
+    // Find applicable seasonal prices for this month
+    const applicableSeasons = this.seasonalPrices.filter(season => {
+      if (season.startMonth <= season.endMonth) {
+        // Regular season (e.g., April-May)
+        return month >= season.startMonth && month <= season.endMonth;
+      } else {
+        // Season spans year end (e.g., November-February)
+        return month >= season.startMonth || month <= season.endMonth;
+      }
+    });
     
-    // Default to low season if no match is found (should never happen)
-    return season ? season.pricePerNight : 150; 
+    if (applicableSeasons.length === 0) {
+      // If no season matches (shouldn't happen with proper setup), use lowest price as fallback
+      console.log(`No seasonal price found for month ${month}, using fallback price`);
+      const lowestPrice = Math.min(...this.seasonalPrices.map(s => s.pricePerNight));
+      return lowestPrice;
+    }
+    
+    // If multiple seasons apply, use the highest price
+    return Math.max(...applicableSeasons.map(s => s.pricePerNight));
   }
 
   // Calculate discount based on length of stay
