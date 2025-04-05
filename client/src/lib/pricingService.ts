@@ -130,6 +130,37 @@ class PricingService {
     };
   }
 
+  // Calculate the subtotal (base price minus discount, before adding cleaning fee)
+  public calculateSubtotal(checkIn: Date, checkOut: Date): number {
+    // Normalize dates to start of day
+    const startDate = startOfDay(checkIn);
+    const endDate = startOfDay(checkOut);
+    
+    // Calculate number of nights
+    const nights = differenceInDays(endDate, startDate);
+    
+    // If invalid dates or 0 nights, return 0
+    if (nights <= 0) {
+      return 0;
+    }
+    
+    // Calculate the price for each night and sum them
+    let basePrice = 0;
+    let currentDate = startDate;
+    
+    for (let i = 0; i < nights; i++) {
+      basePrice += this.getPriceForDate(currentDate);
+      currentDate = addDays(currentDate, 1);
+    }
+    
+    // Apply discount if applicable
+    const { discountPercentage } = this.calculateDiscount(nights);
+    const discount = Math.round(basePrice * discountPercentage);
+    
+    // Return the subtotal (base price minus discount)
+    return basePrice - discount;
+  }
+
   // Get seasonal prices for admin interface
   public getSeasonalPrices(): SeasonalPrice[] {
     return [...this.seasonalPrices];
