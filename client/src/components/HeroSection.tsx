@@ -2,7 +2,6 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
-import AvailabilityCalendar from "./AvailabilityCalendar";
 
 const HeroSection = () => {
   return (
@@ -137,69 +136,6 @@ const HeroSection = () => {
           >
             <ChevronDown className="h-6 w-6" />
           </motion.a>
-        </div>
-      </section>
-      
-      {/* Booking Section with Calendar */}
-      <section id="booking" className="px-4 py-16 bg-white">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 playfair mb-4">
-              Check Availability & Book Your Stay
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Experience the natural beauty of Kefalonia with our special pricing and discounts for longer stays. 
-              Enjoy 12% off for weekly bookings and 20% off for monthly stays.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-            <div className="bg-white p-6 rounded-xl shadow-lg">
-              <AvailabilityCalendar showPrices={true} showHelpText={true} />
-            </div>
-            
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4">Kefalonia Through the Seasons</h3>
-              
-              <div className="space-y-6">
-                <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[var(--sea-blue)]">
-                  <h4 className="font-semibold text-lg mb-2">April - May (€170/night)</h4>
-                  <p className="text-gray-600">
-                    Spring brings mild temperatures, wildflowers, and fewer tourists. Perfect for hiking and exploring the island's natural beauty.
-                  </p>
-                </div>
-                
-                <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[var(--terracotta)]">
-                  <h4 className="font-semibold text-lg mb-2">June & September (€180/night)</h4>
-                  <p className="text-gray-600">
-                    The ideal shoulder seasons with warm sea temperatures, perfect weather, and less crowded beaches.
-                  </p>
-                </div>
-                
-                <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-amber-500">
-                  <h4 className="font-semibold text-lg mb-2">July - August (€200/night)</h4>
-                  <p className="text-gray-600">
-                    Peak summer season with hot sunny days, vibrant nightlife, and the full Greek island experience in all its glory.
-                  </p>
-                </div>
-                
-                <div className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-teal-500">
-                  <h4 className="font-semibold text-lg mb-2">October - March (€150/night)</h4>
-                  <p className="text-gray-600">
-                    Experience the authentic local life with mild winters, peaceful surroundings, and the island's natural beauty without the crowds.
-                  </p>
-                </div>
-                
-                <div className="bg-green-50 p-4 rounded-lg shadow-sm border border-green-200 mt-6">
-                  <h4 className="font-semibold text-lg text-green-700 mb-2">Special Discounts</h4>
-                  <ul className="text-gray-600 list-disc pl-5 space-y-1">
-                    <li><span className="font-medium">Stay 7+ nights:</span> Get 12% off your entire booking</li>
-                    <li><span className="font-medium">Stay 30+ nights:</span> Enjoy 20% off for extended stays</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
     </>

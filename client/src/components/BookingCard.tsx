@@ -84,8 +84,8 @@ const BookingCard = () => {
             </h4>
             <p className="text-gray-700 mb-4">Check our calendar for available dates. Book early for the summer season (June-September)!</p>
             
-            {/* Dynamic availability calendar that replaces the static bars */}
-            <AvailabilityCalendar />
+            {/* Dynamic availability calendar that shows prices */}
+            <AvailabilityCalendar showPrices={true} showHelpText={true} />
           </div>
           
           <div className="space-y-3">
