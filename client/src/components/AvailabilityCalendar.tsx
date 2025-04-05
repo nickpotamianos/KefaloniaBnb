@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, 
   isBefore, isToday, compareAsc, startOfWeek, endOfWeek, getMonth } from "date-fns";
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, InfoCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useBookings } from "@/hooks/use-bookings";
 
@@ -298,7 +298,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                 className="text-gray-500 hover:text-gray-700 focus:outline-none"
                 onClick={() => setShowHelp(!showHelp)}
               >
-                <InfoCircle className="h-4 w-4" />
+                <Info className="h-4 w-4" />
               </button>
             </div>
             
