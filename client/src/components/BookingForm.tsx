@@ -357,7 +357,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
                     
                     {priceSummary.discount > 0 && (
                       <div className="flex justify-between text-green-600">
-                        <span>{priceSummary.discountText} ({Math.round(priceSummary.discountPercentage * 100)}% off)</span>
+                        <span>{priceSummary.discountText} ({Math.round(priceSummary.discountPercentage)}% off)</span>
                         <span>-€{priceSummary.discount}</span>
                       </div>
                     )}
