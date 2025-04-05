@@ -160,6 +160,19 @@ class PricingService {
     // Return the subtotal (base price minus discount)
     return basePrice - discount;
   }
+  
+  // Calculate total price (alias for calculateTotalPrice for compatibility)
+  public calculateTotal(checkIn: Date, checkOut: Date): {
+    basePrice: number;
+    nights: number;
+    discount: number;
+    discountPercentage: number;
+    discountText: string;
+    cleaningFee: number;
+    totalPrice: number;
+  } {
+    return this.calculateTotalPrice(checkIn, checkOut);
+  }
 
   // Get seasonal prices for admin interface
   public getSeasonalPrices(): SeasonalPrice[] {
