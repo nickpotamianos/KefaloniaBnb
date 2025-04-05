@@ -211,7 +211,16 @@ const PayPalSuccessPage: React.FC = () => {
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Payment</h3>
                       <p className="text-xl font-bold text-[var(--deep-blue)]">€{(booking.totalAmount / 100).toFixed(2)}</p>
-                      <p className="text-sm text-gray-600">Paid with PayPal</p>
+                      <p className="text-sm text-gray-600">
+                        Paid with PayPal • 
+                        <span className="text-green-600 font-medium"> {booking.paymentStatus === 'confirmed' ? 'Confirmed' : booking.paymentStatus}</span>
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Booking ID: {booking.id.substring(0, 8).toUpperCase()}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Booked on: {booking.bookingTime ? new Date(booking.bookingTime).toLocaleString() : new Date().toLocaleString()}
+                      </p>
                     </div>
                   </div>
                   

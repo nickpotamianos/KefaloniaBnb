@@ -7,22 +7,36 @@ import {
 import { randomUUID } from "crypto";
 import fs from "fs";
 import path from "path";
+import { MongoDBStorage } from "./modules/database/database";
 
-// Data file path for persistence
+// Data file path for fallback persistence
 const DATA_FILE_PATH = path.join(process.cwd(), 'data.json');
 
-// modify the interface with any CRUD methods
-// you might need
-
+// Interface for storage implementations
 export interface IStorage {
   createBooking(data: InsertBooking): Promise<Booking>;
   updateBookingStatus(id: string, status: string): Promise<Booking | undefined>;
   getAllBookings(): Promise<Booking[]>;
   getBookingByStripeSession(sessionId: string): Promise<Booking | undefined>;
   getBookingByPayPalOrder(orderId: string): Promise<Booking | undefined>;
-  // Other methods...
+  getBooking(id: string): Promise<Booking | undefined>;
+  getBookingsBetweenDates(startDate: Date, endDate: Date): Promise<Booking[]>;
+  
+  // User methods
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(insertUser: InsertUser): Promise<User>;
+  
+  // Contact methods
+  getContact(id: number): Promise<Contact | undefined>;
+  createContact(contactData: Omit<Contact, "id">): Promise<Contact>;
+  
+  // Newsletter methods
+  getNewsletterByEmail(email: string): Promise<Newsletter | undefined>;
+  createNewsletterSubscription(data: Omit<Newsletter, "id">): Promise<Newsletter>;
 }
 
+// Memory-based storage implementation with file persistence
 export class MemStorage implements IStorage {
   private users: Map<number, User>;
   private contactsList: Map<number, Contact>;
@@ -162,12 +176,23 @@ export class MemStorage implements IStorage {
   }
   
   async createBooking(bookingData: InsertBooking): Promise<Booking> {
-    const id = randomUUID();
+    const id = bookingData.id || randomUUID();
+    
+    // Add payment method based on session IDs
+    const paymentMethod = bookingData.stripeSessionId ? 'stripe' : 
+                         bookingData.paypalOrderId ? 'paypal' : undefined;
+    
+    // Record booking time for receipt information
+    const bookingTime = new Date();
+    
     const booking: Booking = { 
       ...bookingData, 
-      id, 
-      createdAt: new Date() 
+      id,
+      paymentMethod,
+      createdAt: bookingData.createdAt || new Date(),
+      bookingTime
     };
+    
     this.bookingsList.set(id, booking);
     this.saveToFile();
     return booking;
@@ -202,4 +227,162 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Hybrid storage class that tries MongoDB first, then falls back to file storage
+export class HybridStorage implements IStorage {
+  private mongoStorage: MongoDBStorage;
+  private fileStorage: MemStorage;
+  private usesMongo: boolean = false;
+
+  constructor() {
+    this.mongoStorage = new MongoDBStorage();
+    this.fileStorage = new MemStorage();
+    
+    // Initialize MongoDB connection
+    this.initMongoDB();
+  }
+
+  private async initMongoDB(): Promise<void> {
+    try {
+      // Just create a test booking to check MongoDB connectivity
+      await this.mongoStorage.getAllBookings();
+      this.usesMongo = true;
+      console.log("Using MongoDB for primary storage");
+    } catch (error) {
+      this.usesMongo = false;
+      console.log("MongoDB not available, using file-based storage");
+    }
+  }
+
+  // Booking methods
+  async getBooking(id: string): Promise<Booking | undefined> {
+    try {
+      if (this.usesMongo) {
+        const booking = await this.mongoStorage.getBooking(id);
+        if (booking) return booking;
+      }
+    } catch (error) {
+      console.error('MongoDB getBooking failed, falling back to file storage:', error);
+    }
+    return await this.fileStorage.getBooking(id);
+  }
+  
+  async getBookingByStripeSession(sessionId: string): Promise<Booking | undefined> {
+    try {
+      if (this.usesMongo) {
+        const booking = await this.mongoStorage.getBookingByStripeSession(sessionId);
+        if (booking) return booking;
+      }
+    } catch (error) {
+      console.error('MongoDB getBookingByStripeSession failed, falling back to file storage:', error);
+    }
+    return await this.fileStorage.getBookingByStripeSession(sessionId);
+  }
+  
+  async getBookingByPayPalOrder(orderId: string): Promise<Booking | undefined> {
+    try {
+      if (this.usesMongo) {
+        const booking = await this.mongoStorage.getBookingByPayPalOrder(orderId);
+        if (booking) return booking;
+      }
+    } catch (error) {
+      console.error('MongoDB getBookingByPayPalOrder failed, falling back to file storage:', error);
+    }
+    return await this.fileStorage.getBookingByPayPalOrder(orderId);
+  }
+  
+  async createBooking(bookingData: InsertBooking): Promise<Booking> {
+    // Always try MongoDB first for new data
+    if (this.usesMongo) {
+      try {
+        const booking = await this.mongoStorage.createBooking(bookingData);
+        
+        // Also save to file storage as backup
+        await this.fileStorage.createBooking(booking);
+        
+        return booking;
+      } catch (error) {
+        console.error('MongoDB createBooking failed, using file storage:', error);
+      }
+    }
+    
+    // Fall back to file storage
+    return await this.fileStorage.createBooking(bookingData);
+  }
+  
+  async updateBookingStatus(id: string, status: string): Promise<Booking | undefined> {
+    // Try MongoDB first
+    if (this.usesMongo) {
+      try {
+        const booking = await this.mongoStorage.updateBookingStatus(id, status);
+        
+        // Also update file storage if MongoDB succeeded
+        if (booking) {
+          await this.fileStorage.updateBookingStatus(id, status);
+        }
+        
+        return booking;
+      } catch (error) {
+        console.error('MongoDB updateBookingStatus failed, using file storage:', error);
+      }
+    }
+    
+    // Fall back to file storage
+    return await this.fileStorage.updateBookingStatus(id, status);
+  }
+  
+  async getAllBookings(): Promise<Booking[]> {
+    if (this.usesMongo) {
+      try {
+        return await this.mongoStorage.getAllBookings();
+      } catch (error) {
+        console.error('MongoDB getAllBookings failed, using file storage:', error);
+      }
+    }
+    
+    return await this.fileStorage.getAllBookings();
+  }
+  
+  async getBookingsBetweenDates(startDate: Date, endDate: Date): Promise<Booking[]> {
+    if (this.usesMongo) {
+      try {
+        return await this.mongoStorage.getBookingsBetweenDates(startDate, endDate);
+      } catch (error) {
+        console.error('MongoDB getBookingsBetweenDates failed, using file storage:', error);
+      }
+    }
+    
+    return await this.fileStorage.getBookingsBetweenDates(startDate, endDate);
+  }
+  
+  // Other interface methods delegate to file storage for now
+  async getUser(id: number): Promise<User | undefined> {
+    return await this.fileStorage.getUser(id);
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    return await this.fileStorage.getUserByUsername(username);
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    return await this.fileStorage.createUser(insertUser);
+  }
+  
+  async getContact(id: number): Promise<Contact | undefined> {
+    return await this.fileStorage.getContact(id);
+  }
+  
+  async createContact(contactData: Omit<Contact, "id">): Promise<Contact> {
+    return await this.fileStorage.createContact(contactData);
+  }
+  
+  async getNewsletterByEmail(email: string): Promise<Newsletter | undefined> {
+    return await this.fileStorage.getNewsletterByEmail(email);
+  }
+  
+  async createNewsletterSubscription(data: Omit<Newsletter, "id">): Promise<Newsletter> {
+    return await this.fileStorage.createNewsletterSubscription(data);
+  }
+}
+
+// Export hybrid storage instance as the main storage
+export const storage = new HybridStorage();

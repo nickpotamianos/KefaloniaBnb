@@ -523,8 +523,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const booking = await storage.getBookingByStripeSession(sessionId);
           
           if (booking) {
-            // Update booking status
-            const updatedBooking = await storage.updateBookingStatus(booking.id, 'confirmed');
+            // Update booking status - Ensure Stripe "paid" status gets converted to "confirmed"
+            const updatedBooking = await storage.updateBookingStatus(booking.id, session.payment_status === 'paid' ? 'confirmed' : session.payment_status);
             
             if (updatedBooking) {
               try {

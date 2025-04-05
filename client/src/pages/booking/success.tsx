@@ -6,36 +6,65 @@ import { Button } from '@/components/ui/button';
 import { Helmet } from 'react-helmet';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import { API_ENDPOINTS } from '@/lib/api-config';
 
 const BookingSuccessPage: React.FC = () => {
   const [location, setLocation] = useLocation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [booking, setBooking] = useState<any>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal' | null>(null);
   
   useEffect(() => {
     const fetchBookingDetails = async () => {
-      // Extract session ID from URL
+      // Extract query parameters from URL
       const params = new URLSearchParams(window.location.search);
-      const sessionId = params.get('session_id');
+      const sessionId = params.get('session_id'); // Stripe parameter
+      const orderId = params.get('token');       // PayPal parameter
       
-      if (!sessionId) {
+      if (!sessionId && !orderId) {
         setError('No booking information found. Please contact support.');
         setLoading(false);
         return;
       }
       
       try {
-        const response = await axios.get(`/api/checkout-session/${sessionId}`);
-        
-        if (response.data.success && response.data.booking) {
-          setBooking(response.data.booking);
-        } else {
-          setError('Could not retrieve booking details. Please contact support.');
+        // Handle Stripe success
+        if (sessionId) {
+          setPaymentMethod('stripe');
+          const response = await axios.get(`${API_ENDPOINTS.CHECKOUT_SESSION}/${sessionId}`);
+          
+          if (response.data.success && response.data.booking) {
+            setBooking(response.data.booking);
+          } else {
+            setError('Could not retrieve booking details. Please contact support.');
+          }
         }
-      } catch (error) {
-        console.error('Error fetching booking details:', error);
-        setError('An error occurred while retrieving your booking. Please contact support.');
+        // Handle PayPal success
+        else if (orderId) {
+          setPaymentMethod('paypal');
+          
+          // Capture the PayPal payment
+          const captureResponse = await axios.post(API_ENDPOINTS.CAPTURE_PAYPAL_PAYMENT, {
+            orderId
+          });
+          
+          if (captureResponse.data.success) {
+            // Get the booking details
+            const bookingResponse = await axios.get(`${API_ENDPOINTS.PAYPAL_ORDER_DETAILS}/${orderId}`);
+            
+            if (bookingResponse.data.success && bookingResponse.data.booking) {
+              setBooking(bookingResponse.data.booking);
+            } else {
+              setError('Could not retrieve booking details. Please contact support.');
+            }
+          } else {
+            setError(captureResponse.data.message || 'Payment could not be completed. Please contact support.');
+          }
+        }
+      } catch (error: any) {
+        console.error('Error processing booking:', error);
+        setError(error.response?.data?.message || 'An error occurred while processing your booking. Please contact support.');
       } finally {
         setLoading(false);
       }
@@ -49,7 +78,9 @@ const BookingSuccessPage: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin text-[var(--primary-blue)] mx-auto" />
-          <h2 className="text-xl font-bold mt-4">Confirming your booking...</h2>
+          <h2 className="text-xl font-bold mt-4">
+            {paymentMethod === 'paypal' ? 'Processing your payment...' : 'Confirming your booking...'}
+          </h2>
           <p className="text-gray-600 mt-2">Please wait while we process your reservation.</p>
         </div>
       </div>
@@ -217,7 +248,16 @@ const BookingSuccessPage: React.FC = () => {
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Payment</h3>
                     <p className="text-xl font-bold text-[var(--deep-blue)]">€{(booking.totalAmount / 100).toFixed(2)}</p>
-                    <p className="text-sm text-gray-600">Paid with Credit Card</p>
+                    <p className="text-sm text-gray-600">
+                      Paid with {paymentMethod === 'paypal' ? 'PayPal' : 'Credit Card'} • 
+                      <span className="text-green-600 font-medium"> {booking.paymentStatus === 'confirmed' ? 'Confirmed' : booking.paymentStatus}</span>
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Booking ID: {booking.id.substring(0, 8).toUpperCase()}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      Booked on: {booking.bookingTime ? new Date(booking.bookingTime).toLocaleString() : new Date().toLocaleString()}
+                    </p>
                   </div>
                 </div>
                 
@@ -259,7 +299,7 @@ const BookingSuccessPage: React.FC = () => {
             <div className="mt-8 flex flex-col md:flex-row md:justify-between items-center">
               <div className="text-center md:text-left mb-6 md:mb-0">
                 <p className="text-sm text-gray-500">Questions about your booking?</p>
-                <p className="text-[var(--primary-blue)]">Contact us at <a href="mailto:nick.potamianos@gmail.com" className="font-medium">nick.potamianos@gmail.com</a></p>
+                <p className="text-[var(--primary-blue)]">Contact us at <a href="mailto:alexandros@potamianosgroup.com" className="font-medium">alexandros@potamianosgroup.com</a></p>
               </div>
               <Button 
                 className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 min-w-[200px]"

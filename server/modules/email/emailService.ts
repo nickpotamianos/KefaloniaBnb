@@ -118,7 +118,15 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
           <h2 style="color: #2a609e; font-family: Georgia, serif; margin-top: 0; border-bottom: 1px solid rgba(42, 96, 158, 0.2); padding-bottom: 10px;">Your Booking Details</h2>
           <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="padding: 12px 0; font-weight: bold; width: 40%;">Check-in:</td>
+              <td style="padding: 12px 0; font-weight: bold; width: 40%;">Booking Reference:</td>
+              <td style="padding: 12px 0;">${booking.id.substring(0, 8).toUpperCase()}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold;">Booking Date:</td>
+              <td style="padding: 12px 0;">${format(booking.bookingTime || new Date(), 'MMMM d, yyyy, HH:mm')} EEST</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold;">Check-in:</td>
               <td style="padding: 12px 0;">${format(checkInDate, 'EEEE, MMMM d, yyyy')} (after 3:00 PM)</td>
             </tr>
             <tr>
@@ -136,6 +144,14 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
             <tr>
               <td style="padding: 12px 0; font-weight: bold;">Property:</td>
               <td style="padding: 12px 0;">Kefalonia Vintage Home - Authentic seaside villa with panoramic views</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold;">Payment Method:</td>
+              <td style="padding: 12px 0;">${booking.paymentMethod === 'stripe' ? 'Credit/Debit Card' : booking.paymentMethod === 'paypal' ? 'PayPal' : 'Online Payment'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 12px 0; font-weight: bold;">Payment Status:</td>
+              <td style="padding: 12px 0; font-weight: bold; color: ${booking.paymentStatus === 'confirmed' ? '#22c55e' : '#e67e22'};">${booking.paymentStatus === 'confirmed' ? 'Confirmed' : 'Pending'}</td>
             </tr>
             <tr>
               <td style="padding: 12px 0; font-weight: bold;">Total Amount:</td>
@@ -233,6 +249,9 @@ export async function sendOwnerNotification(booking: Booking): Promise<boolean> 
     // Format dates for display
     const checkInDate = new Date(booking.checkIn);
     const checkOutDate = new Date(booking.checkOut);
+    const bookingTimeFormatted = booking.bookingTime 
+      ? format(new Date(booking.bookingTime), 'MMMM d, yyyy, HH:mm')
+      : format(new Date(), 'MMMM d, yyyy, HH:mm');
     
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
@@ -243,6 +262,14 @@ export async function sendOwnerNotification(booking: Booking): Promise<boolean> 
         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 5px; margin: 20px 0;">
           <h2 style="color: #2a609e; margin-top: 0;">Booking Details</h2>
           <table style="width: 100%;">
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Booking Reference:</td>
+              <td>${booking.id.substring(0, 8).toUpperCase()}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Booking Date:</td>
+              <td>${bookingTimeFormatted} EEST</td>
+            </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: bold;">Guest Name:</td>
               <td>${booking.name}</td>
@@ -266,6 +293,14 @@ export async function sendOwnerNotification(booking: Booking): Promise<boolean> 
             <tr>
               <td style="padding: 8px 0; font-weight: bold;">Guests:</td>
               <td>${booking.adults} adults, ${booking.children || 0} children</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Payment Method:</td>
+              <td>${booking.paymentMethod === 'stripe' ? 'Credit/Debit Card' : booking.paymentMethod === 'paypal' ? 'PayPal' : 'Online Payment'}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; font-weight: bold;">Payment Status:</td>
+              <td>${booking.paymentStatus === 'confirmed' ? 'Confirmed' : booking.paymentStatus === 'cancelled' ? 'Cancelled' : 'Pending'}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: bold;">Total Amount:</td>

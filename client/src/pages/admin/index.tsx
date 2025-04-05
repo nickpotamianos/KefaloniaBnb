@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { API_ENDPOINTS } from '@/lib/api-config';
 import axios from 'axios';
-import { Loader2, AlertCircle, CheckCircle, XCircle, User, Calendar, Euro } from 'lucide-react';
+import { Loader2, AlertCircle, CheckCircle, XCircle, User, Calendar, Euro, Clock, CreditCard } from 'lucide-react';
 
 // Admin key handling
 const ADMIN_KEY = localStorage.getItem('adminKey') || '';
@@ -133,6 +133,28 @@ const AdminPage: React.FC = () => {
   // Format date for display
   const formatDate = (dateString: string) => {
     return format(new Date(dateString), 'dd MMM yyyy');
+  };
+
+  // Format date and time for display
+  const formatDateTime = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    try {
+      return format(new Date(dateString), 'dd MMM yyyy, HH:mm');
+    } catch (e) {
+      return 'Invalid date';
+    }
+  };
+  
+  // Get payment method label
+  const getPaymentMethodLabel = (method?: string) => {
+    switch (method) {
+      case 'stripe':
+        return 'Credit Card';
+      case 'paypal':
+        return 'PayPal';
+      default:
+        return 'Unknown';
+    }
   };
 
   // Get status badge based on payment status
@@ -330,6 +352,14 @@ const AdminPage: React.FC = () => {
                       <div className="flex items-center text-sm text-gray-500">
                         <Euro className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
                         <span>€{(booking.totalAmount / 100).toFixed(2)}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-500">
+                        <Clock className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                        <span>{formatDateTime(booking.createdAt)}</span>
+                      </div>
+                      <div className="flex items-center text-sm text-gray-500">
+                        <CreditCard className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" />
+                        <span>{getPaymentMethodLabel(booking.paymentMethod)}</span>
                       </div>
                     </div>
                     

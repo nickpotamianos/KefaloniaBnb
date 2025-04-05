@@ -38,8 +38,10 @@ export const bookings = pgTable("bookings", {
   totalAmount: integer("total_amount").notNull(),  // in cents
   stripeSessionId: text("stripe_session_id"),
   paypalOrderId: text("paypal_order_id"),
+  paymentMethod: text("payment_method"),   // 'stripe' or 'paypal'
   paymentStatus: text("payment_status").default("pending").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull()
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  bookingTime: timestamp("booking_time"),  // For receipt/invoice details
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
