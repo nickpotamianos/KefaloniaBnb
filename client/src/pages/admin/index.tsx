@@ -105,7 +105,7 @@ const AdminPage: React.FC = () => {
     
     try {
       const response = await axios.post(
-        `${API_ENDPOINTS.ADMIN_CANCEL_BOOKING}/${bookingId}?adminKey=${adminKey}`,
+        `${API_ENDPOINTS.ADMIN_CANCEL_BOOKING}/${bookingId}/cancel?adminKey=${adminKey}`,
         { reason: 'Cancelled by admin' }
       );
       

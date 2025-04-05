@@ -167,14 +167,14 @@ async function getAllBookedDateRanges(): Promise<DateRange[]> {
     // Get direct bookings from database
     const directBookings = await storage.getAllBookings();
     const directBookingRanges = directBookings
-      // Modified to include both confirmed and pending bookings
-      .filter(booking => booking.paymentStatus === 'confirmed' || booking.paymentStatus === 'pending')
+      // Only include confirmed bookings, not pending or cancelled ones
+      .filter(booking => booking.paymentStatus === 'confirmed')
       .map(booking => ({
         start: new Date(booking.checkIn),
         end: new Date(booking.checkOut),
-        source: booking.paymentStatus === 'pending' ? 'DirectBooking (Pending)' : 'DirectBooking',
+        source: 'DirectBooking',
         uid: booking.id,
-        summary: `Booking: ${booking.name} (${booking.paymentStatus})`
+        summary: `Booking: ${booking.name}`
       }));
     
     return [...externalBookings, ...directBookingRanges];

@@ -210,7 +210,7 @@ const PayPalSuccessPage: React.FC = () => {
                     <CreditCard className="h-5 w-5 text-[var(--terracotta)] mt-1" />
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Payment</h3>
-                      <p className="text-xl font-bold text-[var(--deep-blue)]">€{booking.total}</p>
+                      <p className="text-xl font-bold text-[var(--deep-blue)]">€{(booking.totalAmount / 100).toFixed(2)}</p>
                       <p className="text-sm text-gray-600">Paid with PayPal</p>
                     </div>
                   </div>

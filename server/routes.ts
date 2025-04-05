@@ -598,7 +598,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               children: parseInt(session.metadata.children || '0', 10),
               guests: parseInt(session.metadata.adults || '2', 10) + parseInt(session.metadata.children || '0', 10),
               specialRequests: session.metadata.specialRequests,
-              paymentStatus: session.payment_status,
+              paymentStatus: session.payment_status === 'paid' ? 'confirmed' : session.payment_status,
               totalAmount: parseInt(session.metadata.totalAmount || '0', 10),
               createdAt: new Date(session.created * 1000) // Convert UNIX timestamp to Date
             };
