@@ -192,7 +192,7 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
           </ul>
         </div>
         
-        <div style="background: url('https://villakefalonia.potamianosgroup.com/images/fiskardo.jpeg') center center / cover no-repeat; padding: 40px; border-radius: 12px; margin: 30px 0; position: relative; overflow: hidden;">
+        <div style="background: url('https://villakefalonia.potamianosgroup.com/images/fiskardo.jpg') center center / cover no-repeat; padding: 40px; border-radius: 12px; margin: 30px 0; position: relative; overflow: hidden;">
           <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);"></div>
           <div style="position: relative; z-index: 1; color: white; text-align: center;">
             <h2 style="font-family: Georgia, serif; margin-top: 0; font-size: 26px;">A Taste of Kefalonia Awaits You</h2>
