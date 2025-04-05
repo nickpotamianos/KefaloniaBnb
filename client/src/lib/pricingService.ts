@@ -89,26 +89,47 @@ class PricingService {
   public getPriceForDate(date: Date): number {
     const month = date.getMonth();
     
-    // Find applicable seasonal prices for this month
-    const applicableSeasons = this.seasonalPrices.filter(season => {
+    if (this.seasonalPrices.length === 0) {
+      return 160; // Default fallback price if no seasons defined
+    }
+    
+    // Create comprehensive mapping of months to seasonal prices
+    const monthPriceMap = new Map<number, number>();
+    
+    // Fill the month-to-price mapping
+    this.seasonalPrices.forEach(season => {
       if (season.startMonth <= season.endMonth) {
-        // Regular season (e.g., April-May)
-        return month >= season.startMonth && month <= season.endMonth;
+        // Normal range: e.g. April(3)-May(4)
+        for (let m = season.startMonth; m <= season.endMonth; m++) {
+          monthPriceMap.set(m, season.pricePerNight);
+        }
       } else {
-        // Season spans year end (e.g., November-February)
-        return month >= season.startMonth || month <= season.endMonth;
+        // Range spans year end: e.g. November(10)-February(1)
+        // First part: startMonth to December(11)
+        for (let m = season.startMonth; m <= 11; m++) {
+          monthPriceMap.set(m, season.pricePerNight);
+        }
+        // Second part: January(0) to endMonth
+        for (let m = 0; m <= season.endMonth; m++) {
+          monthPriceMap.set(m, season.pricePerNight);
+        }
       }
     });
     
-    if (applicableSeasons.length === 0) {
-      // If no season matches (shouldn't happen with proper setup), use lowest price as fallback
-      console.log(`No seasonal price found for month ${month}, using fallback price`);
-      const lowestPrice = Math.min(...this.seasonalPrices.map(s => s.pricePerNight));
-      return lowestPrice;
+    // Look up the price for this month
+    if (monthPriceMap.has(month)) {
+      return monthPriceMap.get(month)!;
     }
     
-    // If multiple seasons apply, use the highest price
-    return Math.max(...applicableSeasons.map(s => s.pricePerNight));
+    // If no mapping exists for this month (should never happen with proper setup)
+    // Find the low season price as fallback
+    const lowSeason = this.seasonalPrices.find(s => s.id === "low-season");
+    if (lowSeason) {
+      return lowSeason.pricePerNight;
+    }
+    
+    // Ultimate fallback
+    return 160;
   }
 
   // Calculate discount based on length of stay
