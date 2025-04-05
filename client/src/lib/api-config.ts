@@ -8,7 +8,7 @@ const USE_PRODUCTION_API = import.meta.env.PROD;
 const isProduction = import.meta.env.PROD;
 
 // Choose which API endpoint to use
-const API_ENDPOINT = USE_PRODUCTION_API ? DIGITAL_OCEAN_API : 'http://localhost:3000';
+const API_ENDPOINT = DIGITAL_OCEAN_API;
 
 // Base URL for API calls
 export const API_BASE_URL = API_ENDPOINT;
