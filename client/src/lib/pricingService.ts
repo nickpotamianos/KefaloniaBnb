@@ -94,6 +94,7 @@ class PricingService {
   // Get the base price for a specific date
   public getPriceForDate(date: Date): number {
     const month = date.getMonth();
+    const year = date.getFullYear();
     
     if (this.seasonalPrices.length === 0) {
       console.log("PricingService: No seasonal prices defined, using fallback price 160");
@@ -123,16 +124,18 @@ class PricingService {
       }
     });
     
-    console.log(`PricingService: Price lookup for month ${month}`, {
-      month,
-      monthPriceMap: Array.from(monthPriceMap.entries()),
-      hasMonth: monthPriceMap.has(month),
-      price: monthPriceMap.get(month) || 'not found'
+    console.log(`PricingService: Price lookup for ${date.toISOString().split('T')[0]} (month: ${month}, year: ${year})`, {
+      monthPriceMap: Array.from(monthPriceMap.entries())
+        .map(([month, price]) => `Month ${month}: €${price}`)
+        .join(', '),
+      hasPrice: monthPriceMap.has(month)
     });
     
     // Look up the price for this month
     if (monthPriceMap.has(month)) {
-      return monthPriceMap.get(month)!;
+      const price = monthPriceMap.get(month)!;
+      console.log(`PricingService: Found price €${price} for month ${month}`);
+      return price;
     }
     
     // If no mapping exists for this month (should never happen with proper setup)
