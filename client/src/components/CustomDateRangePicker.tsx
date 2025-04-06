@@ -23,7 +23,9 @@ interface CustomDateRangePickerProps {
 
 // Now using the pricing service for date prices
 const getPriceForDate = (date: Date): number => {
-  return pricingService.getPriceForDate(date);
+  const price = pricingService.getPriceForDate(date);
+  console.log(`CustomDateRangePicker: Price for date ${date.toISOString().split('T')[0]} = €${price}`);
+  return price;
 };
 
 const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({

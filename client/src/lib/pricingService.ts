@@ -52,10 +52,16 @@ class PricingService {
   public async loadPricingFromServer(): Promise<void> {
     try {
       // Use the public endpoint that doesn't require admin authentication
+      console.log("PricingService: Loading pricing from server...");
       const response = await axios.get(API_ENDPOINTS.PRICING);
       
       if (response.data.success && response.data.pricing) {
         const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
+        console.log("PricingService: Received pricing data:", { 
+          seasonalPrices,
+          discounts,
+          cleaningFee
+        });
         
         if (Array.isArray(seasonalPrices) && seasonalPrices.length > 0) {
           // Ensure all price values are whole numbers
@@ -63,6 +69,7 @@ class PricingService {
             ...price,
             pricePerNight: Math.round(price.pricePerNight)
           }));
+          console.log("PricingService: Updated seasonal prices:", this.seasonalPrices);
         }
         
         if (Array.isArray(discounts) && discounts.length > 0) {
@@ -78,8 +85,7 @@ class PricingService {
       }
     } catch (error) {
       // For the public pricing endpoint, don't display errors in console
-      // Just silently fall back to default pricing
-      console.log("Using default pricing");
+      console.log("PricingService: Error loading pricing, using default pricing", error);
     } finally {
       this.isInitialized = true;
     }
@@ -90,7 +96,8 @@ class PricingService {
     const month = date.getMonth();
     
     if (this.seasonalPrices.length === 0) {
-      return 160; // Default fallback price if no seasons defined
+      console.log("PricingService: No seasonal prices defined, using fallback price 160");
+      return 160;
     }
     
     // Create comprehensive mapping of months to seasonal prices
@@ -116,6 +123,13 @@ class PricingService {
       }
     });
     
+    console.log(`PricingService: Price lookup for month ${month}`, {
+      month,
+      monthPriceMap: Array.from(monthPriceMap.entries()),
+      hasMonth: monthPriceMap.has(month),
+      price: monthPriceMap.get(month) || 'not found'
+    });
+    
     // Look up the price for this month
     if (monthPriceMap.has(month)) {
       return monthPriceMap.get(month)!;
@@ -125,10 +139,12 @@ class PricingService {
     // Find the low season price as fallback
     const lowSeason = this.seasonalPrices.find(s => s.id === "low-season");
     if (lowSeason) {
+      console.log(`PricingService: No price mapping for month ${month}, using low season price: ${lowSeason.pricePerNight}`);
       return lowSeason.pricePerNight;
     }
     
     // Ultimate fallback
+    console.log(`PricingService: No low season found, using ultimate fallback price 160`);
     return 160;
   }
 

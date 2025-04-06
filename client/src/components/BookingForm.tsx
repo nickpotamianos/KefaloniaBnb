@@ -169,7 +169,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
   // Update pricing information when dates change
   useEffect(() => {
     if (checkIn && checkOut) {
+      console.log("BookingForm: Calculating price for dates", { 
+        checkIn: checkIn.toISOString(), 
+        checkOut: checkOut.toISOString() 
+      });
       const pricing = pricingService.calculateTotalPrice(checkIn, checkOut);
+      console.log("BookingForm: Received pricing", pricing);
       setPriceSummary(pricing);
     } else {
       setPriceSummary({
