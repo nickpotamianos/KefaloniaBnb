@@ -22,10 +22,10 @@ export interface Discount {
 class PricingService {
   // Property to store the pricing data
   private seasonalPrices: SeasonalPrice[] = [
-    { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 }, // July-August
-    { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },  // June & September
-    { id: "shoulder-season", name: "Shoulder Season", startMonth: 3, endMonth: 4, pricePerNight: 170 }, // April-May
-    { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 } // Jan-Mar
+    { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 }, // Jan-Mar
+    { id: "shoulder-season", name: "Shoulder Season", startMonth: 3, endMonth: 4, pricePerNight: 170 }, // Apr-May
+    { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },  // Jun & Sep
+    { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 } // Jul-Aug
   ];
 
   // Discount tiers based on length of stay
@@ -43,6 +43,9 @@ class PricingService {
   // Promise to track when pricing data is loaded
   private initPromise: Promise<void> | null = null;
   
+  // Default low season price if not configured
+  private readonly DEFAULT_LOW_SEASON_PRICE = 150;
+  
   constructor() {
     // Start loading pricing from the server immediately
     this.initPromise = this.loadPricingFromServer();
@@ -55,11 +58,13 @@ class PricingService {
       console.log("PricingService: Loading pricing from server...");
       const response = await axios.get(API_ENDPOINTS.PRICING);
       
+      console.log("PricingService: Raw server response:", JSON.stringify(response.data, null, 2));
+      
       if (response.data.success && response.data.pricing) {
         const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
         console.log("PricingService: Received pricing data:", { 
-          seasonalPrices,
-          discounts,
+          seasonalPrices: JSON.stringify(seasonalPrices),
+          discountsCount: discounts?.length,
           cleaningFee
         });
         
@@ -69,7 +74,24 @@ class PricingService {
             ...price,
             pricePerNight: Math.round(price.pricePerNight)
           }));
-          console.log("PricingService: Updated seasonal prices:", this.seasonalPrices);
+          console.log("PricingService: Processed seasonal prices:", JSON.stringify(this.seasonalPrices));
+          
+          // Make sure we have a low-season entry
+          const hasLowSeason = this.seasonalPrices.some(price => price.id === "low-season");
+          if (!hasLowSeason) {
+            console.warn("PricingService: No low-season entry found in data from server, adding default");
+            this.seasonalPrices.push({
+              id: "low-season",
+              name: "Low Season",
+              startMonth: 0,
+              endMonth: 2,
+              pricePerNight: this.DEFAULT_LOW_SEASON_PRICE
+            });
+          }
+          
+          console.log("PricingService: Final seasonal prices:", 
+            this.seasonalPrices.map(s => `${s.id} (${s.name}): €${s.pricePerNight}`).join(', ')
+          );
         } else {
           console.warn("PricingService: No seasonal prices in server response, keeping defaults");
         }
@@ -87,11 +109,32 @@ class PricingService {
       } else {
         console.warn("PricingService: Invalid or missing pricing data in server response, using defaults");
       }
+      
+      // After loading data, always check one more time for the low-season entry
+      this.ensureLowSeasonExists();
     } catch (error) {
       // For the public pricing endpoint, don't display errors in console
       console.warn("PricingService: Error loading pricing, using default pricing", error);
+      
+      // After error, ensure we have a low-season entry for fallback
+      this.ensureLowSeasonExists();
     } finally {
       this.isInitialized = true;
+    }
+  }
+  
+  // Make sure we always have a low-season entry
+  private ensureLowSeasonExists(): void {
+    const hasLowSeason = this.seasonalPrices.some(price => price.id === "low-season");
+    if (!hasLowSeason) {
+      console.warn("PricingService: No low-season entry found, adding fallback");
+      this.seasonalPrices.push({
+        id: "low-season",
+        name: "Low Season",
+        startMonth: 0,
+        endMonth: 2,
+        pricePerNight: this.DEFAULT_LOW_SEASON_PRICE
+      });
     }
   }
 
@@ -107,6 +150,9 @@ class PricingService {
       } catch (error) {
         console.error("PricingService: Error waiting for initialization", error);
         this.isInitialized = true; // Prevent further attempts
+        
+        // Ensure we have a low-season entry even if initialization failed
+        this.ensureLowSeasonExists();
       }
     } else {
       // If initPromise is null for some reason, initialize now
@@ -125,14 +171,16 @@ class PricingService {
   public getPriceForDate(date: Date): number {
     if (!this.isInitialized) {
       console.warn("PricingService: Getting price before initialization complete, might use default prices");
+      // Make sure we have a low-season entry for fallback
+      this.ensureLowSeasonExists();
     }
     
     const month = date.getMonth();
-    const year = date.getFullYear();
     
+    // Debug seasonal prices state in problematic cases
     if (this.seasonalPrices.length === 0) {
-      console.warn("PricingService: No seasonal prices defined, using fallback price 160");
-      return 160;
+      console.warn("PricingService: No seasonal prices defined! Using fallback price");
+      return this.DEFAULT_LOW_SEASON_PRICE;
     }
     
     // Create comprehensive mapping of months to seasonal prices
@@ -182,9 +230,23 @@ class PricingService {
       return lowSeason.pricePerNight;
     }
     
-    // Ultimate fallback
-    console.warn(`PricingService: No low season found, using ultimate fallback price 160`);
-    return 160;
+    // This should never happen since we always ensure a low-season entry exists,
+    // but kept as ultimate fallback for robustness
+    console.error(
+      `PricingService: CRITICAL - No low season found despite safeguards. Using fallback price ${this.DEFAULT_LOW_SEASON_PRICE}. ` +
+      `Seasons available: ${this.seasonalPrices.map(s => s.id).join(', ')}`
+    );
+    
+    // Add an emergency low season entry to prevent future errors
+    this.seasonalPrices.push({
+      id: "low-season",
+      name: "Low Season (Emergency Fallback)",
+      startMonth: 0, 
+      endMonth: 2,
+      pricePerNight: this.DEFAULT_LOW_SEASON_PRICE
+    });
+    
+    return this.DEFAULT_LOW_SEASON_PRICE;
   }
   
   // Internal flag to prevent excessive logging
@@ -248,7 +310,8 @@ class PricingService {
     let currentDate = startDate;
     
     for (let i = 0; i < nights; i++) {
-      basePrice += this.getPriceForDate(currentDate);
+      const nightPrice = this.getPriceForDate(currentDate);
+      basePrice += nightPrice;
       currentDate = addDays(currentDate, 1);
     }
     
@@ -258,6 +321,7 @@ class PricingService {
     // Apply discount if applicable
     const { discountPercentage, discountText } = this.calculateDiscount(nights);
     const discount = Math.round(basePrice * discountPercentage);
+    
     const discountedPrice = basePrice - discount;
     
     // Add cleaning fee
@@ -326,6 +390,12 @@ class PricingService {
   // Set seasonal prices from admin interface
   public setSeasonalPrices(prices: SeasonalPrice[]): void {
     this.seasonalPrices = [...prices];
+    
+    // Always ensure we have a low-season entry after setting prices
+    this.ensureLowSeasonExists();
+    
+    // Reset the month price map cache
+    this._loggedMonthPrices = false;
   }
 
   // Get discounts for admin interface
@@ -346,6 +416,15 @@ class PricingService {
   // Get cleaning fee
   public getCleaningFee(): number {
     return this.cleaningFee;
+  }
+
+  // Public method to force reload pricing data from server
+  public async reloadPricing(): Promise<void> {
+    console.log("PricingService: Forced reload of pricing data requested");
+    this.isInitialized = false;
+    this._loggedMonthPrices = false;
+    this.initPromise = this.loadPricingFromServer();
+    await this.initPromise;
   }
 
   // Save all pricing to the server (admin function)
@@ -373,6 +452,11 @@ class PricingService {
         }
       );
       
+      if (response.data.success) {
+        // If save was successful, reload pricing to ensure consistency
+        await this.reloadPricing();
+      }
+      
       return response.data.success === true;
     } catch (error) {
       console.error("Error saving pricing to server:", error);
@@ -383,10 +467,10 @@ class PricingService {
   // Reset all pricing to defaults
   public resetToDefaults(): void {
     this.seasonalPrices = [
-      { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 },
-      { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },
+      { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 },
       { id: "shoulder-season", name: "Shoulder Season", startMonth: 3, endMonth: 4, pricePerNight: 170 },
-      { id: "low-season", name: "Low Season", startMonth: 0, endMonth: 2, pricePerNight: 150 }
+      { id: "mid-season", name: "Mid Season", startMonth: 5, endMonth: 8, pricePerNight: 180 },
+      { id: "high-season", name: "High Season", startMonth: 6, endMonth: 7, pricePerNight: 200 }
     ];
     
     this.discounts = [
@@ -395,6 +479,10 @@ class PricingService {
     ];
     
     this.cleaningFee = 60;
+    
+    // Reset initialization flags to trigger a reload
+    this.isInitialized = false;
+    this._loggedMonthPrices = false;
   }
 }
 

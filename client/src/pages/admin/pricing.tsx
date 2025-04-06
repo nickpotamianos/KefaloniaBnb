@@ -212,6 +212,10 @@ const PricingAdmin: React.FC = () => {
       
       if (response.data.success) {
         setSuccessMessage('Pricing configuration saved successfully');
+        
+        // Force reload the pricing service to ensure consistent data across the app
+        await pricingService.reloadPricing();
+        
         // Reload the configuration to get the server-validated data
         fetchPricingConfiguration();
       } else {
