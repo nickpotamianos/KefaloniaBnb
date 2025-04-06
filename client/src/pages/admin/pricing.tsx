@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Save, Plus, Trash, ArrowLeft, Calendar, Percent, Euro } from 'lucide-react';
 import axios from 'axios';
 import { API_ENDPOINTS } from '@/lib/api-config';
+import pricingService from '@/lib/pricingService'; // Import the PricingService singleton
 
 type SeasonalPrice = {
   id: string;
@@ -71,12 +72,22 @@ const PricingAdmin: React.FC = () => {
             pricePerNight: Math.round(price.pricePerNight)
           }));
           setSeasonalPrices(roundedPrices || []);
+          
+          // Update the PricingService singleton with the fetched data
+          pricingService.setSeasonalPrices(roundedPrices);
         } else {
           setSeasonalPrices([]);
         }
         
         setDiscounts(discounts || []);
+        // Update discounts in the PricingService singleton
+        pricingService.setDiscounts(discounts || []);
+        
         setCleaningFee(Math.round(cleaningFee || 60));
+        // Update cleaning fee in the PricingService singleton
+        pricingService.setCleaningFee(Math.round(cleaningFee || 60));
+        
+        console.log("Admin: Updated PricingService with fetched data");
       } else {
         setError('Failed to load pricing configuration');
       }
@@ -96,7 +107,7 @@ const PricingAdmin: React.FC = () => {
   // Add a new seasonal price entry
   const addSeasonalPrice = () => {
     const newId = `season-${Date.now()}`;
-    setSeasonalPrices([
+    const newPrices = [
       ...seasonalPrices,
       {
         id: newId,
@@ -105,13 +116,16 @@ const PricingAdmin: React.FC = () => {
         endMonth: 1,
         pricePerNight: 150
       }
-    ]);
+    ];
+    setSeasonalPrices(newPrices);
+    // Update PricingService immediately with new season
+    pricingService.setSeasonalPrices(newPrices);
   };
   
   // Add a new discount entry
   const addDiscount = () => {
     const newId = `discount-${Date.now()}`;
-    setDiscounts([
+    const newDiscounts = [
       ...discounts,
       {
         id: newId,
@@ -119,39 +133,52 @@ const PricingAdmin: React.FC = () => {
         minNights: 7,
         discountPercentage: 10
       }
-    ]);
+    ];
+    setDiscounts(newDiscounts);
+    // Update PricingService immediately with new discount
+    pricingService.setDiscounts(newDiscounts);
   };
   
   // Delete a seasonal price entry
   const deleteSeasonalPrice = (id: string) => {
-    setSeasonalPrices(seasonalPrices.filter(price => price.id !== id));
+    const updatedPrices = seasonalPrices.filter(price => price.id !== id);
+    setSeasonalPrices(updatedPrices);
+    // Update PricingService immediately when a season is deleted
+    pricingService.setSeasonalPrices(updatedPrices);
   };
   
   // Delete a discount entry
   const deleteDiscount = (id: string) => {
-    setDiscounts(discounts.filter(discount => discount.id !== id));
+    const updatedDiscounts = discounts.filter(discount => discount.id !== id);
+    setDiscounts(updatedDiscounts);
+    // Update PricingService immediately when a discount is deleted
+    pricingService.setDiscounts(updatedDiscounts);
   };
   
   // Update a seasonal price field
   const updateSeasonalPrice = (id: string, field: keyof SeasonalPrice, value: string | number) => {
-    setSeasonalPrices(
-      seasonalPrices.map(price => 
-        price.id === id 
-          ? { ...price, [field]: field === 'name' ? value : Number(value) }
-          : price
-      )
+    const updatedPrices = seasonalPrices.map(price => 
+      price.id === id 
+        ? { ...price, [field]: field === 'name' ? value : Number(value) }
+        : price
     );
+    
+    setSeasonalPrices(updatedPrices);
+    // Update PricingService immediately when prices are changed in the UI
+    pricingService.setSeasonalPrices(updatedPrices);
   };
   
   // Update a discount field
   const updateDiscount = (id: string, field: keyof Discount, value: string | number) => {
-    setDiscounts(
-      discounts.map(discount => 
-        discount.id === id 
-          ? { ...discount, [field]: field === 'name' ? value : Number(value) }
-          : discount
-      )
+    const updatedDiscounts = discounts.map(discount => 
+      discount.id === id 
+        ? { ...discount, [field]: field === 'name' ? value : Number(value) }
+        : discount
     );
+    
+    setDiscounts(updatedDiscounts);
+    // Update PricingService immediately when discounts are changed in the UI
+    pricingService.setDiscounts(updatedDiscounts);
   };
   
   // Save pricing configuration
@@ -528,7 +555,12 @@ const PricingAdmin: React.FC = () => {
                     <Input
                       type="number"
                       value={cleaningFee}
-                      onChange={(e) => setCleaningFee(Number(e.target.value))}
+                      onChange={(e) => {
+                        const newFee = Number(e.target.value);
+                        setCleaningFee(newFee);
+                        // Update PricingService immediately when cleaning fee is changed
+                        pricingService.setCleaningFee(newFee);
+                      }}
                       className="w-full pl-8"
                       min={0}
                     />
