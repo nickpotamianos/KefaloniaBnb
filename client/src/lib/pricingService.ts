@@ -69,11 +69,30 @@ class PricingService {
         });
         
         if (Array.isArray(seasonalPrices) && seasonalPrices.length > 0) {
-          // Ensure all price values are whole numbers
-          this.seasonalPrices = seasonalPrices.map(price => ({
-            ...price,
-            pricePerNight: Math.round(price.pricePerNight)
-          }));
+          // Extract the actual data from MongoDB document objects
+          // MongoDB documents may contain _doc property or other metadata
+          const extractedPrices = seasonalPrices.map(price => {
+            // If it's a MongoDB document with _doc property, use that
+            if (price._doc) {
+              return {
+                id: price._doc.id,
+                name: price._doc.name,
+                startMonth: price._doc.startMonth,
+                endMonth: price._doc.endMonth,
+                pricePerNight: Math.round(price._doc.pricePerNight)
+              };
+            }
+            // Otherwise take direct properties if they exist
+            return {
+              id: price.id,
+              name: price.name,
+              startMonth: price.startMonth,
+              endMonth: price.endMonth,
+              pricePerNight: Math.round(price.pricePerNight)
+            };
+          });
+          
+          this.seasonalPrices = extractedPrices;
           console.log("PricingService: Processed seasonal prices:", JSON.stringify(this.seasonalPrices));
           
           // Make sure we have a low-season entry
@@ -186,8 +205,12 @@ class PricingService {
     // Create comprehensive mapping of months to seasonal prices
     const monthPriceMap = new Map<number, number>();
     
+    // Sort seasons by price - higher prices should override lower ones
+    // This handles overlapping date ranges (like mid-season and high-season both containing June)
+    const sortedSeasons = [...this.seasonalPrices].sort((a, b) => b.pricePerNight - a.pricePerNight);
+    
     // Fill the month-to-price mapping
-    this.seasonalPrices.forEach(season => {
+    sortedSeasons.forEach(season => {
       if (season.startMonth <= season.endMonth) {
         // Normal range: e.g. April(3)-May(4)
         for (let m = season.startMonth; m <= season.endMonth; m++) {
@@ -210,6 +233,7 @@ class PricingService {
     if (!this._loggedMonthPrices) {
       console.log("PricingService: Month-to-price mapping:", 
         Array.from(monthPriceMap.entries())
+          .sort((a, b) => a[0] - b[0])  // Sort by month for clearer output
           .map(([month, price]) => `Month ${month+1}: €${price}`)
           .join(', ')
       );
