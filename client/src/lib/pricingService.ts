@@ -40,12 +40,12 @@ class PricingService {
   // Flag to indicate if pricing has been loaded from the server
   private isInitialized: boolean = false;
   
+  // Promise to track when pricing data is loaded
+  private initPromise: Promise<void> | null = null;
+  
   constructor() {
-    // Try to load pricing from the server
-    this.loadPricingFromServer().catch(err => {
-      // Just use the defaults, no need to log an error to console that might confuse users
-      this.isInitialized = true;
-    });
+    // Start loading pricing from the server immediately
+    this.initPromise = this.loadPricingFromServer();
   }
   
   // Initialize pricing from the server
@@ -70,6 +70,8 @@ class PricingService {
             pricePerNight: Math.round(price.pricePerNight)
           }));
           console.log("PricingService: Updated seasonal prices:", this.seasonalPrices);
+        } else {
+          console.warn("PricingService: No seasonal prices in server response, keeping defaults");
         }
         
         if (Array.isArray(discounts) && discounts.length > 0) {
@@ -82,22 +84,54 @@ class PricingService {
         if (typeof cleaningFee === 'number') {
           this.cleaningFee = Math.round(cleaningFee);
         }
+      } else {
+        console.warn("PricingService: Invalid or missing pricing data in server response, using defaults");
       }
     } catch (error) {
       // For the public pricing endpoint, don't display errors in console
-      console.log("PricingService: Error loading pricing, using default pricing", error);
+      console.warn("PricingService: Error loading pricing, using default pricing", error);
     } finally {
       this.isInitialized = true;
     }
   }
 
+  // Ensure pricing data is loaded before returning prices
+  private async ensureInitialized(): Promise<void> {
+    if (this.isInitialized) {
+      return;
+    }
+    
+    if (this.initPromise) {
+      try {
+        await this.initPromise;
+      } catch (error) {
+        console.error("PricingService: Error waiting for initialization", error);
+        this.isInitialized = true; // Prevent further attempts
+      }
+    } else {
+      // If initPromise is null for some reason, initialize now
+      this.initPromise = this.loadPricingFromServer();
+      await this.initPromise;
+    }
+  }
+
   // Get the base price for a specific date
+  public async getPriceForDateAsync(date: Date): Promise<number> {
+    await this.ensureInitialized();
+    return this.getPriceForDate(date);
+  }
+
+  // Get the base price for a specific date (synchronous version)
   public getPriceForDate(date: Date): number {
+    if (!this.isInitialized) {
+      console.warn("PricingService: Getting price before initialization complete, might use default prices");
+    }
+    
     const month = date.getMonth();
     const year = date.getFullYear();
     
     if (this.seasonalPrices.length === 0) {
-      console.log("PricingService: No seasonal prices defined, using fallback price 160");
+      console.warn("PricingService: No seasonal prices defined, using fallback price 160");
       return 160;
     }
     
@@ -124,17 +158,19 @@ class PricingService {
       }
     });
     
-    console.log(`PricingService: Price lookup for ${date.toISOString().split('T')[0]} (month: ${month}, year: ${year})`, {
-      monthPriceMap: Array.from(monthPriceMap.entries())
-        .map(([month, price]) => `Month ${month}: €${price}`)
-        .join(', '),
-      hasPrice: monthPriceMap.has(month)
-    });
+    // Debug log for monthly prices (less verbose than per-date logging)
+    if (!this._loggedMonthPrices) {
+      console.log("PricingService: Month-to-price mapping:", 
+        Array.from(monthPriceMap.entries())
+          .map(([month, price]) => `Month ${month+1}: €${price}`)
+          .join(', ')
+      );
+      this._loggedMonthPrices = true;
+    }
     
     // Look up the price for this month
     if (monthPriceMap.has(month)) {
       const price = monthPriceMap.get(month)!;
-      console.log(`PricingService: Found price €${price} for month ${month}`);
       return price;
     }
     
@@ -142,14 +178,17 @@ class PricingService {
     // Find the low season price as fallback
     const lowSeason = this.seasonalPrices.find(s => s.id === "low-season");
     if (lowSeason) {
-      console.log(`PricingService: No price mapping for month ${month}, using low season price: ${lowSeason.pricePerNight}`);
+      console.warn(`PricingService: No price mapping for month ${month+1}, using low season price: ${lowSeason.pricePerNight}`);
       return lowSeason.pricePerNight;
     }
     
     // Ultimate fallback
-    console.log(`PricingService: No low season found, using ultimate fallback price 160`);
+    console.warn(`PricingService: No low season found, using ultimate fallback price 160`);
     return 160;
   }
+  
+  // Internal flag to prevent excessive logging
+  private _loggedMonthPrices: boolean = false;
 
   // Calculate discount based on length of stay
   public calculateDiscount(nights: number): { 

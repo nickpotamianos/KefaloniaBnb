@@ -22,7 +22,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   showPrices = false,
   showHelpText = false 
 }) => {
-  const { isLoading, error, bookings } = useBookings();
+  const { isLoading: isBookingsLoading, error: bookingsError, bookings } = useBookings();
   const [month, setMonth] = useState<Date>(new Date());
   const [days, setDays] = useState<{
     date: Date, 
@@ -42,6 +42,22 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   const [discountInfo, setDiscountInfo] = useState<{percentage: number, text: string} | null>(null);
   const [showHelp, setShowHelp] = useState(false);
   
+  // Flag to track if prices are loaded
+  const [pricesLoaded, setPricesLoaded] = useState(false);
+  // Combined loading state
+  const isLoading = isBookingsLoading || !pricesLoaded;
+  
+  // Load pricing data when the component mounts
+  useEffect(() => {
+    const loadPricing = async () => {
+      // Wait for pricing service to initialize
+      await pricingService.getPriceForDateAsync(new Date());
+      setPricesLoaded(true);
+    };
+    
+    loadPricing();
+  }, []);
+  
   // Create isDateBooked function within component to prevent dependency issues
   const isDateBooked = (date: Date): boolean => {
     return bookings.some(booking => 
@@ -56,6 +72,9 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
   
   // Calculate days for the current month with booking status
   useEffect(() => {
+    // Don't process if still loading bookings or prices
+    if (isLoading) return;
+    
     // Get all days in the current month, plus days from prev/next month to fill the week
     const monthStart = startOfMonth(month);
     const monthEnd = endOfMonth(month);
@@ -75,7 +94,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
     }));
     
     setDays(daysWithStatus);
-  }, [month, bookings]); // Only depend on month and bookings, not the function
+  }, [month, bookings, isLoading]); // Add isLoading as dependency
 
   // Calculate the total price when date range changes
   useEffect(() => {
@@ -202,15 +221,16 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
       return (
         <div className="h-[320px] flex items-center justify-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--terracotta)]"></div>
+          <span className="ml-3 text-gray-600">Loading calendar...</span>
         </div>
       );
     }
 
-    if (error) {
+    if (bookingsError) {
       return (
         <div className="h-[200px] flex items-center justify-center">
           <div className="text-red-500 text-center">
-            <p>{error}</p>
+            <p>{bookingsError}</p>
             <button 
               className="mt-3 px-4 py-2 bg-[var(--terracotta)] text-white rounded-md hover:bg-[var(--terracotta)]/90"
               onClick={() => window.location.reload()}

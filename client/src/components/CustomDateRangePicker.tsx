@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { addMonths, format, isSameDay, isWithinInterval, startOfMonth, 
   endOfMonth, eachDayOfInterval, isBefore, isToday, compareAsc,
   addDays, subDays, getDay, startOfWeek, endOfWeek, getMonth } from 'date-fns';
@@ -21,13 +21,6 @@ interface CustomDateRangePickerProps {
   showPrices?: boolean;
 }
 
-// Now using the pricing service for date prices
-const getPriceForDate = (date: Date): number => {
-  const price = pricingService.getPriceForDate(date);
-  console.log(`CustomDateRangePicker: Price for date ${date.toISOString().split('T')[0]} = €${price}`);
-  return price;
-};
-
 const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   initialStartDate = null,
   initialEndDate = null,
@@ -43,6 +36,33 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
     endDate: initialEndDate
   });
   const [hoverDate, setHoverDate] = useState<Date | null>(null);
+  // State to store calendar days with prices
+  const [calendarDaysWithPrices, setCalendarDaysWithPrices] = useState<Array<Array<{date: Date, isCurrentMonth: boolean, price: number}>>>([]);
+  // Flag to track if prices are loaded
+  const [pricesLoaded, setPricesLoaded] = useState(false);
+
+  // Load pricing data when the component mounts
+  useEffect(() => {
+    const loadPricing = async () => {
+      // Wait for pricing service to initialize
+      await pricingService.getPriceForDateAsync(new Date());
+      setPricesLoaded(true);
+    };
+    
+    loadPricing();
+  }, []);
+
+  // Generate calendar days when month changes or pricing loads
+  useEffect(() => {
+    if (!pricesLoaded) return;
+    
+    const monthsToDisplay = Array.from({ length: numberOfMonths }, (_, idx) => {
+      return addMonths(currentMonth, idx);
+    });
+    
+    const allCalendarDays = monthsToDisplay.map(month => generateCalendarDays(month));
+    setCalendarDaysWithPrices(allCalendarDays);
+  }, [currentMonth, pricesLoaded, numberOfMonths]);
 
   // Generate array of all days visible in the month view, including days from previous/next months
   const generateCalendarDays = (month: Date) => {
@@ -54,7 +74,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
     return eachDayOfInterval({ start: startDate, end: endDate }).map(date => ({
       date,
       isCurrentMonth: date.getMonth() === month.getMonth(),
-      price: getPriceForDate(date)
+      price: pricingService.getPriceForDate(date)
     }));
   };
 
@@ -125,6 +145,18 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
     return addMonths(currentMonth, idx);
   });
 
+  // Loading state
+  if (!pricesLoaded) {
+    return (
+      <div className={cn("custom-date-range-picker", className)}>
+        <div className="flex justify-center items-center p-8">
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--terracotta)]"></div>
+          <span className="ml-2 text-gray-600">Loading prices...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn("custom-date-range-picker", className)}>
       <div className="flex justify-between items-center mb-4">
@@ -153,9 +185,7 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-        {monthsToDisplay.map((month, monthIdx) => {
-          const calendarDays = generateCalendarDays(month);
-          
+        {calendarDaysWithPrices.map((calendarDays, monthIdx) => {
           return (
             <div key={monthIdx} className="month">
               <div className="grid grid-cols-7 mb-1">
