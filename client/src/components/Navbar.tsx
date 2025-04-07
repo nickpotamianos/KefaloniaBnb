@@ -53,7 +53,7 @@ const Navbar = () => {
             <span className={`text-2xl font-bold playfair ${
               scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
             }`}>
-              Kefalonia Vintage Home
+              Villa Fiscardo
             </span>
           </div>
         </a>

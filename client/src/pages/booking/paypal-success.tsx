@@ -109,7 +109,7 @@ const PayPalSuccessPage: React.FC = () => {
     return (
       <div className="min-h-screen relative overflow-hidden pb-12">
         <Helmet>
-          <title>Booking Confirmed | Kefalonia Vintage Home</title>
+          <title>Booking Confirmed | Villa Fiscardo</title>
         </Helmet>
         
         {/* Background video with overlay */}
@@ -158,7 +158,7 @@ const PayPalSuccessPage: React.FC = () => {
               </div>
               <h1 className="text-3xl md:text-4xl font-bold text-[var(--deep-blue)]">Booking Confirmed!</h1>
               <p className="mt-3 text-lg text-gray-700">
-                Thank you for booking with Kefalonia Vintage Home.
+                Thank you for booking with Villa Fiscardo.
               </p>
               <div className="mt-6 py-2 px-4 bg-blue-50 rounded-full text-sm text-[var(--primary-blue)] font-medium inline-flex items-center">
                 <Mail className="h-4 w-4 mr-2" /> A confirmation email has been sent to {booking.email}
@@ -201,7 +201,7 @@ const PayPalSuccessPage: React.FC = () => {
                     <MapPin className="h-5 w-5 text-[var(--terracotta)] mt-1" />
                     <div>
                       <h3 className="text-sm font-medium text-gray-500">Property</h3>
-                      <p className="text-gray-800">Kefalonia Vintage Home</p>
+                      <p className="text-gray-800">Villa Fiscardo</p>
                       <p className="text-sm text-gray-600">Fiscardo, Kefalonia, Greece</p>
                     </div>
                   </div>

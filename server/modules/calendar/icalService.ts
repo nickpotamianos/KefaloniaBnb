@@ -266,7 +266,7 @@ export async function generateICalFile(): Promise<string> {
     calendar.updatePropertyWithValue('version', '2.0');
     calendar.updatePropertyWithValue('calscale', 'GREGORIAN');
     calendar.updatePropertyWithValue('method', 'PUBLISH');
-    calendar.updatePropertyWithValue('x-wr-calname', 'Kefalonia Vintage Home Availability');
+    calendar.updatePropertyWithValue('x-wr-calname', 'Villa Fiscardo Availability');
     calendar.updatePropertyWithValue('x-wr-timezone', 'Europe/Athens');
     
     // Add events for each booking

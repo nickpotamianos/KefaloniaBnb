@@ -222,7 +222,7 @@ const BookingPage: React.FC = () => {
     return (
       <div className="max-w-3xl mx-auto p-6 md:p-10">
         <Helmet>
-          <title>Booking Confirmed | Kefalonia Vintage Home</title>
+          <title>Booking Confirmed | Villa Fiscardo</title>
         </Helmet>
         
         <div className="text-center mb-10 p-8 bg-green-50 rounded-xl">
@@ -263,7 +263,7 @@ const BookingPage: React.FC = () => {
   return (
     <div className="relative min-h-screen">
       <Helmet>
-        <title>Book Your Stay | Kefalonia Vintage Home</title>
+        <title>Book Your Stay | Villa Fiscardo</title>
         <meta name="description" content="Book your dream vacation at our authentic Kefalonian seaside villa with panoramic views and traditional charm." />
       </Helmet>
 

@@ -253,14 +253,14 @@ const PricingAdmin: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <Helmet>
-          <title>Admin Login | Kefalonia Vintage Home</title>
+          <title>Admin Login | Villa Fiscardo</title>
         </Helmet>
         
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center mb-8">
             <img 
               src="/images/logokef1.png" 
-              alt="Kefalonia Vintage Home" 
+              alt="Villa Fiscardo" 
               className="h-16 mx-auto mb-4"
             />
             <h1 className="text-2xl font-bold text-gray-800">Admin Login</h1>
@@ -311,7 +311,7 @@ const PricingAdmin: React.FC = () => {
             <div className="flex items-center">
               <img 
                 src="/images/logokef1.png" 
-                alt="Kefalonia Vintage Home" 
+                alt="Villa Fiscardo" 
                 className="h-10 mr-4"
               />
               <h1 className="text-xl font-bold text-gray-800">Pricing Management</h1>

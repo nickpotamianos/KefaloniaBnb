@@ -191,7 +191,7 @@ export async function createCheckoutSession(bookingData: BookingData): Promise<S
         price_data: {
           currency: 'eur',
           product_data: {
-            name: 'Kefalonia Vintage Home Booking',
+            name: 'Villa Fiscardo Booking',
             description: `${nights} nights, ${adults} adults, ${children || 0} children, Check-in: ${formattedCheckIn}, Check-out: ${formattedCheckOut}`,
             images: ['https://villakefalonia.potamianosgroup.com/images/logokef1.png'],
           },
@@ -302,7 +302,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
               }
             }
           },
-          description: `Kefalonia Vintage Home Booking - ${nights} nights, ${adults} adults, ${children || 0} children`,
+          description: `Villa Fiscardo Booking - ${nights} nights, ${adults} adults, ${children || 0} children`,
           items: [
             {
               name: 'Accommodation Package',
@@ -329,7 +329,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
         }
       ],
       application_context: {
-        brand_name: 'Kefalonia Vintage Home',
+        brand_name: 'Villa Fiscardo',
         return_url: PAYPAL_RETURN_URL, // Always use localhost URL for testing
         cancel_url: PAYPAL_CANCEL_URL, // Always use localhost URL for testing
         user_action: 'PAY_NOW',

@@ -7,7 +7,7 @@ const HeroSection = () => {
   return (
     <>
       <Helmet>
-        <title>Kefalonia Vintage Home | Authentic Greek Island Getaway in Fiscardo</title>
+        <title>Villa Fiscardo | Authentic Greek Island Getaway in Fiscardo</title>
         <meta name="description" content="Experience the authentic beauty of Kefalonia in our traditional seaside villa with breathtaking views of the Ionian Sea, near pristine beaches and charming local attractions." />
       </Helmet>
       

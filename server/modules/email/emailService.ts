@@ -14,7 +14,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Email sender address
-const FROM_EMAIL = process.env.EMAIL_FROM || 'Kefalonia Vintage Home <nick.potamianos@gmail.com>';
+const FROM_EMAIL = process.env.EMAIL_FROM || 'Villa Fiscardo <nick.potamianos@gmail.com>';
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'alexandros@potamianosgroup.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'nick.potamianos@gmail.com';
 const SUPPORT_PHONE = process.env.SUPPORT_PHONE || '+30 694 820 1383';
@@ -104,7 +104,7 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
     const html = `
       <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.5;">
         <div style="text-align: center; margin-bottom: 30px; background: linear-gradient(135deg, #f8f4eb 0%, #e0f7fa 100%); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Kefalonia Vintage Home" style="max-width: 220px;">
+          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 220px;">
           <h1 style="color: #2a609e; font-family: Georgia, serif; margin-top: 20px; font-size: 32px;">Your Greek Paradise Awaits!</h1>
           <p style="color: #e67e22; font-size: 20px; font-style: italic; margin-top: 10px;">${format(checkInDate, 'MMMM d')} - ${format(checkOutDate, 'MMMM d, yyyy')}</p>
           <div style="width: 80px; height: 3px; background: linear-gradient(to right, #2a609e, #e67e22); margin: 15px auto;"></div>
@@ -143,7 +143,7 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
             </tr>
             <tr>
               <td style="padding: 12px 0; font-weight: bold;">Property:</td>
-              <td style="padding: 12px 0;">Kefalonia Vintage Home - Authentic seaside villa with panoramic views</td>
+              <td style="padding: 12px 0;">Villa Fiscardo - Authentic seaside villa with panoramic views</td>
             </tr>
             <tr>
               <td style="padding: 12px 0; font-weight: bold;">Payment Method:</td>
@@ -215,7 +215,7 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
         
         <p style="font-size: 17px; margin-top: 30px;">We're truly looking forward to welcoming you to our little slice of Greek paradise and helping you create beautiful memories that will last a lifetime!</p>
         
-        <p style="font-size: 17px; margin-top: 30px; font-family: Georgia, serif;">Καλό ταξίδι (Safe travels),<br><strong>Alex and the Kefalonia Vintage Home Team</strong></p>
+        <p style="font-size: 17px; margin-top: 30px; font-family: Georgia, serif;">Καλό ταξίδι (Safe travels),<br><strong>Alex and the Villa Fiscardo Team</strong></p>
         
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 14px; color: #777; display: flex; justify-content: space-between; flex-wrap: wrap;">
           <div style="margin-bottom: 15px;">
@@ -236,7 +236,7 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
     
     return await sendEmail({
       to: booking.email,
-      subject: '✨ Your Kefalonia Vintage Home Paradise Awaits! Booking Confirmed',
+      subject: '✨ Your Villa Fiscardo Paradise Awaits! Booking Confirmed',
       html
     });
   } catch (error) {
@@ -263,7 +263,7 @@ export async function sendOwnerNotification(booking: Booking): Promise<boolean> 
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <h1 style="color: #2a609e;">New Booking Alert</h1>
         
-        <p>A new booking has been confirmed for Kefalonia Vintage Home.</p>
+        <p>A new booking has been confirmed for Villa Fiscardo.</p>
         
         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 5px; margin: 20px 0;">
           <h2 style="color: #2a609e; margin-top: 0;">Booking Details</h2>
@@ -325,13 +325,13 @@ export async function sendOwnerNotification(booking: Booking): Promise<boolean> 
         
         <p>Please ensure the property is prepared for the guest's arrival on ${formatDate(checkInDate)}.</p>
         
-        <p style="margin-top: 30px;">Regards,<br>Kefalonia Vintage Home Booking System</p>
+        <p style="margin-top: 30px;">Regards,<br>Villa Fiscardo Booking System</p>
       </div>
     `;
     
     return await sendEmail({
       to: OWNER_EMAIL,
-      subject: 'New Booking: Kefalonia Vintage Home',
+      subject: 'New Booking: Villa Fiscardo',
       html
     });
   } catch (error) {
@@ -354,19 +354,19 @@ export async function sendPreArrivalEmail(booking: Booking): Promise<boolean> {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Kefalonia Vintage Home" style="max-width: 200px;">
+          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Your Stay is Coming Soon!</h1>
         </div>
         
         <p>Dear ${booking.name},</p>
         
-        <p>We're looking forward to welcoming you to Kefalonia Vintage Home in just a few days! Here's everything you need to know for a smooth arrival:</p>
+        <p>We're looking forward to welcoming you to Villa Fiscardo in just a few days! Here's everything you need to know for a smooth arrival:</p>
         
         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 5px; margin: 20px 0;">
           <h2 style="color: #2a609e; margin-top: 0;">Check-in Information</h2>
           <p><strong>Date:</strong> ${formatDate(checkInDate)}</p>
           <p><strong>Check-in time:</strong> 3:00 PM - 8:00 PM</p>
-          <p><strong>Address:</strong> Kefalonia Vintage Home, Fiscardo, Kefalonia, Ionian Islands, Greece</p>
+          <p><strong>Address:</strong> Villa Fiscardo, Fiscardo, Kefalonia, Ionian Islands, Greece</p>
           
           <h3 style="color: #2a609e; margin-top: 20px;">Self Check-in Instructions</h3>
           <p>Our home offers convenient self-check-in with a lockbox. The code for your stay is: <strong>2002</strong></p>
@@ -401,7 +401,7 @@ export async function sendPreArrivalEmail(booking: Booking): Promise<boolean> {
         
         <p>We're excited to host you and hope you have a wonderful stay!</p>
         
-        <p style="margin-top: 30px;">Warm regards,<br>The Kefalonia Vintage Home Team</p>
+        <p style="margin-top: 30px;">Warm regards,<br>The Villa Fiscardo Team</p>
         
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #777;">
           <p>If you have any questions, please contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #2a609e;">${SUPPORT_EMAIL}</a> or call us at ${SUPPORT_PHONE}.</p>
@@ -413,7 +413,7 @@ export async function sendPreArrivalEmail(booking: Booking): Promise<boolean> {
     
     return await sendEmail({
       to: booking.email,
-      subject: 'Your Upcoming Stay at Kefalonia Vintage Home - Check-in Instructions',
+      subject: 'Your Upcoming Stay at Villa Fiscardo - Check-in Instructions',
       html
     });
   } catch (error) {
@@ -433,13 +433,13 @@ export async function sendPostStayEmail(booking: Booking): Promise<boolean> {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Kefalonia Vintage Home" style="max-width: 200px;">
+          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Thank You for Staying With Us!</h1>
         </div>
         
         <p>Dear ${booking.name},</p>
         
-        <p>Thank you for choosing Kefalonia Vintage Home for your recent stay in Kefalonia. We hope you had a wonderful time and created lasting memories on our beautiful island.</p>
+        <p>Thank you for choosing Villa Fiscardo for your recent stay in Kefalonia. We hope you had a wonderful time and created lasting memories on our beautiful island.</p>
         
         <p>We'd love to hear about your experience! Your feedback helps us improve and provide an even better stay for future guests.</p>
         
@@ -455,9 +455,9 @@ export async function sendPostStayEmail(booking: Booking): Promise<boolean> {
           <p>The best times to visit Kefalonia are May-June and September-October when the weather is perfect and the island is less crowded.</p>
         </div>
         
-        <p>We hope to welcome you back to Kefalonia Vintage Home soon!</p>
+        <p>We hope to welcome you back to Villa Fiscardo soon!</p>
         
-        <p style="margin-top: 30px;">Warm regards,<br>Alex and the Kefalonia Vintage Home Team</p>
+        <p style="margin-top: 30px;">Warm regards,<br>Alex and the Villa Fiscardo Team</p>
         
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #777;">
           <p>Follow us: 
@@ -470,7 +470,7 @@ export async function sendPostStayEmail(booking: Booking): Promise<boolean> {
     
     return await sendEmail({
       to: booking.email,
-      subject: 'Thank You for Staying at Kefalonia Vintage Home',
+      subject: 'Thank You for Staying at Villa Fiscardo',
       html
     });
   } catch (error) {
@@ -493,13 +493,13 @@ export async function sendCancellationEmail(booking: Booking): Promise<boolean> 
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Kefalonia Vintage Home" style="max-width: 200px;">
+          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Booking Cancellation Confirmation</h1>
         </div>
         
         <p>Dear ${booking.name},</p>
         
-        <p>We're confirming that your booking at Kefalonia Vintage Home has been cancelled as requested.</p>
+        <p>We're confirming that your booking at Villa Fiscardo has been cancelled as requested.</p>
         
         <div style="background-color: #f7f7f7; padding: 20px; border-radius: 5px; margin: 20px 0;">
           <h2 style="color: #2a609e; margin-top: 0;">Cancelled Booking Details</h2>
@@ -519,9 +519,9 @@ export async function sendCancellationEmail(booking: Booking): Promise<boolean> 
           </table>
         </div>
         
-        <p>If your plans change and you'd like to stay with us in the future, we'll be happy to welcome you to Kefalonia Vintage Home.</p>
+        <p>If your plans change and you'd like to stay with us in the future, we'll be happy to welcome you to Villa Fiscardo.</p>
         
-        <p style="margin-top: 30px;">Warm regards,<br>The Kefalonia Vintage Home Team</p>
+        <p style="margin-top: 30px;">Warm regards,<br>The Villa Fiscardo Team</p>
         
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; font-size: 12px; color: #777;">
           <p>If you have any questions, please contact us at <a href="mailto:${SUPPORT_EMAIL}" style="color: #2a609e;">${SUPPORT_EMAIL}</a> or call us at ${SUPPORT_PHONE}.</p>
@@ -531,7 +531,7 @@ export async function sendCancellationEmail(booking: Booking): Promise<boolean> 
     
     return await sendEmail({
       to: booking.email,
-      subject: 'Your Kefalonia Vintage Home Booking Cancellation',
+      subject: 'Your Villa Fiscardo Booking Cancellation',
       html
     });
   } catch (error) {
@@ -550,11 +550,11 @@ export async function sendTestEmail(recipient: string): Promise<boolean> {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Kefalonia Vintage Home" style="max-width: 200px;">
+          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Email System Test</h1>
         </div>
         
-        <p>This is a test email from the Kefalonia Vintage Home booking system.</p>
+        <p>This is a test email from the Villa Fiscardo booking system.</p>
         
         <p>If you're receiving this, the email system is configured correctly!</p>
         
@@ -576,13 +576,13 @@ export async function sendTestEmail(recipient: string): Promise<boolean> {
           </table>
         </div>
         
-        <p style="margin-top: 30px;">Regards,<br>Kefalonia Vintage Home Booking System</p>
+        <p style="margin-top: 30px;">Regards,<br>Villa Fiscardo Booking System</p>
       </div>
     `;
     
     return await sendEmail({
       to: recipient,
-      subject: 'Kefalonia Vintage Home - Email System Test',
+      subject: 'Villa Fiscardo - Email System Test',
       html
     });
   } catch (error) {
