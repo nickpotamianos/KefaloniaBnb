@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 
 // Email sender address
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Villa Fiscardo <nick.potamianos@gmail.com>';
-const OWNER_EMAIL = process.env.OWNER_EMAIL || 'alexandros@potamianosgroup.com';
+const OWNER_EMAIL = process.env.OWNER_EMAIL || 'info@villafiscardo.com';
 const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'nick.potamianos@gmail.com';
 const SUPPORT_PHONE = process.env.SUPPORT_PHONE || '+30 694 820 1383';
 

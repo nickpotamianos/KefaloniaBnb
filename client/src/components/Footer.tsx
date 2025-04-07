@@ -248,10 +248,10 @@ const Footer = () => {
                   <div>
                     <h5 className="text-white/60 text-sm">Email</h5>
                     <a 
-                      href="mailto:alexandros@potamianosgroup.com" 
+                      href="mailto:info@villafiscardo.com" 
                       className="text-white hover:text-[var(--sea-blue)] transition-colors duration-300"
                     >
-                      alexandros@potamianosgroup.com
+                      info@villafiscardo.com
                     </a>
                   </div>
                 </li>
