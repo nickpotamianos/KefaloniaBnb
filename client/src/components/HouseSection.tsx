@@ -90,7 +90,7 @@ const HouseSection = () => {
       <section id="house" className="py-20 px-4 bg-white">
         <div className="container mx-auto">
           <Heading
-            title="Unique Villa Fiscardo"
+            title="Villa Fiscardo"
             description="Experience the charm of our beautifully restored 100-year-old traditional Kefalonian home that blends heritage with modern comforts."
             centered
           />
