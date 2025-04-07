@@ -4,19 +4,19 @@ import { Booking } from '@shared/schema';
 
 // Create a transporter using the configured transport
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  host: process.env.EMAIL_HOST || 'smtp.zoho.eu',
   port: parseInt(process.env.EMAIL_PORT || '587'),
   secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_USER || 'nick.potamianos@gmail.com',
-    pass: process.env.EMAIL_PASSWORD || 'vzvy urgn isjc khav',
+    user: process.env.EMAIL_USER || 'info@villafiscardo.com',
+    pass: process.env.EMAIL_PASSWORD || 'gVVAs0Mmf5hG',
   },
 });
 
 // Email sender address
-const FROM_EMAIL = process.env.EMAIL_FROM || 'Villa Fiscardo <nick.potamianos@gmail.com>';
+const FROM_EMAIL = process.env.EMAIL_FROM || 'Villa Fiscardo <info@villafiscardo.com>';
 const OWNER_EMAIL = process.env.OWNER_EMAIL || 'info@villafiscardo.com';
-const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'nick.potamianos@gmail.com';
+const SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || 'info@villafiscardo.com';
 const SUPPORT_PHONE = process.env.SUPPORT_PHONE || '+30 694 820 1383';
 
 // Check email configuration on startup
@@ -563,7 +563,7 @@ export async function sendTestEmail(recipient: string): Promise<boolean> {
           <table style="width: 100%;">
             <tr>
               <td style="padding: 8px 0; font-weight: bold;">SMTP Host:</td>
-              <td>${process.env.EMAIL_HOST || 'smtp.gmail.com'}</td>
+              <td>${process.env.EMAIL_HOST || 'smtp.zoho.eu'}</td>
             </tr>
             <tr>
               <td style="padding: 8px 0; font-weight: bold;">Sender Email:</td>

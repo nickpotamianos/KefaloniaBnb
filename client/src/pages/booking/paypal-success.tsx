@@ -262,7 +262,7 @@ const PayPalSuccessPage: React.FC = () => {
               <div className="mt-8 flex flex-col md:flex-row md:justify-between items-center">
                 <div className="text-center md:text-left mb-6 md:mb-0">
                   <p className="text-sm text-gray-500">Questions about your booking?</p>
-                  <p className="text-[var(--primary-blue)]">Contact us at <a href="mailto:nick.potamianos@gmail.com" className="font-medium">nick.potamianos@gmail.com</a></p>
+                  <p className="text-[var(--primary-blue)]">Contact us at <a href="mailto:info@villafiscardo.com" className="font-medium">info@villafiscardo.com</a></p>
                 </div>
                 <Button 
                   className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 min-w-[200px]"
