@@ -1,14 +1,10 @@
-// API configuration for development and production environments
+// API configuration for production environment
 
-// API URLs
-const LOCAL_API = 'http://localhost:3000';
+// Production API URL
 const PRODUCTION_API = 'https://villafiscardo.com';
 
-// Determine which API URL to use based on environment
-const DIGITAL_OCEAN_API = PRODUCTION_API;
-
-// Use the local API for development, and the production API for production
-export const API_BASE = import.meta.env.DEV ? LOCAL_API : PRODUCTION_API;
+// Always use the production API regardless of environment
+export const API_BASE = PRODUCTION_API;
 
 // Base URL for API calls
 export const API_BASE_URL = API_BASE;
