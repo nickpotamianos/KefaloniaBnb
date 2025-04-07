@@ -831,8 +831,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Admin endpoints with basic protection
   
-  // Simple admin secret key - in production, use a proper authentication system
-  const ADMIN_SECRET = process.env.ADMIN_SECRET || 'kefalonia-admin-2025';
+  // Use environment variable for admin secret with a strong fallback
+  const ADMIN_SECRET = process.env.ADMIN_SECRET || 'vf-admin-kef-9q8p3m2x7z6y5t4r';
   
   // Admin middleware to check for authorization
   const requireAdmin = (req: any, res: any, next: any) => {

@@ -1,20 +1,20 @@
 // API configuration for development and production environments
 
-// Digital Ocean deployment URL (your new combined frontend+backend)
-const DIGITAL_OCEAN_API = 'https://kefalonia-bnb-tiq7j.ondigitalocean.app';
+// API URLs
+const LOCAL_API = 'http://localhost:3000';
+const PRODUCTION_API = 'https://villafiscardo.com';
 
-// For production, we'll use Digital Ocean API
-const USE_PRODUCTION_API = import.meta.env.PROD;
-const isProduction = import.meta.env.PROD;
+// Determine which API URL to use based on environment
+const DIGITAL_OCEAN_API = PRODUCTION_API;
 
-// Choose which API endpoint to use
-const API_ENDPOINT = DIGITAL_OCEAN_API;
+// Use the local API for development, and the production API for production
+export const API_BASE = import.meta.env.DEV ? LOCAL_API : PRODUCTION_API;
 
 // Base URL for API calls
-export const API_BASE_URL = API_ENDPOINT;
+export const API_BASE_URL = API_BASE;
 
 // Production domain for redirects
-export const PRODUCTION_DOMAIN = 'https://kefalonia-bnb-tiq7j.ondigitalocean.app';
+export const PRODUCTION_DOMAIN = PRODUCTION_API;
 
 // API endpoints
 export const API_ENDPOINTS = {

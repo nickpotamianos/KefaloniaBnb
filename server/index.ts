@@ -14,18 +14,12 @@ const app = express();
 const isProduction = process.env.NODE_ENV === 'production';
 
 // Configure CORS
-const corsOptions = {
-  origin: isProduction 
-    ? ['https://villakefalonia.potamianosgroup.com', 'https://www.villakefalonia.potamianosgroup.com', 'https://kefalonia-bnb-tiq7j.ondigitalocean.app']
-    : '*', // Allow all origins in development
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'Authorization', 'stripe-signature'],
-  credentials: true,
-  optionsSuccessStatus: 204
-};
-
-// Use the cors middleware with our options
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://villafiscardo.com', 'https://www.villafiscardo.com']
+    : 'http://localhost:5173',
+  credentials: true
+}));
 
 // Parse JSON for regular routes
 app.use((req, res, next) => {

@@ -34,8 +34,8 @@ const CLEANING_FEE = 60;         // €60 cleaning fee
 const ADDITIONAL_GUEST_FEE = 0;   // No additional guest fee
 const MIN_NIGHTS = 2;
 
-// Frontend URL for redirects - always use Digital Ocean URL
-const FRONTEND_URL = 'https://kefalonia-bnb-tiq7j.ondigitalocean.app';
+// Frontend URL for redirects - always use the production URL
+const FRONTEND_URL = 'https://villafiscardo.com';
 
 // PayPal return URLs
 const PAYPAL_RETURN_URL = `${FRONTEND_URL}/booking/paypal-success`;
