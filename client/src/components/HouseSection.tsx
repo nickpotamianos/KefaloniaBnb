@@ -240,10 +240,10 @@ const HouseSection = () => {
                     
                     {/* Season-specific image */}
                     <div className="h-40 bg-cover bg-center" style={{
-                      backgroundImage: activeSeason === "summer" ? "url('/images/assos.jpg')" :
-                                      activeSeason === "spring" ? "url('/images/hike.jpg')" :
-                                      activeSeason === "autumn" ? "url('/images/Robola.jpg')" : 
-                                      "url('/images/fiskardo.jpeg')"
+                      backgroundImage: activeSeason === "summer" ? "url('/images/summer.jpg')" :
+                                      activeSeason === "spring" ? "url('/images/spring.jpg')" :
+                                      activeSeason === "autumn" ? "url('/images/autumn.jpg')" : 
+                                      "url('/images/winter.png')"
                     }}></div>
                   </div>
                 </div>

@@ -143,6 +143,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
   
   // Default to Greece country code (+30)
   const [selectedCountryCode, setSelectedCountryCode] = useState('+30');
+  
+  // Flag to track if prices are loaded
+  const [pricesLoaded, setPricesLoaded] = useState(false);
 
   // State for pricing information
   const [priceSummary, setPriceSummary] = useState<{
@@ -166,9 +169,20 @@ const BookingForm: React.FC<BookingFormProps> = ({
   // Get booking data from the same hook used in AvailabilityCalendar
   const { isDateBooked } = useBookings();
   
-  // Update pricing information when dates change
+  // Load pricing data when the component mounts
   useEffect(() => {
-    if (checkIn && checkOut) {
+    const loadPricing = async () => {
+      // Wait for pricing service to initialize
+      await pricingService.getPriceForDateAsync(new Date());
+      setPricesLoaded(true);
+    };
+    
+    loadPricing();
+  }, []);
+  
+  // Update pricing information when dates change or when pricing data loads
+  useEffect(() => {
+    if (checkIn && checkOut && pricesLoaded) {
       console.log("BookingForm: Calculating price for dates", { 
         checkIn: checkIn.toISOString(), 
         checkOut: checkOut.toISOString() 
@@ -176,6 +190,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
       const pricing = pricingService.calculateTotalPrice(checkIn, checkOut);
       console.log("BookingForm: Received pricing", pricing);
       setPriceSummary(pricing);
+    } else if (!pricesLoaded) {
+      console.log("BookingForm: Waiting for prices to load...");
     } else {
       setPriceSummary({
         basePrice: 0,
@@ -187,7 +203,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         totalPrice: 0
       });
     }
-  }, [checkIn, checkOut]);
+  }, [checkIn, checkOut, pricesLoaded]);
   
   // Parse phone number to separate country code and number
   const getPhoneWithoutCode = () => {

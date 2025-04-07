@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { addMonths, format, isSameDay, isWithinInterval, startOfMonth, 
   endOfMonth, eachDayOfInterval, isBefore, isToday, compareAsc,
   addDays, subDays, getDay, startOfWeek, endOfWeek, getMonth } from 'date-fns';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import pricingService from '@/lib/pricingService';
 
@@ -40,6 +40,8 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   const [calendarDaysWithPrices, setCalendarDaysWithPrices] = useState<Array<Array<{date: Date, isCurrentMonth: boolean, price: number}>>>([]);
   // Flag to track if prices are loaded
   const [pricesLoaded, setPricesLoaded] = useState(false);
+  // Add state for showing help tooltip
+  const [showHelp, setShowHelp] = useState(false);
 
   // Load pricing data when the component mounts
   useEffect(() => {
@@ -160,28 +162,57 @@ const CustomDateRangePicker: React.FC<CustomDateRangePickerProps> = ({
   return (
     <div className={cn("custom-date-range-picker", className)}>
       <div className="flex justify-between items-center mb-4">
-        <button 
-          type="button"
-          onClick={prevMonth}
-          className="p-1 rounded-full hover:bg-gray-100"
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        
-        <div className="font-medium">
-          {format(currentMonth, 'MMMM yyyy')}
-          {numberOfMonths > 1 && (
-            <> - {format(addMonths(currentMonth, numberOfMonths-1), 'MMMM yyyy')}</>
-          )}
+        <div className="flex items-center">
+          <button 
+            type="button"
+            onClick={prevMonth}
+            className="p-1 rounded-full hover:bg-gray-100"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          
+          <div className="font-medium mx-2">
+            {format(currentMonth, 'MMMM yyyy')}
+            {numberOfMonths > 1 && (
+              <> - {format(addMonths(currentMonth, numberOfMonths-1), 'MMMM yyyy')}</>
+            )}
+          </div>
+          
+          <button 
+            type="button"
+            onClick={nextMonth}
+            className="p-1 rounded-full hover:bg-gray-100"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
         </div>
         
-        <button 
-          type="button"
-          onClick={nextMonth}
-          className="p-1 rounded-full hover:bg-gray-100"
-        >
-          <ChevronRight className="h-5 w-5" />
-        </button>
+        {/* Add Info button */}
+        <div className="relative">
+          <button 
+            className="text-gray-500 hover:text-gray-700 focus:outline-none"
+            onClick={() => setShowHelp(!showHelp)}
+          >
+            <Info className="h-4 w-4" />
+          </button>
+          
+          {showHelp && (
+            <div className="absolute right-0 mt-2 w-72 bg-white p-3 rounded-md shadow-lg z-10 text-xs leading-relaxed text-gray-700 border border-gray-200">
+              <p className="font-medium mb-1">How to use this calendar:</p>
+              <ol className="list-decimal ml-4 space-y-1">
+                <li>Click once to select your check-in date</li>
+                <li>Click again to select your check-out date</li>
+                <li>View the total price with any applicable discounts</li>
+              </ol>
+              <p className="mt-2 font-medium">Special offers:</p>
+              <ul className="list-disc ml-4 space-y-1">
+                <li>12% discount for 7+ night stays</li>
+                <li>20% discount for 30+ night stays</li>
+              </ul>
+              <p className="mt-2 text-[10px] text-gray-500">Prices shown include taxes.</p>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
