@@ -244,7 +244,7 @@ const HouseSection = () => {
                                       activeSeason === "spring" ? "url('/images/spring.jpg')" :
                                       activeSeason === "autumn" ? "url('/images/autumn.jpg')" : 
                                       "url('/images/winter.png')",
-                      backgroundPosition: activeSeason === "winter" ? "center bottom" : "center"
+                      backgroundPosition: activeSeason === "winter" ? "center 30%" : "center"
                     }}></div>
                   </div>
                 </div>
