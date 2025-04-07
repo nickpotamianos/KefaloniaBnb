@@ -297,30 +297,30 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <div className="relative group">
             <div className="flex items-center justify-between">
               <h3 className="text-md font-medium text-gray-700">Check Availability & Prices</h3>
-              <button 
-                className="text-gray-500 hover:text-gray-700 focus:outline-none"
-                onClick={() => setShowHelp(!showHelp)}
-              >
-                <Info className="h-4 w-4" />
-              </button>
-            </div>
-            
-            {showHelp && (
-              <div className="absolute right-0 mt-2 w-72 bg-white p-3 rounded-md shadow-lg z-10 text-xs leading-relaxed text-gray-700 border border-gray-200">
-                <p className="font-medium mb-1">How to use this calendar:</p>
-                <ol className="list-decimal ml-4 space-y-1">
-                  <li>Click once to select your check-in date</li>
-                  <li>Click again to select your check-out date</li>
-                  <li>View the total price with any applicable discounts</li>
-                </ol>
-                <p className="mt-2 font-medium">Special offers:</p>
-                <ul className="list-disc ml-4 space-y-1">
-                  <li>12% discount for 7+ night stays</li>
-                  <li>20% discount for 30+ night stays</li>
-                </ul>
-                <p className="mt-2 text-[10px] text-gray-500">Prices shown include taxes.</p>
+              <div className="relative">
+                <div 
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none cursor-help"
+                >
+                  <Info className="h-4 w-4" />
+                </div>
+                
+                <div className="absolute right-0 mt-2 w-72 bg-white p-3 rounded-md shadow-lg z-10 text-xs leading-relaxed text-gray-700 border border-gray-200 
+                  invisible group-hover:visible transition-all duration-200 opacity-0 group-hover:opacity-100">
+                  <p className="font-medium mb-1">How to use this calendar:</p>
+                  <ol className="list-decimal ml-4 space-y-1">
+                    <li>Click once to select your check-in date</li>
+                    <li>Click again to select your check-out date</li>
+                    <li>View the total price with any applicable discounts</li>
+                  </ol>
+                  <p className="mt-2 font-medium">Special offers:</p>
+                  <ul className="list-disc ml-4 space-y-1">
+                    <li>12% discount for 7+ night stays</li>
+                    <li>20% discount for 30+ night stays</li>
+                  </ul>
+                  <p className="mt-2 text-[10px] text-gray-500">Prices shown include taxes.</p>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         )}
       
