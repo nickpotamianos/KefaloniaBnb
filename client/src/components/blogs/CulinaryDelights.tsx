@@ -128,7 +128,7 @@ const CulinaryDelights = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/fiskardo.jpeg" 
+              src="/images/tasia.png" 
               alt="Tassia's restaurant with harbor views in Fiskardo serving authentic Kefalonian cuisine" 
               className="w-full h-full object-cover"
             />
@@ -198,7 +198,7 @@ const CulinaryDelights = () => {
           </div>
         </motion.div>
         
-        {/* Vassilikis Seafood Restaurant */}
+        {/* Alati All Day Bar & Restaurant */}
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
           initial={{ opacity: 0, y: 20 }}
@@ -207,7 +207,7 @@ const CulinaryDelights = () => {
           transition={{ duration: 0.7 }}
         >
           <div className="order-2 md:order-1">
-            <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">Vassilikis Seafood Restaurant</h2>
+            <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">Alati All Day Bar & Restaurant</h2>
             <div className="flex items-center mb-4 text-sm text-gray-600">
               <MapPin className="h-4 w-4 mr-1.5 text-[var(--terracotta)]" />
               <span>Alaties Beach | 15 minutes drive from Villa Fiscardo</span>
@@ -254,8 +254,8 @@ const CulinaryDelights = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/alaties.jpg" 
-              alt="Vassilikis Seafood Restaurant at Alaties Beach with sunset views over the Ionian Sea" 
+              src="/images/alati.png" 
+              alt="Alati All Day Bar & Restaurant at Alaties Beach with sunset views over the Ionian Sea" 
               className="w-full h-full object-cover"
             />
           </div>
