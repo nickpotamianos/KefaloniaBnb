@@ -1,4 +1,4 @@
-import { Check, CalendarDays, Sun, Cloud, Leaf } from "lucide-react";
+import { Check, CalendarDays, Sun, Cloud, Leaf, Flower2 } from "lucide-react";
 import { Heading } from "@/components/ui/heading";
 import BookingCard from "@/components/BookingCard";
 import PhotoGallery from "@/components/PhotoGallery";
@@ -27,7 +27,7 @@ const HouseSection = () => {
       description: "Lush greenery, wildflowers, and comfortable temperatures make spring perfect for hiking and exploring the island without crowds.",
       activities: ["Wildflower hiking", "Easter celebrations", "Village exploration"],
       temp: "15-24°C",
-      icon: <Leaf className="h-5 w-5" />
+      icon: <Flower2 className="h-5 w-5" />
     },
     summer: {
       title: "Summer (June-Sept)",

@@ -11,12 +11,41 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
+  // Add debug option for troubleshooting
+  debug: process.env.NODE_ENV !== 'production',
+  // Add additional security and connection settings for Zoho
+  tls: {
+    // Do not fail on invalid certs
+    rejectUnauthorized: false,
+    // Zoho requires secure connection
+    ciphers: 'SSLv3'
+  },
+  // Set authentication method explicitly
+  authMethod: 'PLAIN'
+});
+
+// Print email configuration for debugging (without exposing full password)
+const emailUser = process.env.EMAIL_USER;
+const emailPassword = process.env.EMAIL_PASSWORD ? 
+  `${process.env.EMAIL_PASSWORD.substring(0, 1)}...${process.env.EMAIL_PASSWORD.slice(-1)}` : 
+  'not provided';
+
+console.log('Email Configuration:', {
+  host: process.env.EMAIL_HOST || 'smtp.zoho.eu',
+  port: process.env.EMAIL_PORT || '587',
+  secure: process.env.EMAIL_SECURE === 'true',
+  userProvided: !!emailUser,
+  user: emailUser,
+  passwordLength: process.env.EMAIL_PASSWORD?.length || 0,
+  passwordDebug: emailPassword
 });
 
 // If credentials are missing, log a warning but don't expose them in code
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
   console.warn('WARNING: Email credentials not provided via environment variables.');
   console.warn('Set EMAIL_USER and EMAIL_PASSWORD environment variables for emails to work.');
+} else {
+  console.log('Email credentials provided. Will attempt to verify connection...');
 }
 
 // Email sender address
