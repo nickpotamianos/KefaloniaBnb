@@ -2,19 +2,28 @@ import { useState, useEffect } from "react";
 import { Menu, X, Sun, Home, MapPin, Compass, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const Navbar = () => {
+interface NavbarProps {
+  isBlogPage?: boolean;
+}
+
+const Navbar = ({ isBlogPage = false }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  // Always set scrolled to true if on blog page initially
+  const [scrolled, setScrolled] = useState(isBlogPage);
   const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
       // Handle the background change on scroll
-      if (window.scrollY > 10) {
+      // Always set scrolled to true when on blog pages regardless of scroll position
+      if (window.scrollY > 10 || isBlogPage) {
         setScrolled(true);
       } else {
         setScrolled(false);
       }
+      
+      // Skip section detection on blog pages
+      if (isBlogPage) return;
       
       // Find the active section based on scroll position
       const sections = ["home", "house", "location", "experiences", "contact"];
@@ -31,12 +40,238 @@ const Navbar = () => {
     };
     
     window.addEventListener("scroll", handleScroll);
+    // Run the handleScroll once on mount to ensure initial state is correct
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isBlogPage]);
+
+  // Force scrolled state on mount if this is a blog page
+  useEffect(() => {
+    if (isBlogPage) {
+      setScrolled(true);
+    }
+  }, [isBlogPage]);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
-  const logoSrc = scrolled ? "/images/logokef1.png" : "/images/2logokef1.png";
+  // Always use the solid logo on blog pages
+  const logoSrc = scrolled || isBlogPage ? "/images/logokef1.png" : "/images/2logokef1.png";
+  
+  // For blog pages, we'll modify the navigation links
+  const getNavLinks = () => {
+    if (isBlogPage) {
+      return (
+        <>
+          <NavLink 
+            href="/" 
+            text="Home"
+            icon={<Sun size={16} />}
+            isActive={false}
+            scrolled={scrolled}
+          />
+          
+          <NavLink 
+            href="/#house" 
+            text="The House"
+            icon={<Home size={16} />}
+            isActive={false}
+            scrolled={scrolled}
+          />
+          
+          <NavLink 
+            href="/#location" 
+            text="Location"
+            icon={<MapPin size={16} />}
+            isActive={false}
+            scrolled={scrolled}
+          />
+          
+          <NavLink 
+            href="/#experiences" 
+            text="Experiences"
+            icon={<Compass size={16} />}
+            isActive={false}
+            scrolled={scrolled}
+          />
+          
+          <NavLink 
+            href="/#contact" 
+            text="Contact"
+            icon={<MessageCircle size={16} />}
+            isActive={false}
+            scrolled={scrolled}
+          />
+          
+          <Button 
+            asChild 
+            className={`bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 text-white px-6 py-2 rounded-full transition duration-300 shadow-sm hover:shadow-md`}
+          >
+            <a href="/#booking">Book Now</a>
+          </Button>
+        </>
+      );
+    }
+    
+    // Default home page navigation
+    return (
+      <>
+        <NavLink 
+          href="#home" 
+          text="Home"
+          icon={<Sun size={16} />}
+          isActive={activeSection === "home"}
+          scrolled={scrolled}
+        />
+        
+        <NavLink 
+          href="#house" 
+          text="The House"
+          icon={<Home size={16} />}
+          isActive={activeSection === "house"}
+          scrolled={scrolled}
+        />
+        
+        <NavLink 
+          href="#location" 
+          text="Location"
+          icon={<MapPin size={16} />}
+          isActive={activeSection === "location"}
+          scrolled={scrolled}
+        />
+        
+        <NavLink 
+          href="#experiences" 
+          text="Experiences"
+          icon={<Compass size={16} />}
+          isActive={activeSection === "experiences"}
+          scrolled={scrolled}
+        />
+        
+        <NavLink 
+          href="#contact" 
+          text="Contact"
+          icon={<MessageCircle size={16} />}
+          isActive={activeSection === "contact"}
+          scrolled={scrolled}
+        />
+        
+        <Button 
+          asChild 
+          className={`bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 text-white px-6 py-2 rounded-full transition duration-300 shadow-sm hover:shadow-md`}
+        >
+          <a href="#booking">Book Now</a>
+        </Button>
+      </>
+    );
+  };
+
+  // Get mobile nav links based on whether it's a blog page
+  const getMobileNavLinks = () => {
+    if (isBlogPage) {
+      return (
+        <>
+          <MobileNavLink 
+            onClick={closeMenu} 
+            href="/" 
+            text="Home"
+            icon={<Sun size={18} className="text-[var(--primary-blue)]" />}
+            isActive={false}
+          />
+          
+          <MobileNavLink 
+            onClick={closeMenu} 
+            href="/#house" 
+            text="The House"
+            icon={<Home size={18} className="text-[var(--primary-blue)]" />}
+            isActive={false}
+          />
+          
+          <MobileNavLink 
+            onClick={closeMenu} 
+            href="/#location" 
+            text="Location"
+            icon={<MapPin size={18} className="text-[var(--primary-blue)]" />}
+            isActive={false}
+          />
+          
+          <MobileNavLink 
+            onClick={closeMenu} 
+            href="/#experiences" 
+            text="Experiences"
+            icon={<Compass size={18} className="text-[var(--primary-blue)]" />}
+            isActive={false}
+          />
+          
+          <MobileNavLink 
+            onClick={closeMenu} 
+            href="/#contact" 
+            text="Contact"
+            icon={<MessageCircle size={18} className="text-[var(--primary-blue)]" />}
+            isActive={false}
+          />
+          
+          <Button 
+            asChild 
+            className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 w-full justify-center rounded-full mt-2 shadow-sm"
+          >
+            <a onClick={closeMenu} href="/#booking">Book Now</a>
+          </Button>
+        </>
+      );
+    }
+    
+    // Default home page mobile navigation
+    return (
+      <>
+        <MobileNavLink 
+          onClick={closeMenu} 
+          href="#home" 
+          text="Home"
+          icon={<Sun size={18} className="text-[var(--primary-blue)]" />}
+          isActive={activeSection === "home"}
+        />
+        
+        <MobileNavLink 
+          onClick={closeMenu} 
+          href="#house" 
+          text="The House"
+          icon={<Home size={18} className="text-[var(--primary-blue)]" />}
+          isActive={activeSection === "house"}
+        />
+        
+        <MobileNavLink 
+          onClick={closeMenu} 
+          href="#location" 
+          text="Location"
+          icon={<MapPin size={18} className="text-[var(--primary-blue)]" />}
+          isActive={activeSection === "location"}
+        />
+        
+        <MobileNavLink 
+          onClick={closeMenu} 
+          href="#experiences" 
+          text="Experiences"
+          icon={<Compass size={18} className="text-[var(--primary-blue)]" />}
+          isActive={activeSection === "experiences"}
+        />
+        
+        <MobileNavLink 
+          onClick={closeMenu} 
+          href="#contact" 
+          text="Contact"
+          icon={<MessageCircle size={18} className="text-[var(--primary-blue)]" />}
+          isActive={activeSection === "contact"}
+        />
+        
+        <Button 
+          asChild 
+          className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 w-full justify-center rounded-full mt-2 shadow-sm"
+        >
+          <a onClick={closeMenu} href="#booking">Book Now</a>
+        </Button>
+      </>
+    );
+  };
   
   return (
     <header 
@@ -47,7 +282,7 @@ const Navbar = () => {
       }`}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
-        <a href="#" className="flex items-center space-x-3">
+        <a href={isBlogPage ? "/" : "#"} className="flex items-center space-x-3">
           <div className="flex items-center space-x-3">
             <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-12 w-auto" />
             <span className={`text-2xl font-bold playfair ${
@@ -73,52 +308,7 @@ const Navbar = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
-          <NavLink 
-            href="#home" 
-            text="Home"
-            icon={<Sun size={16} />}
-            isActive={activeSection === "home"}
-            scrolled={scrolled}
-          />
-          
-          <NavLink 
-            href="#house" 
-            text="The House"
-            icon={<Home size={16} />}
-            isActive={activeSection === "house"}
-            scrolled={scrolled}
-          />
-          
-          <NavLink 
-            href="#location" 
-            text="Location"
-            icon={<MapPin size={16} />}
-            isActive={activeSection === "location"}
-            scrolled={scrolled}
-          />
-          
-          <NavLink 
-            href="#experiences" 
-            text="Experiences"
-            icon={<Compass size={16} />}
-            isActive={activeSection === "experiences"}
-            scrolled={scrolled}
-          />
-          
-          <NavLink 
-            href="#contact" 
-            text="Contact"
-            icon={<MessageCircle size={16} />}
-            isActive={activeSection === "contact"}
-            scrolled={scrolled}
-          />
-          
-          <Button 
-            asChild 
-            className={`bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 text-white px-6 py-2 rounded-full transition duration-300 shadow-sm hover:shadow-md`}
-          >
-            <a href="#booking">Book Now</a>
-          </Button>
+          {getNavLinks()}
         </nav>
       </div>
       
@@ -126,52 +316,7 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden bg-white/95 backdrop-blur-md shadow-lg animate-slide-down">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <MobileNavLink 
-              onClick={closeMenu} 
-              href="#home" 
-              text="Home"
-              icon={<Sun size={18} className="text-[var(--primary-blue)]" />}
-              isActive={activeSection === "home"}
-            />
-            
-            <MobileNavLink 
-              onClick={closeMenu} 
-              href="#house" 
-              text="The House"
-              icon={<Home size={18} className="text-[var(--primary-blue)]" />}
-              isActive={activeSection === "house"}
-            />
-            
-            <MobileNavLink 
-              onClick={closeMenu} 
-              href="#location" 
-              text="Location"
-              icon={<MapPin size={18} className="text-[var(--primary-blue)]" />}
-              isActive={activeSection === "location"}
-            />
-            
-            <MobileNavLink 
-              onClick={closeMenu} 
-              href="#experiences" 
-              text="Experiences"
-              icon={<Compass size={18} className="text-[var(--primary-blue)]" />}
-              isActive={activeSection === "experiences"}
-            />
-            
-            <MobileNavLink 
-              onClick={closeMenu} 
-              href="#contact" 
-              text="Contact"
-              icon={<MessageCircle size={18} className="text-[var(--primary-blue)]" />}
-              isActive={activeSection === "contact"}
-            />
-            
-            <Button 
-              asChild 
-              className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 w-full justify-center rounded-full mt-2 shadow-sm"
-            >
-              <a onClick={closeMenu} href="#booking">Book Now</a>
-            </Button>
+            {getMobileNavLinks()}
           </div>
         </div>
       )}

@@ -139,7 +139,7 @@ const Blog = () => {
         </Helmet>
       )}
       
-      <Navbar />
+      <Navbar isBlogPage={true} />
       
       <div className="pt-20 bg-[var(--bg-color)]">
         {/* Back button */}
