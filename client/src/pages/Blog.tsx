@@ -4,6 +4,8 @@ import BeachExploration from '../components/blogs/BeachExploration';
 import CulinaryDelights from '../components/blogs/CulinaryDelights';
 import IslandCruising from '../components/blogs/IslandCruising';
 import NatureHikes from '../components/blogs/NatureHikes';
+import WineTasting from '../components/blogs/WineTasting';
+import SunsetMagic from '../components/blogs/SunsetMagic';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ChevronLeft } from 'lucide-react';
@@ -87,7 +89,10 @@ const Blog = () => {
         return <IslandCruising />;
       case 'nature-hikes':
         return <NatureHikes />;
-      // Other blog components will be added when created for wine-tasting and sunset-magic
+      case 'wine-tasting':
+        return <WineTasting />;
+      case 'sunset-magic':
+        return <SunsetMagic />;
       default:
         return (
           <div className="container mx-auto px-4 py-16 text-center">
