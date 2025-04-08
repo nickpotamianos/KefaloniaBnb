@@ -14,7 +14,7 @@ const HeroSection = () => {
       <section 
         id="home" 
         className="relative h-screen bg-cover bg-center"
-        aria-label="Kefalonian Vintage Home Introduction"
+        aria-label="Villa Fiscardo Introduction"
       >
         <video 
           className="absolute inset-0 w-full h-full object-cover" 
@@ -77,7 +77,7 @@ const HeroSection = () => {
                 size="lg" 
                 className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 text-white text-lg px-8 py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
               >
-                <a href="#booking" aria-label="Book your stay at Kefalonian Vintage Home now">
+                <a href="#booking" aria-label="Book your stay at Villa Fiscardo now">
                   Book Your Stay
                 </a>
               </Button>

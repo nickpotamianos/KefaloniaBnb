@@ -49,7 +49,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 flex items-center justify-between">
         <a href="#" className="flex items-center space-x-3">
           <div className="flex items-center space-x-3">
-            <img src={logoSrc} alt="Kefalonian Vintage Home Logo" className="h-12 w-auto" />
+            <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-12 w-auto" />
             <span className={`text-2xl font-bold playfair ${
               scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
             }`}>

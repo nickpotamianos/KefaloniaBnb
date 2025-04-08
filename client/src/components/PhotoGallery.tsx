@@ -168,7 +168,7 @@ const PhotoGallery = ({ folderPath, photos, title }: PhotoGalleryProps) => {
               >
                 <img
                   src={photos[currentPhotoIndex].src}
-                  alt={`Kefalonian Vintage Home - ${photos[currentPhotoIndex].alt} - Traditional Greek accommodation in Fiscardo`}
+                  alt={`Villa Fiscardo - ${photos[currentPhotoIndex].alt} - Traditional Greek accommodation in Fiscardo`}
                   className="w-full object-contain max-h-[75vh]"
                   loading="lazy"
                 />

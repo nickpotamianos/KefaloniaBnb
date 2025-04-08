@@ -13,7 +13,7 @@ const ReviewsSection = () => {
   return (
     <>
       <Helmet>
-        <title>Guest Reviews | Kefalonian Vintage Home</title>
+        <title>Guest Reviews | Villa Fiscardo</title>
         <meta name="description" content="See what our guests say about their stay at our traditional Kefalonian home. Authentic reviews highlighting our hospitality, location, and unique experience." />
         <script type="application/ld+json">
           {`
@@ -22,7 +22,7 @@ const ReviewsSection = () => {
               "@type": "AggregateRating",
               "itemReviewed": {
                 "@type": "LodgingBusiness",
-                "name": "Kefalonian Vintage Home",
+                "name": "Villa Fiscardo",
                 "image": "/images/cropped_83A0388.jpg",
                 "address": {
                   "@type": "PostalAddress",
@@ -35,7 +35,7 @@ const ReviewsSection = () => {
               "bestRating": "5",
               "worstRating": "1",
               "ratingCount": "${reviews.length}",
-              "description": "Guest reviews of Kefalonian Vintage Home in Fiscardo"
+              "description": "Guest reviews of Villa Fiscardo in Fiscardo"
             }
           `}
         </script>
@@ -70,7 +70,7 @@ const ReviewsSection = () => {
             
             <div className="mt-12 text-center">
               <Button asChild className="bg-[#3B83BD] hover:bg-[#2C5F89] text-white">
-                <a href="#booking" aria-label="Book your stay at our Kefalonian Vintage Home">Book Your Stay Today</a>
+                <a href="#booking" aria-label="Book your stay at our Villa Fiscardo">Book Your Stay Today</a>
               </Button>
             </div>
           </div>

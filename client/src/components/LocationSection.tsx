@@ -34,7 +34,7 @@ const LocationSection = () => {
             {
               "@context": "https://schema.org",
               "@type": "Place",
-              "name": "Kefalonian Vintage Home Location",
+              "name": "Villa Fiscardo Location",
               "description": "Traditional villa located in Fiscardo, Kefalonia, Greece, close to beaches and attractions",
               "geo": {
                 "@type": "GeoCoordinates",
@@ -97,7 +97,7 @@ const LocationSection = () => {
                   <Marker position={villaPosition} icon={customIcon}>
                     <Popup>
                       <div className="text-center">
-                        <strong className="text-[var(--deep-blue)] block">Kefalonian Vintage Home</strong>
+                        <strong className="text-[var(--deep-blue)] block">Villa Fiscardo</strong>
                         <span className="text-sm block mb-2">Traditional villa in Fiscardo</span>
                         <a 
                           href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
@@ -128,7 +128,7 @@ const LocationSection = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Address</h4>
-                      <p className="text-gray-600">Kefalonian Vintage Home, Fiscardo, Kefalonia 28081, Greece</p>
+                      <p className="text-gray-600">Villa Fiscardo, Fiscardo, Kefalonia 28081, Greece</p>
                     </div>
                   </div>
                   

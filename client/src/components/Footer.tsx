@@ -19,7 +19,7 @@ const Footer = () => {
               transition={{ duration: 0.5 }}
             >
               <div className="flex items-center mb-6">
-                <img src="/images/2logokef1.png" alt="Kefalonian Vintage Home Logo" className="h-14 mr-3" />
+                <img src="/images/2logokef1.png" alt="Villa Fiscardo Logo" className="h-14 mr-3" />
                 <div>
                   <h2 className="text-2xl font-bold playfair">Villa Fiscardo</h2>
                   <p className="text-white/60 text-sm">Traditional Greek Island Escape</p>
