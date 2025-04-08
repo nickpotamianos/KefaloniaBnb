@@ -145,7 +145,7 @@ const CulinaryDelights = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/_83A0418.jpg" 
+              src="/images/odysseas.png" 
               alt="Odysseas Traditional Taverna with mountainside views and garden seating" 
               className="w-full h-full object-cover"
             />
