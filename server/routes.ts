@@ -831,12 +831,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Admin endpoints with basic protection
   
-  // Use environment variable for admin secret with a strong fallback
-  const ADMIN_SECRET = process.env.ADMIN_SECRET || 'vf-admin-kef-9q8p3m2x7z6y5t4r';
+  // Use environment variable for admin secret with no fallback
+  const ADMIN_SECRET = process.env.ADMIN_SECRET;
   
   // Admin middleware to check for authorization
   const requireAdmin = (req: any, res: any, next: any) => {
     const adminKey = req.headers['x-admin-key'] || req.query.adminKey || req.body.adminKey;
+    
+    if (!ADMIN_SECRET) {
+      console.error("ERROR: ADMIN_SECRET environment variable is not set. Admin endpoints will not function.");
+      return res.status(500).json({
+        success: false,
+        message: "Server configuration error: Admin access is not properly configured."
+      });
+    }
     
     if (!adminKey || adminKey !== ADMIN_SECRET) {
       return res.status(401).json({

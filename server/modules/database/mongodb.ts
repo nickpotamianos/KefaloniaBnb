@@ -4,13 +4,20 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-// MongoDB Atlas connection - properly URL-encode password to handle special characters
-const DB_PASSWORD = process.env.DB_PASSWORD || '20Nikol@s02';
-const ENCODED_PASSWORD = encodeURIComponent(DB_PASSWORD);
+// Get MongoDB credentials from environment variables
+const DB_USER = process.env.DB_USER;
+const DB_PASSWORD = process.env.DB_PASSWORD;
+const DB_CLUSTER = process.env.DB_CLUSTER || 'cluster0.uzob572.mongodb.net';
 
-// MongoDB connection string with encoded password
+// MongoDB connection string with proper URL encoding for password special characters
 const MONGODB_URI = process.env.MONGODB_URI || 
-  `mongodb+srv://kefalonia-bnb:${ENCODED_PASSWORD}@cluster0.uzob572.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+  (DB_USER && DB_PASSWORD ? 
+    `mongodb+srv://${DB_USER}:${encodeURIComponent(DB_PASSWORD)}@${DB_CLUSTER}/?retryWrites=true&w=majority` : 
+    null);
+
+if (!MONGODB_URI) {
+  console.error('ERROR: MongoDB connection credentials not provided. Set MONGODB_URI or DB_USER and DB_PASSWORD environment variables.');
+}
 
 // Create a connection to MongoDB
 async function connectToDatabase(): Promise<typeof mongoose> {
@@ -18,7 +25,7 @@ async function connectToDatabase(): Promise<typeof mongoose> {
     // Set strict query to false to avoid deprecation warnings
     mongoose.set('strictQuery', false);
     
-    const connection = await mongoose.connect(MONGODB_URI, {
+    const connection = await mongoose.connect(MONGODB_URI!, {
       // These options are no longer needed in newer Mongoose versions, but included for compatibility
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
     });

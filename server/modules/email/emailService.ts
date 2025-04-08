@@ -8,10 +8,16 @@ const transporter = nodemailer.createTransport({
   port: parseInt(process.env.EMAIL_PORT || '587'),
   secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
   auth: {
-    user: process.env.EMAIL_USER || 'info@villafiscardo.com',
-    pass: process.env.EMAIL_PASSWORD || 'gVVAs0Mmf5hG',
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
   },
 });
+
+// If credentials are missing, log a warning but don't expose them in code
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+  console.warn('WARNING: Email credentials not provided via environment variables.');
+  console.warn('Set EMAIL_USER and EMAIL_PASSWORD environment variables for emails to work.');
+}
 
 // Email sender address
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Villa Fiscardo <info@villafiscardo.com>';
