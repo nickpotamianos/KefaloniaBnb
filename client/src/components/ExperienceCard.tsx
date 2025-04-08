@@ -3,6 +3,7 @@ import { Experience } from "@/lib/types";
 import { MapPin, Calendar, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface ExperienceCardProps {
   experience: Experience;
@@ -11,6 +12,12 @@ interface ExperienceCardProps {
 
 const ExperienceCard = ({ experience, className }: ExperienceCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Function to determine the correct blog link based on experience title
+  const getBlogLink = (title: string) => {
+    const titleSlug = title.toLowerCase().replace(/\s+/g, '-');
+    return `/blog/${titleSlug}`;
+  };
   
   return (
     <motion.div 
@@ -86,14 +93,16 @@ const ExperienceCard = ({ experience, className }: ExperienceCardProps) => {
             </span>
           )}
           
-          {/* Learn more button */}
-          <motion.div 
-            className="text-[var(--terracotta)] font-medium text-sm flex items-center cursor-pointer group"
-            whileHover={{ x: 3 }}
-          >
-            Learn more
-            <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </motion.div>
+          {/* Learn more button now links to individual blog pages */}
+          <Link to={getBlogLink(experience.title)}>
+            <motion.div 
+              className="text-[var(--terracotta)] font-medium text-sm flex items-center cursor-pointer group"
+              whileHover={{ x: 3 }}
+            >
+              Learn more
+              <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </motion.div>
+          </Link>
         </div>
       </div>
     </motion.div>
