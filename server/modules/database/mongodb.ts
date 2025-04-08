@@ -15,6 +15,15 @@ const MONGODB_URI = process.env.MONGODB_URI ||
     `mongodb+srv://${DB_USER}:${encodeURIComponent(DB_PASSWORD)}@${DB_CLUSTER}/?retryWrites=true&w=majority` : 
     null);
 
+// Debug MongoDB connection parameters (without exposing full password)
+console.log('MongoDB Connection Info:', {
+  uriProvided: !!process.env.MONGODB_URI,
+  userProvided: !!DB_USER,
+  passwordProvided: !!DB_PASSWORD,
+  clusterProvided: !!DB_CLUSTER,
+  connectionStringType: typeof MONGODB_URI
+});
+
 if (!MONGODB_URI) {
   console.error('ERROR: MongoDB connection credentials not provided. Set MONGODB_URI or DB_USER and DB_PASSWORD environment variables.');
 }
@@ -25,7 +34,12 @@ async function connectToDatabase(): Promise<typeof mongoose> {
     // Set strict query to false to avoid deprecation warnings
     mongoose.set('strictQuery', false);
     
-    const connection = await mongoose.connect(MONGODB_URI!, {
+    // Add defensive check to ensure MONGODB_URI is a string
+    if (!MONGODB_URI || typeof MONGODB_URI !== 'string') {
+      throw new Error(`Invalid MongoDB URI: ${typeof MONGODB_URI}. Check your environment variables.`);
+    }
+    
+    const connection = await mongoose.connect(MONGODB_URI, {
       // These options are no longer needed in newer Mongoose versions, but included for compatibility
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
     });
