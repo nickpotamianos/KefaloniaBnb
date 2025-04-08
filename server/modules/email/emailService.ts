@@ -139,7 +139,7 @@ export async function sendBookingConfirmation(booking: Booking): Promise<boolean
     const html = `
       <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.5;">
         <div style="text-align: center; margin-bottom: 30px; background: linear-gradient(135deg, #f8f4eb 0%, #e0f7fa 100%); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 220px;">
+          <img src="https://villafiscardo.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 220px;">
           <h1 style="color: #2a609e; font-family: Georgia, serif; margin-top: 20px; font-size: 32px;">Your Greek Paradise Awaits!</h1>
           <p style="color: #e67e22; font-size: 20px; font-style: italic; margin-top: 10px;">${format(checkInDate, 'MMMM d')} - ${format(checkOutDate, 'MMMM d, yyyy')}</p>
           <div style="width: 80px; height: 3px; background: linear-gradient(to right, #2a609e, #e67e22); margin: 15px auto;"></div>
@@ -389,7 +389,7 @@ export async function sendPreArrivalEmail(booking: Booking): Promise<boolean> {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
+          <img src="https://villafiscardo.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Your Stay is Coming Soon!</h1>
         </div>
         
@@ -468,7 +468,7 @@ export async function sendPostStayEmail(booking: Booking): Promise<boolean> {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
+          <img src="https://villafiscardo.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Thank You for Staying With Us!</h1>
         </div>
         
@@ -528,7 +528,7 @@ export async function sendCancellationEmail(booking: Booking): Promise<boolean> 
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
+          <img src="https://villafiscardo.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Booking Cancellation Confirmation</h1>
         </div>
         
@@ -585,7 +585,7 @@ export async function sendTestEmail(recipient: string): Promise<boolean> {
     const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
         <div style="text-align: center; margin-bottom: 30px;">
-          <img src="https://villakefalonia.potamianosgroup.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
+          <img src="https://villafiscardo.com/images/logokef1.png" alt="Villa Fiscardo" style="max-width: 200px;">
           <h1 style="color: #2a609e;">Email System Test</h1>
         </div>
         

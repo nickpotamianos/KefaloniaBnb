@@ -15,7 +15,7 @@ const CALENDAR_URLS = [
 ];
 
 // iCal feed URL for our own calendar that other platforms can subscribe to
-const OUR_ICAL_URL = process.env.ICAL_FEED_URL || 'https://villakefalonia.potamianosgroup.com/api/calendar.ics';
+const OUR_ICAL_URL = process.env.ICAL_FEED_URL || 'https://villafiscardo.com/api/calendar.ics';
 
 // Types for date ranges
 interface DateRange {

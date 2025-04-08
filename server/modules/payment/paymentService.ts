@@ -193,7 +193,7 @@ export async function createCheckoutSession(bookingData: BookingData): Promise<S
           product_data: {
             name: 'Villa Fiscardo Booking',
             description: `${nights} nights, ${adults} adults, ${children || 0} children, Check-in: ${formattedCheckIn}, Check-out: ${formattedCheckOut}`,
-            images: ['https://villakefalonia.potamianosgroup.com/images/logokef1.png'],
+            images: ['https://villafiscardo.com/images/logokef1.png'],
           },
           unit_amount: totalAmount,
         },
