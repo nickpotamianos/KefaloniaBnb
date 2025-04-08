@@ -1,6 +1,6 @@
 import { MapPin, Mountain, Cloud, Layers, Clock, Bird, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
-import Heading from "../ui/Heading";
+import Heading from "../ui/heading";
 
 const NatureHikes = () => {
   return (

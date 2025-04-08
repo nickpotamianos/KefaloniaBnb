@@ -1,6 +1,6 @@
 import { MapPin, Anchor, Ship, Navigation, Sun, Calendar, Compass, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
-import Heading from "../ui/Heading";
+import Heading from "../ui/heading";
 
 const IslandCruising = () => {
   return (
