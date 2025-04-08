@@ -188,7 +188,7 @@ const BeachExploration = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/_83A0850.jpg" 
+              src="/images/emplisi.jpg" 
               alt="Emblisi Beach near Fiskardo with clear turquoise waters" 
               className="w-full h-full object-cover"
             />
@@ -205,7 +205,7 @@ const BeachExploration = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/_83A0853.jpg" 
+              src="/images/antisamos.jpg" 
               alt="Antisamos Beach in Kefalonia with emerald waters and lush green surroundings" 
               className="w-full h-full object-cover"
             />
@@ -378,7 +378,7 @@ const BeachExploration = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/DJI_0720.jpg" 
+              src="/images/rent.jpg" 
               alt="Aerial view of boat exploring Kefalonia's coastline" 
               className="w-full h-48 object-cover"
             />

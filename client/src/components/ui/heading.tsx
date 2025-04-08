@@ -35,3 +35,6 @@ export const Heading = ({
     </div>
   );
 };
+
+// Add default export to support both named and default imports
+export default Heading;

@@ -1,6 +1,9 @@
 import { useParams, Link } from 'wouter';
 import { useState, useEffect } from 'react';
 import BeachExploration from '../components/blogs/BeachExploration';
+import CulinaryDelights from '../components/blogs/CulinaryDelights';
+import IslandCruising from '../components/blogs/IslandCruising';
+import NatureHikes from '../components/blogs/NatureHikes';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ChevronLeft } from 'lucide-react';
@@ -78,7 +81,13 @@ const Blog = () => {
     switch(slug) {
       case 'beach-exploration':
         return <BeachExploration />;
-      // Other blog components will be added here
+      case 'culinary-delights':
+        return <CulinaryDelights />;
+      case 'island-cruising':
+        return <IslandCruising />;
+      case 'nature-hikes':
+        return <NatureHikes />;
+      // Other blog components will be added when created for wine-tasting and sunset-magic
       default:
         return (
           <div className="container mx-auto px-4 py-16 text-center">

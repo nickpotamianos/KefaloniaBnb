@@ -1,6 +1,6 @@
 import { MapPin, Utensils, Star, Clock, Wine, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
-import Heading from "../ui/Heading";
+import { Heading } from "../ui/heading";
 
 const CulinaryDelights = () => {
   return (
