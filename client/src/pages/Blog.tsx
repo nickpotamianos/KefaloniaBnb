@@ -1,10 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'wouter';
 import { useState, useEffect } from 'react';
 import BeachExploration from '../components/blogs/BeachExploration';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { ChevronLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 // Import metadata for SEO
 import { Helmet } from 'react-helmet-async';

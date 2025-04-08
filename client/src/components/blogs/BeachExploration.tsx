@@ -1,6 +1,6 @@
 import { MapPin, Anchor, Umbrella, Navigation, Sun, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
-import Heading from "../ui/Heading";
+import { Heading } from "../ui/heading";
 
 const BeachExploration = () => {
   return (
