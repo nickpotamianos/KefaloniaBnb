@@ -22,7 +22,7 @@ const IslandCruising = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/DJI_0722.jpg" 
+          src="/images/foki.jpeg" 
           alt="Boat cruising along Kefalonia's turquoise waters with view of dramatic coastline and sea caves" 
           className="w-full h-full object-cover"
         />
@@ -139,7 +139,7 @@ const IslandCruising = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/DJI_0720.jpg" 
+              src="/images/boat-rental-02.jpg" 
               alt="Small motorboat rental in Kefalonia's crystal clear waters near hidden beach coves" 
               className="w-full h-full object-cover"
             />
@@ -156,7 +156,7 @@ const IslandCruising = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/DJI_0727.jpg" 
+              src="/images/Rental-Boat-Moraitis-Skipper-NC42-2024-MAIN.webp" 
               alt="Skippered boat tour in Kefalonia with experienced local captain showing hidden caves" 
               className="w-full h-full object-cover"
             />
@@ -278,7 +278,7 @@ const IslandCruising = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/DJI_0732.jpg" 
+              src="/images/sailing.png" 
               alt="Sailing yacht cruising along Kefalonia's coastline with full sails and blue water" 
               className="w-full h-full object-cover"
             />
@@ -534,7 +534,7 @@ const IslandCruising = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/_83A0853.jpg" 
+              src="/images/ithaca.jpg" 
               alt="Colorful fishing village of Kioni in Ithaca with boats moored in the harbor" 
               className="w-full h-48 object-cover"
             />

@@ -242,7 +242,7 @@ const CulinaryDelights = () => {
             </div>
             
             <a 
-              href="https://www.instagram.com/alaties_sunset_restaurant/" 
+              href="https://www.instagram.com/alati_all_day_bar_restaurant/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="inline-flex items-center text-[var(--terracotta)] hover:underline text-sm"
@@ -256,7 +256,8 @@ const CulinaryDelights = () => {
             <img 
               src="/images/alati.png" 
               alt="Alati All Day Bar & Restaurant at Alaties Beach with sunset views over the Ionian Sea" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover object-center object-position-y-30"
+              style={{ objectPosition: '0 30%' }}
             />
           </div>
         </motion.div>
