@@ -13,6 +13,22 @@ const app = express();
 // Get the environment
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Add WWW to non-WWW redirect middleware (before other middlewares)
+app.use((req, res, next) => {
+  if (isProduction && req.headers.host?.startsWith('www.')) {
+    // Get the original host without 'www.' prefix
+    const nonWwwHost = req.headers.host.replace(/^www\./, '');
+    
+    // Build the redirect URL
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    const redirectUrl = `${protocol}://${nonWwwHost}${req.originalUrl}`;
+    
+    // Send a 301 permanent redirect
+    return res.redirect(301, redirectUrl);
+  }
+  next();
+});
+
 // Configure CORS
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
