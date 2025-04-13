@@ -65,6 +65,12 @@ const blogMetadata = {
   }
 };
 
+// Helper function to normalize URLs to the canonical version
+const getCanonicalUrl = (path: string) => {
+  // Always use the non-www version as the canonical form
+  return `https://villafiscardo.com${path}`;
+};
+
 const Blog = () => {
   const { slug } = useParams<{ slug: string }>();
   const [isLoading, setIsLoading] = useState(true);
@@ -109,6 +115,9 @@ const Blog = () => {
   // Get metadata for current blog
   const metadata = slug ? blogMetadata[slug as keyof typeof blogMetadata] : null;
   
+  // Construct canonical URL for the current blog page
+  const canonicalUrl = slug ? getCanonicalUrl(`/blog/${slug}`) : getCanonicalUrl('/');
+  
   return (
     <>
       {metadata && (
@@ -121,21 +130,21 @@ const Blog = () => {
           <meta property="og:type" content="article" />
           <meta property="og:title" content={metadata.title} />
           <meta property="og:description" content={metadata.description} />
-          <meta property="og:image" content={`https://villafiscardo.com${metadata.image}`} />
-          <meta property="og:url" content={`https://villafiscardo.com/blog/${slug}`} />
+          <meta property="og:image" content={getCanonicalUrl(metadata.image)} />
+          <meta property="og:url" content={canonicalUrl} />
           
           {/* Twitter */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content={metadata.title} />
           <meta name="twitter:description" content={metadata.description} />
-          <meta name="twitter:image" content={`https://villafiscardo.com${metadata.image}`} />
+          <meta name="twitter:image" content={getCanonicalUrl(metadata.image)} />
           
           {/* Article specific metadata */}
           <meta property="article:published_time" content={metadata.publishDate} />
           <meta property="article:modified_time" content={metadata.modifiedDate} />
           
-          {/* Canonical URL */}
-          <link rel="canonical" href={`https://villafiscardo.com/blog/${slug}`} />
+          {/* Canonical URL - consistent formatting */}
+          <link rel="canonical" href={canonicalUrl} />
         </Helmet>
       )}
       

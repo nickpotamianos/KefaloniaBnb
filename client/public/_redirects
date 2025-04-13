@@ -1,0 +1,9 @@
+# Redirect www to non-www
+https://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
+
+# Handle country-specific redirects if needed
+# https://www.villafiscardo.com.gr/* https://villafiscardo.com/:splat 301!
+
+# Optional: Redirect HTTP to HTTPS
+http://villafiscardo.com/* https://villafiscardo.com/:splat 301!
+http://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
