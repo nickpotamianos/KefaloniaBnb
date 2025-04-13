@@ -93,13 +93,13 @@ const ExperienceCard = ({ experience, className }: ExperienceCardProps) => {
             </span>
           )}
           
-          {/* Learn more button now links to individual blog pages */}
+          {/* Learn more button now links to individual blog pages with descriptive text */}
           <Link to={getBlogLink(experience.title)}>
             <motion.div 
               className="text-[var(--terracotta)] font-medium text-sm flex items-center cursor-pointer group"
               whileHover={{ x: 3 }}
             >
-              Learn more
+              Discover more about {experience.title}
               <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </motion.div>
           </Link>
