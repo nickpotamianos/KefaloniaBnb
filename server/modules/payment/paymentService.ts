@@ -161,17 +161,13 @@ export async function createCheckoutSession(bookingData: BookingData): Promise<S
   const startDate = new Date(checkIn);
   const endDate = new Date(checkOut);
   const nights = differenceInDays(endDate, startDate);
-  const formattedCheckIn = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  const formattedCheckOut = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const formattedCheckIn = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });  const formattedCheckOut = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   
-  // Calculate base price (nights * rate per night)
-  const basePrice = nights * BASE_PRICE_PER_NIGHT;
-  
-  // Calculate total price (base price + cleaning fee)
-  const totalInEuros = basePrice + CLEANING_FEE;
-  
-  // Convert to cents for Stripe
-  const totalAmount = Math.round(totalInEuros * 100);
+  // Use the totalAmount passed from client instead of recalculating
+  // This ensures consistency between what's shown and what's charged
+  const totalAmount = bookingData.totalAmount;
+  // Convert back to euros for display in logs
+  const totalInEuros = totalAmount / 100;
   
   // Debug logging
   console.log('=== BOOKING DEBUG INFO ===');
