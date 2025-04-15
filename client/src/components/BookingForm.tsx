@@ -413,7 +413,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
               value={adults}
               setValue={setAdults}
               min={1}
-              max={5}
+              max={4}
               label="Adults"
               icon={<Users className="h-4 w-4" />}
               hint="Ages 13+"

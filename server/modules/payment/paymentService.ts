@@ -168,15 +168,13 @@ export async function createCheckoutSession(bookingData: BookingData): Promise<S
   const totalAmount = bookingData.totalAmount;
   // Convert back to euros for display in logs
   const totalInEuros = totalAmount / 100;
-  
-  // Debug logging
+    // Debug logging
   console.log('=== BOOKING DEBUG INFO ===');
   console.log(`Check-in: ${checkIn} (${formattedCheckIn})`);
   console.log(`Check-out: ${checkOut} (${formattedCheckOut})`);
   console.log(`Nights: ${nights}`);
-  console.log(`Base price: €${basePrice} (${nights} nights × €${BASE_PRICE_PER_NIGHT})`);
+  console.log(`Total amount from client: €${totalInEuros}`);
   console.log(`Cleaning fee: €${CLEANING_FEE}`);
-  console.log(`Total in EUR: €${totalInEuros}`);
   console.log(`Total in cents for Stripe: ${totalAmount}`);
   console.log('=========================');
   
