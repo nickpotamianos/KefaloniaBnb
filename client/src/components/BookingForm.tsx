@@ -11,7 +11,7 @@ import { useBookings } from '@/hooks/use-bookings';
 import pricingService from '@/lib/pricingService';
 
 // Use centralized pricing service instead of hardcoded constants
-export const MIN_NIGHTS = 2;
+export const MIN_NIGHTS = 4;
 
 // Country codes for phone numbers - comprehensive worldwide list
 const countryCodes = [

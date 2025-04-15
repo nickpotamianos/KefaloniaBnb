@@ -32,7 +32,7 @@ const stripe = new Stripe(STRIPE_SECRET_KEY || '', {
 const BASE_PRICE_PER_NIGHT = 200; // €200 per night
 const CLEANING_FEE = 60;         // €60 cleaning fee
 const ADDITIONAL_GUEST_FEE = 0;   // No additional guest fee
-const MIN_NIGHTS = 2;
+const MIN_NIGHTS = 4;
 
 // Frontend URL for redirects - always use the production URL
 const FRONTEND_URL = 'https://villafiscardo.com';
@@ -262,10 +262,9 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
   const nights = differenceInDays(endDate, startDate);
   const formattedCheckIn = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   const formattedCheckOut = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  
-  // Calculate base price and total amount the same way as Stripe
-  const basePrice = nights * BASE_PRICE_PER_NIGHT;
-  const totalInEuros = basePrice + CLEANING_FEE;
+    // Use totalAmount passed from client instead of recalculating
+  // This ensures consistency between what's shown and what's charged
+  const totalInEuros = bookingData.totalAmount / 100; // Convert from cents back to euros for display
   const totalAmount = totalInEuros.toFixed(2);
   
   // Debug PayPal API credentials

@@ -113,9 +113,8 @@ const BookingPage: React.FC = () => {
   useEffect(() => {
     if (checkIn && checkOut) {
       if (differenceInDays(checkOut, checkIn) < MIN_NIGHTS) {
-        setBookingError(`Minimum stay is ${MIN_NIGHTS} nights`);
-      } else if (adults > 5) {
-        setBookingError("Maximum 5 adults allowed");
+        setBookingError(`Minimum stay is ${MIN_NIGHTS} nights`);      } else if (adults > 4) {
+        setBookingError("Maximum 4 adults allowed");
       } else if (guests > 8) {
         setBookingError("Maximum 8 guests (adults + children) allowed");
       } else {
