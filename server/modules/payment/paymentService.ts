@@ -256,13 +256,13 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
   if (!checkIn || !checkOut || !name || !email || !adults) {
     throw new Error('Missing required booking information');
   }
-  
-  const startDate = new Date(checkIn);
+    const startDate = new Date(checkIn);
   const endDate = new Date(checkOut);
   const nights = differenceInDays(endDate, startDate);
   const formattedCheckIn = startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   const formattedCheckOut = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    // Use totalAmount passed from client instead of recalculating
+  
+  // Use totalAmount passed from client instead of recalculating
   // This ensures consistency between what's shown and what's charged
   const totalInEuros = bookingData.totalAmount / 100; // Convert from cents back to euros for display
   const totalAmount = totalInEuros.toFixed(2);
@@ -270,7 +270,7 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
   // Debug PayPal API credentials
   console.log('=== PAYPAL DEBUG INFO ===');
   console.log(`PayPal API URL: ${PAYPAL_API_URL}`);
-  console.log(`Base price: €${basePrice.toFixed(2)}`);
+  console.log(`Total from client: €${totalAmount}`);
   console.log(`Cleaning fee: €${CLEANING_FEE.toFixed(2)}`);
   console.log(`Item total: €${totalAmount}`);
   console.log('=========================');
