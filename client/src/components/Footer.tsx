@@ -157,14 +157,22 @@ const Footer = () => {
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--sea-blue)] mr-2"></span>
                       Reviews
                     </a>
-                  </li>
-                  <li>
+                  </li>                  <li>
                     <a 
                       href="#contact" 
                       className="text-white/80 hover:text-white transition-colors duration-300 flex items-center hover:translate-x-1 transform"
                     >
                       <span className="w-1.5 h-1.5 rounded-full bg-[var(--sea-blue)] mr-2"></span>
                       Contact
+                    </a>
+                  </li>
+                  <li>
+                    <a 
+                      href="/about" 
+                      className="text-white/80 hover:text-white transition-colors duration-300 flex items-center hover:translate-x-1 transform"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--sea-blue)] mr-2"></span>
+                      About Villa
                     </a>
                   </li>
                 </ul>
@@ -203,14 +211,22 @@ const Footer = () => {
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--sand)] mr-2"></span>
                     House Rules
                   </a>
-                </li>
-                <li>
+                </li>                <li>
                   <a 
                     href="#" 
                     className="text-white/80 hover:text-white transition-colors duration-300 flex items-center hover:translate-x-1 transform"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--sand)] mr-2"></span>
                     Policy
+                  </a>
+                </li>
+                <li>
+                  <a 
+                    href="/about" 
+                    className="text-white/80 hover:text-white transition-colors duration-300 flex items-center hover:translate-x-1 transform"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--sand)] mr-2"></span>
+                    About Us
                   </a>
                 </li>
                 <li>
