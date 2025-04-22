@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import Heading from '../components/Heading';
+import { Heading } from "@/components/ui/heading";
 import { Calendar, Users, Home, Wifi, Utensils, Mountain } from 'lucide-react';
 
 const AboutVilla = () => {
