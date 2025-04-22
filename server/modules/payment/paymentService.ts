@@ -12,8 +12,8 @@ const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 // Get PayPal credentials
 const PAYPAL_CLIENT_ID = process.env.PAYPAL_CLIENT_ID;
 const PAYPAL_CLIENT_SECRET = process.env.PAYPAL_CLIENT_SECRET;
-// Force sandbox mode for testing
-const PAYPAL_API_URL = 'https://api-m.sandbox.paypal.com';
+// Use production URL instead of sandbox
+const PAYPAL_API_URL = 'https://api-m.paypal.com';
 
 if (!STRIPE_SECRET_KEY) {
   console.error('ERROR: STRIPE_SECRET_KEY is not defined in environment variables');
@@ -323,8 +323,8 @@ export async function createPayPalOrder(bookingData: BookingData): Promise<any> 
       ],
       application_context: {
         brand_name: 'Villa Fiscardo',
-        return_url: PAYPAL_RETURN_URL, // Always use localhost URL for testing
-        cancel_url: PAYPAL_CANCEL_URL, // Always use localhost URL for testing
+        return_url: PAYPAL_RETURN_URL, // Production return URL
+        cancel_url: PAYPAL_CANCEL_URL, // Production cancel URL
         user_action: 'PAY_NOW',
         shipping_preference: 'NO_SHIPPING'
       }
