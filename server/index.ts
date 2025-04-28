@@ -19,9 +19,10 @@ app.use((req, res, next) => {
     // Get the original host without 'www.' prefix
     const nonWwwHost = req.headers.host.replace(/^www\./, '');
     
-    // Build the redirect URL
+    // Build the redirect URL with full path and query parameters
     const protocol = req.headers['x-forwarded-proto'] || 'https';
-    const redirectUrl = `${protocol}://${nonWwwHost}${req.originalUrl}`;
+    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+    const redirectUrl = `${protocol}://${nonWwwHost}${req.path}${queryString}`;
     
     // Send a 301 permanent redirect
     return res.redirect(301, redirectUrl);

@@ -1,5 +1,8 @@
-# Redirect www to non-www
+# Redirect www to non-www - preserve paths properly
 https://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
+
+# Blog-specific redirects to ensure proper handling
+https://www.villafiscardo.com/blog/* https://villafiscardo.com/blog/:splat 301!
 
 # Handle country-specific redirects if needed
 # https://www.villafiscardo.com.gr/* https://villafiscardo.com/:splat 301!

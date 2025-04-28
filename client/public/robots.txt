@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /blog/
+Allow: /blog/*
 
 # Sitemap
 Sitemap: https://villafiscardo.com/sitemap.xml
