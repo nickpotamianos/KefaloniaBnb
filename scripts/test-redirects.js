@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 
-const https = require('https');
+import https from 'https';
 
 // URLs to test redirects
 const urlsToTest = [
   'https://www.villafiscardo.com/',
   'https://www.villafiscardo.com/blog',
   'https://www.villafiscardo.com/blog/beach-exploration',
-  'https://www.villafiscardo.com/blog-redirect-test.html'
+  'https://www.villafiscardo.com/blog/culinary-delights',
+  'https://www.villafiscardo.com/blog/nature-hikes',
+  'https://www.villafiscardo.com/redirect-test.html'
 ];
 
 // Function to test a URL and check the redirect
@@ -15,7 +17,6 @@ function testRedirect(url) {
   return new Promise((resolve, reject) => {
     const options = {
       method: 'HEAD',
-      followRedirect: false,
     };
 
     const req = https.request(url, options, (res) => {
@@ -48,6 +49,29 @@ function testRedirect(url) {
     req.end();
   });
 }
+
+// Execute the redirect tests
+async function runTests() {
+  console.log('=== REDIRECT TEST RESULTS ===');
+  console.log('Testing redirects for villafiscardo.com');
+  console.log('Date: ' + new Date().toLocaleString());
+  console.log('==============================');
+
+  for (const url of urlsToTest) {
+    try {
+      await testRedirect(url);
+    } catch (error) {
+      console.error(`Failed to test ${url}`);
+    }
+  }
+  
+  console.log('\n=== TEST SUMMARY ===');
+  console.log('All tests completed. Check results above for any issues.');
+  console.log('For pages that 301 redirect, verify that they reach a 200 status code page.');
+}
+
+// Run the tests
+runTests();
 
 // Test all URLs
 async function testAllRedirects() {

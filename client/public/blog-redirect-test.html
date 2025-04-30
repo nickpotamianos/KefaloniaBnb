@@ -1,16 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Redirect Test</title>
-    <!-- This file is used to verify that blog redirects are working properly -->
-    <link rel="canonical" href="https://villafiscardo.com/blog-redirect-test.html" />
-</head>
-<body>
-    <h1>Blog Redirect Test</h1>
-    <p>This page is used to test that redirects from www to non-www are working properly for all URLs, including blog URLs.</p>
-    <p>If you can see this page directly on https://villafiscardo.com/blog-redirect-test.html, the redirect is working correctly.</p>
-    <p>If you tried to access https://www.villafiscardo.com/blog-redirect-test.html and were redirected here, the redirect is working properly.</p>
-</body>
-</html>
+# This file focuses on the specific blog URLs that Google is reporting issues with
+
+# Ensure direct paths to blog posts don't redirect unnecessarily
+/blog/beach-exploration /blog/beach-exploration 200!
+/blog/culinary-delights /blog/culinary-delights 200!
+/blog/nature-hikes /blog/nature-hikes 200!
+
+# Handle www to non-www redirects for these specific blog URLs
+https://www.villafiscardo.com/blog/beach-exploration https://villafiscardo.com/blog/beach-exploration 301!
+https://www.villafiscardo.com/blog/culinary-delights https://villafiscardo.com/blog/culinary-delights 301!
+https://www.villafiscardo.com/blog/nature-hikes https://villafiscardo.com/blog/nature-hikes 301!

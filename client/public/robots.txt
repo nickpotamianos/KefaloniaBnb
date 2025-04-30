@@ -3,10 +3,13 @@ Allow: /
 Allow: /blog/
 Allow: /blog/*
 
+# Specify canonical domain
+Host: villafiscardo.com
+
 # Sitemap
 Sitemap: https://villafiscardo.com/sitemap.xml
 
-# Prevent access to admin area for web crawlers
-User-agent: *
+# Prevent access to admin area and test pages
 Disallow: /admin/
 Disallow: */admin/*
+Disallow: /redirect-test.html
