@@ -114,8 +114,7 @@ const Blog = () => {
   
   // Get metadata for current blog
   const metadata = slug ? blogMetadata[slug as keyof typeof blogMetadata] : null;
-  
-  // Construct canonical URL for the current blog page
+    // Construct canonical URL for the current blog page
   const canonicalUrl = slug ? getCanonicalUrl(`/blog/${slug}`) : getCanonicalUrl('/');
   
   return (
