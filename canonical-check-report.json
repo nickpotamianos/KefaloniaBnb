@@ -1,0 +1,31 @@
+{
+  "timestamp": "2025-04-30T10:44:35.883Z",
+  "results": [
+    {
+      "url": "https://villafiscardo.com/blog/beach-exploration",
+      "status": "OK",
+      "canonical": null,
+      "expectedCanonical": "https://villafiscardo.com/blog/beach-exploration",
+      "isCorrect": false
+    },
+    {
+      "url": "https://villafiscardo.com/blog/culinary-delights",
+      "status": "OK",
+      "canonical": null,
+      "expectedCanonical": "https://villafiscardo.com/blog/culinary-delights",
+      "isCorrect": false
+    },
+    {
+      "url": "https://villafiscardo.com/blog/nature-hikes",
+      "status": "OK",
+      "canonical": null,
+      "expectedCanonical": "https://villafiscardo.com/blog/nature-hikes",
+      "isCorrect": false
+    }
+  ],
+  "summary": {
+    "total": 3,
+    "correct": 0,
+    "incorrect": 3
+  }
+}
