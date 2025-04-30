@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { Helmet } from 'react-helmet-async';
+import CanonicalTag from '../components/SEO/CanonicalTag';
 
 // Import blog metadata from the Blog component
 // This metadata is the same as what's in the Blog.tsx file
@@ -82,9 +83,11 @@ const BlogIndex = () => {
   }, []);
 
   const canonicalUrl = getCanonicalUrl('/blog');
-
   return (
     <>
+      {/* Direct DOM manipulation for canonical tag */}
+      <CanonicalTag url={canonicalUrl} />
+      
       <Helmet>
         <title>Villa Fiscardo Blog | Travel Tips & Insights for Kefalonia</title>
         <meta 
@@ -115,7 +118,7 @@ const BlogIndex = () => {
         />
         <meta name="twitter:image" content={getCanonicalUrl("/images/fiskardo.jpeg")} />
         
-        {/* Canonical URL - consistent formatting */}
+        {/* Canonical URL - both through Helmet and direct DOM manipulation */}
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
       

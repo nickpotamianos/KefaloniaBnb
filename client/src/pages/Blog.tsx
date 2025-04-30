@@ -12,6 +12,7 @@ import { ChevronLeft } from 'lucide-react';
 
 // Import metadata for SEO
 import { Helmet } from 'react-helmet-async';
+import CanonicalTag from '../components/SEO/CanonicalTag';
 
 // Blog metadata for SEO
 const blogMetadata = {
@@ -116,9 +117,11 @@ const Blog = () => {
   const metadata = slug ? blogMetadata[slug as keyof typeof blogMetadata] : null;
     // Construct canonical URL for the current blog page
   const canonicalUrl = slug ? getCanonicalUrl(`/blog/${slug}`) : getCanonicalUrl('/');
-  
-  return (
+    return (
     <>
+      {/* Add canonical URL tag that directly manipulates DOM for search engines */}
+      {slug && <CanonicalTag url={canonicalUrl} />}
+      
       {metadata && (
         <Helmet>
           <title>{metadata.title}</title>
@@ -142,7 +145,7 @@ const Blog = () => {
           <meta property="article:published_time" content={metadata.publishDate} />
           <meta property="article:modified_time" content={metadata.modifiedDate} />
           
-          {/* Canonical URL - consistent formatting */}
+          {/* Canonical URL - consistent formatting - belt and suspenders approach */}
           <link rel="canonical" href={canonicalUrl} />
         </Helmet>
       )}

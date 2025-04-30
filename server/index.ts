@@ -4,6 +4,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import * as bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import addCanonicalTagsMiddleware from './middleware/canonicalTags';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -49,6 +50,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.urlencoded({ extended: false }));
+
+// Add canonical tags middleware for proper SEO
+app.use(addCanonicalTagsMiddleware);
 
 app.use((req, res, next) => {
   const start = Date.now();
