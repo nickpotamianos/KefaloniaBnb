@@ -312,7 +312,7 @@ const Footer = () => {
             {/* Map or additional info */}
             <div className="mt-8 relative overflow-hidden rounded-lg h-32 opacity-90 hover:opacity-100 transition-opacity">
               <a 
-                href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                href="https://maps.app.goo.gl/UfJRhLzjntBUpAHv8" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="absolute inset-0 z-10 flex items-center justify-center bg-black/40 hover:bg-black/30 transition-colors"

@@ -100,7 +100,7 @@ const LocationSection = () => {
                         <strong className="text-[var(--deep-blue)] block">Villa Fiscardo</strong>
                         <span className="text-sm block mb-2">Traditional villa in Fiscardo</span>
                         <a 
-                          href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                          href="https://maps.app.goo.gl/UfJRhLzjntBUpAHv8" 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="text-sm text-[var(--terracotta)] hover:underline"
@@ -159,7 +159,7 @@ const LocationSection = () => {
                     className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
                   >
                     <a 
-                      href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                      href="https://maps.app.goo.gl/UfJRhLzjntBUpAHv8" 
                       target="_blank" 
                       rel="noopener noreferrer"
                     >

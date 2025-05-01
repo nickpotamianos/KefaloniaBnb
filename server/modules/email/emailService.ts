@@ -416,7 +416,7 @@ export async function sendPreArrivalEmail(booking: Booking): Promise<boolean> {
           <li>Once in Fiscardo, follow our detailed directions (attached to this email).</li>
         </ul>
         
-        <p>For turn-by-turn navigation, use this link: <a href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" style="color: #2a609e;">Google Maps Location</a></p>
+        <p>For turn-by-turn navigation, use this link: <a href="https://maps.app.goo.gl/UfJRhLzjntBUpAHv8" style="color: #2a609e;">Google Maps Location</a></p>
         
         <h2 style="color: #2a609e;">During Your Stay</h2>
         <ul>
