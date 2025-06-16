@@ -1,0 +1,29 @@
+name: Villa Fiscardo SEO Automation
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # Every Monday at 8 AM UTC
+  workflow_dispatch:     # Allow manual triggers
+
+jobs:
+  seo-automation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Run SEO automation
+        env:
+          GOOGLE_PROJECT_ID: villa-fiscardo-seo-automation
+          GOOGLE_SEARCH_CONSOLE_SITE_URL: sc-domain:villafiscardo.com
+          GOOGLE_SERVICE_ACCOUNT_KEY_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY_JSON }}
+          GOOGLE_API_RATE_LIMIT_MS: 200
+          SEO_REPORT_OUTPUT_DIR: ./reports/
+        run: npm run seo:submit
