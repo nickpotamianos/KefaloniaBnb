@@ -1,10 +1,32 @@
 import { MapPin, Utensils, Star, Clock, Wine, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 import { Heading } from "../ui/heading";
+import { Helmet } from "react-helmet-async";
 
 const CulinaryDelights = () => {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-5xl">
+    <>
+      <Helmet>
+        <title>Kefalonia Food Guide | Best Restaurants & Tavernas in Fiscardo | Villa Fiscardo</title>
+        <meta name="description" content="Discover authentic Kefalonian cuisine, traditional tavernas, and gourmet restaurants near Fiscardo. Complete food guide from Villa Fiscardo with insider recommendations." />
+        <meta name="keywords" content="Kefalonia restaurants, Fiscardo tavernas, Greek food Kefalonia, traditional cuisine Kefalonia, best restaurants Fiscardo, Villa Fiscardo dining guide" />
+        <link rel="canonical" href="https://villafiscardo.com/blog/culinary-delights" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Kefalonia Food Guide | Best Restaurants in Fiscardo" />
+        <meta property="og:description" content="Discover authentic Kefalonian cuisine and the best restaurants near Fiscardo with insider recommendations from Villa Fiscardo." />
+        <meta property="og:image" content="https://villafiscardo.com/images/fiskardo.jpeg" />
+        <meta property="og:url" content="https://villafiscardo.com/blog/culinary-delights" />
+        <meta property="og:type" content="article" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Kefalonia Food Guide | Best Restaurants in Fiscardo" />
+        <meta name="twitter:description" content="Discover authentic Kefalonian cuisine and traditional tavernas with insider tips from Villa Fiscardo." />
+        <meta name="twitter:image" content="https://villafiscardo.com/images/fiskardo.jpeg" />
+      </Helmet>
+      
+      <div className="container mx-auto px-4 py-12 max-w-5xl">
       {/* SEO-optimized heading structure */}
       <div className="mb-10 text-center">
         <span className="inline-block mb-3 px-4 py-2 bg-[var(--olive)]/10 rounded-full text-[var(--olive)] text-sm font-medium flex items-center justify-center mx-auto">

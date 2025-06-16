@@ -1,10 +1,64 @@
 import { MapPin, Anchor, Umbrella, Navigation, Sun, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
 import { Heading } from "../ui/heading";
+import { Helmet } from "react-helmet-async";
 
 const BeachExploration = () => {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-5xl">
+    <>
+      <Helmet>
+        <title>Best Beaches in Kefalonia | Complete Guide to Fiscardo Area Beaches | Villa Fiscardo</title>
+        <meta name="description" content="Discover Kefalonia's most stunning beaches near Fiscardo including Myrtos, Antisamos, and hidden coves. Complete guide with insider tips from Villa Fiscardo." />
+        <meta name="keywords" content="Kefalonia beaches, Fiscardo beaches, Myrtos beach, Antisamos beach, best beaches Kefalonia, Fiskardo beach guide, Villa Fiscardo" />
+        <link rel="canonical" href="https://villafiscardo.com/blog/beach-exploration" />
+        
+        {/* Open Graph */}
+        <meta property="og:title" content="Best Beaches in Kefalonia | Complete Guide to Fiscardo Area" />
+        <meta property="og:description" content="Discover Kefalonia's most stunning beaches near Fiscardo including Myrtos, Antisamos, and hidden coves with insider tips." />
+        <meta property="og:image" content="https://villafiscardo.com/images/myrtos2.jpg" />
+        <meta property="og:url" content="https://villafiscardo.com/blog/beach-exploration" />
+        <meta property="og:type" content="article" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Best Beaches in Kefalonia | Complete Guide" />
+        <meta name="twitter:description" content="Discover Kefalonia's most stunning beaches near Fiscardo with insider tips from Villa Fiscardo." />
+        <meta name="twitter:image" content="https://villafiscardo.com/images/myrtos2.jpg" />
+        
+        {/* Article schema */}
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              "headline": "Kefalonia's Breathtaking Beaches: A Complete Guide to Fiscardo Area",
+              "image": "https://villafiscardo.com/images/myrtos2.jpg",
+              "author": {
+                "@type": "Person",
+                "name": "Villa Fiscardo Team"
+              },
+              "publisher": {
+                "@type": "Organization",
+                "name": "Villa Fiscardo",
+                "logo": {
+                  "@type": "ImageObject",
+                  "url": "https://villafiscardo.com/images/logokef1.png"
+                }
+              },
+              "datePublished": "2024-01-15",
+              "dateModified": "2025-04-30",
+              "description": "Discover the most stunning beaches near Fiscardo and throughout Kefalonia with our insider's guide to the island's coastal treasures.",
+              "mainEntityOfPage": {
+                "@type": "WebPage",
+                "@id": "https://villafiscardo.com/blog/beach-exploration"
+              },
+              "keywords": "Kefalonia beaches, Fiscardo beaches, Myrtos beach, Antisamos beach, Greek island beaches"
+            }
+          `}
+        </script>
+      </Helmet>
+      
+      <div className="container mx-auto px-4 py-12 max-w-5xl">
       {/* SEO-optimized heading structure */}
       <div className="mb-10 text-center">
         <span className="inline-block mb-3 px-4 py-2 bg-[var(--sea-blue)]/10 rounded-full text-[var(--primary-blue)] text-sm font-medium flex items-center justify-center mx-auto">
@@ -587,11 +641,11 @@ const BeachExploration = () => {
                 <h3 className="text-lg font-bold text-[var(--deep-blue)] mb-2 group-hover:text-[var(--terracotta)] transition-colors duration-300">Wine Tasting</h3>
                 <p className="text-gray-700 text-sm">Sample the distinctive Robola wine and learn about local winemaking traditions</p>
               </div>
-            </div>
-          </a>
+            </div>          </a>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

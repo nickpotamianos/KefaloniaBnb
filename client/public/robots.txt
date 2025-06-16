@@ -2,6 +2,10 @@ User-agent: *
 Allow: /
 Allow: /blog/
 Allow: /blog/*
+Allow: /fiscardo-villa.html
+Allow: /fiscardo-villas.html
+Allow: /villa-fiscardo-guide.html
+Allow: /local-business.html
 
 # Specify canonical domain
 Host: villafiscardo.com
@@ -13,3 +17,14 @@ Sitemap: https://villafiscardo.com/sitemap.xml
 Disallow: /admin/
 Disallow: */admin/*
 Disallow: /redirect-test.html
+Disallow: /blog-redirect-test.html
+
+# SEO crawling directives
+Crawl-delay: 1
+
+# Additional indexing hints for search engines
+User-agent: Googlebot
+Allow: /images/
+Allow: /src/
+Allow: /*.css
+Allow: /*.js

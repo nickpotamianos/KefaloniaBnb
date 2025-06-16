@@ -15,6 +15,18 @@ vite.config.ts.*
 client/.env
 client/.env.*
 
+# Google API credentials - NEVER commit these!
+scripts/google-service-account-key.json
+**/google-service-account-key.json
+google-credentials.json
+service-account-*.json
+
+# SEO automation reports and logs
+scripts/reports/
+scripts/automation-log.txt
+scripts/*-report-*.json
+scripts/gsc-automation-report.json
+
 # Log files that might contain sensitive information
 logs
 *.log
