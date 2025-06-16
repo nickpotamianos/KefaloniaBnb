@@ -851,14 +851,14 @@ const CulinaryDelights = () => {
           },
           "datePublished": "2023-04-02",
           "dateModified": "2023-12-10",
-          "description": "Savor the distinctive flavors of Kefalonia, from fresh seafood and local specialties to award-winning wines and traditional dishes.",
-          "mainEntityOfPage": {
+          "description": "Savor the distinctive flavors of Kefalonia, from fresh seafood and local specialties to award-winning wines and traditional dishes.",          "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": "https://villafiscardo.com/blog/culinary-delights"
           }
         }
       `}} />
     </div>
+    </>
   );
 };
 
