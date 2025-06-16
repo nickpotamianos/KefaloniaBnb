@@ -81,13 +81,13 @@
   
   <!-- Blog Posts -->
   <url>
-    <loc>https://villafiscardo.com/blog/beach-exploration</loc>
+    <loc>https://villafiscardo.com/beach-exploration-canonical.html</loc>
     <lastmod>2025-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://villafiscardo.com/blog/culinary-delights</loc>
+    <loc>https://villafiscardo.com/culinary-delights-canonical.html</loc>
     <lastmod>2025-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -100,7 +100,7 @@
   </url>
   
   <url>
-    <loc>https://villafiscardo.com/blog/nature-hikes</loc>
+    <loc>https://villafiscardo.com/nature-hikes-canonical.html</loc>
     <lastmod>2025-04-30</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

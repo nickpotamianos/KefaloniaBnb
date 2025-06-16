@@ -7,11 +7,10 @@ https://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
 http://villafiscardo.com/* https://villafiscardo.com/:splat 301!
 http://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
 
-# Specific blog posts that Google is reporting issues with
-# These rules ensure these paths don't get additional redirects
-/blog/beach-exploration /blog/beach-exploration 200!
-/blog/culinary-delights /blog/culinary-delights 200!
-/blog/nature-hikes /blog/nature-hikes 200!
+# Blog URL redirects to canonical pages
+/blog/beach-exploration /beach-exploration-canonical.html 301!
+/blog/culinary-delights /culinary-delights-canonical.html 301!
+/blog/nature-hikes /nature-hikes-canonical.html 301!
 
 # Static canonical pages to help Google indexing
 /beach-exploration-canonical.html /beach-exploration-canonical.html 200

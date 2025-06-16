@@ -13,10 +13,10 @@
     "seo:monitor": "node scripts/seo-health-monitor.js",
     "seo:accelerate": "node scripts/accelerated-indexing.js",
     "seo:track": "node scripts/keyword-performance-tracker.js",
-    "seo:content": "node scripts/generate-villa-content.js",
-    "seo:daily": "node scripts/scheduled-seo-automation.js daily",
+    "seo:content": "node scripts/generate-villa-content.js",    "seo:daily": "node scripts/scheduled-seo-automation.js daily",
     "seo:weekly": "node scripts/scheduled-seo-automation.js weekly",
-    "seo:monthly": "node scripts/scheduled-seo-automation.js monthly"
+    "seo:monthly": "node scripts/scheduled-seo-automation.js monthly",
+    "seo:verify": "node scripts/final-seo-verification.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
