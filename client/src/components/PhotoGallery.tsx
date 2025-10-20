@@ -90,6 +90,9 @@ const PhotoGallery = ({ folderPath, photos, title }: PhotoGalleryProps) => {
               src={photos[0].src}
               alt={photos[0].alt}
               className="absolute inset-0 w-full h-full object-cover hover-zoom"
+              loading="lazy"
+              width="800"
+              height="600"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <div className="absolute bottom-3 left-3 flex items-center gap-2">
@@ -112,6 +115,9 @@ const PhotoGallery = ({ folderPath, photos, title }: PhotoGalleryProps) => {
                 src={photo.src}
                 alt={photo.alt}
                 className="absolute inset-0 w-full h-full object-cover hover-zoom"
+                loading="lazy"
+                width="400"
+                height="300"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </div>
@@ -129,6 +135,9 @@ const PhotoGallery = ({ folderPath, photos, title }: PhotoGalleryProps) => {
                 src={photos[5].src}
                 alt={photos[5].alt}
                 className="absolute inset-0 w-full h-full object-cover brightness-50"
+                loading="lazy"
+                width="400"
+                height="300"
               />
               <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-white bg-black/30 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium">
@@ -225,6 +234,9 @@ const PhotoGallery = ({ folderPath, photos, title }: PhotoGalleryProps) => {
                         "w-full h-full object-cover transition-all",
                         currentPhotoIndex !== index && "filter grayscale-[30%]"
                       )}
+                      loading="lazy"
+                      width="80"
+                      height="80"
                     />
                   </motion.div>
                 ))}

@@ -328,6 +328,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <button 
             onClick={handlePreviousMonth}
             className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Previous month"
           >
             <ChevronLeft className="h-4 w-4 text-gray-600" />
           </button>
@@ -339,6 +340,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
           <button 
             onClick={handleNextMonth}
             className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Next month"
           >
             <ChevronRight className="h-4 w-4 text-gray-600" />
           </button>

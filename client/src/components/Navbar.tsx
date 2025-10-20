@@ -284,7 +284,7 @@ const Navbar = ({ isBlogPage = false }: NavbarProps) => {
       <div className="container mx-auto px-4 flex items-center justify-between">
         <a href={isBlogPage ? "/" : "#"} className="flex items-center space-x-3">
           <div className="flex items-center space-x-3">
-            <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-12 w-auto" />
+            <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-12 w-auto" width="48" height="48" />
             <span className={`text-2xl font-bold playfair ${
               scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
             }`}>

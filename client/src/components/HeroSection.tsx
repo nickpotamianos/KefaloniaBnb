@@ -23,6 +23,7 @@ const HeroSection = () => {
           loop 
           muted 
           playsInline
+          preload="metadata"
           aria-hidden="true"
         ></video>
         
@@ -34,13 +35,13 @@ const HeroSection = () => {
             className="max-w-4xl mx-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.4 }}
           >
             {/* Badge for authenticity */}
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+              transition={{ delay: 0.1, duration: 0.3 }}
               className="mb-6 inline-block"
             >
               <span className="px-4 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm uppercase tracking-wider font-medium border border-white/30">
@@ -49,9 +50,9 @@ const HeroSection = () => {
             </motion.div>
             
             <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.3, delay: 0 }}
               className="text-5xl md:text-7xl text-white font-bold mb-6 playfair leading-tight"
             >
               Your Seaside Escape<br className="hidden sm:block" /> in Kefalonia
