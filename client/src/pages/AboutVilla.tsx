@@ -24,7 +24,7 @@ const AboutVilla = () => {
       <div className="relative">
         <div className="h-[60vh] w-full overflow-hidden">
           <img 
-            src="/images/cropped_83A0388.jpg" 
+            src="/images/cropped_83A0388.webp" 
             alt="Villa Fiscardo exterior view" 
             className="w-full h-full object-cover"
           />

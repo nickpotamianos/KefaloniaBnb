@@ -22,7 +22,7 @@ const SunsetMagic = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/alaties.jpg" 
+          src="/images/alaties.webp" 
           alt="Stunning sunset view over Alaties Beach in Kefalonia" 
           className="w-full h-full object-cover"
         />
@@ -90,7 +90,7 @@ const SunsetMagic = () => {
           </div>
           <div className="md:col-span-3 order-1 md:order-2 rounded-lg overflow-hidden h-64">
             <img 
-              src="/images/alaties.jpg" 
+              src="/images/alaties.webp" 
               alt="Alaties Beach sunset with colorful sky reflection in rock pools" 
               className="w-full h-full object-cover"
             />
@@ -101,7 +101,7 @@ const SunsetMagic = () => {
         <div className="mb-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-3 rounded-lg overflow-hidden h-64">
             <img 
-              src="/images/myrtos.jpg" 
+              src="/images/myrtos.webp" 
               alt="Sunset view from Petani Beach with dramatic cliffs" 
               className="w-full h-full object-cover"
             />
@@ -140,7 +140,7 @@ const SunsetMagic = () => {
           </div>
           <div className="md:col-span-3 order-1 md:order-2 rounded-lg overflow-hidden h-64">
             <img 
-              src="/images/fiskardo.jpg" 
+              src="/images/fiskardo.webp" 
               alt="Sunset over Fiskardo harbor with boats and colorful buildings" 
               className="w-full h-full object-cover"
             />
@@ -151,7 +151,7 @@ const SunsetMagic = () => {
         <div className="mb-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-3 rounded-lg overflow-hidden h-64">
             <img 
-              src="/images/DJI_0727.jpg" 
+              src="/images/DJI_0727.webp" 
               alt="Panoramic sunset view from Mount Ainos overlooking Kefalonia" 
               className="w-full h-full object-cover"
             />
@@ -190,7 +190,7 @@ const SunsetMagic = () => {
           </div>
           <div className="md:col-span-3 order-1 md:order-2 rounded-lg overflow-hidden h-64">
             <img 
-              src="/images/assos.jpg" 
+              src="/images/assos.webp" 
               alt="Evening view of Assos village peninsula with golden hour lighting" 
               className="w-full h-full object-cover"
             />

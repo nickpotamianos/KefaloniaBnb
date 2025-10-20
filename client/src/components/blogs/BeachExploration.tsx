@@ -76,7 +76,7 @@ const BeachExploration = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/myrtos2.jpg" 
+          src="/images/myrtos2.webp" 
           alt="Myrtos Beach in Kefalonia with turquoise waters and white sand" 
           className="w-full h-full object-cover"
         />
@@ -156,7 +156,7 @@ const BeachExploration = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/myrtos.jpg" 
+              src="/images/myrtos.webp" 
               alt="Aerial view of Myrtos Beach in Kefalonia showing white sand and bright blue water" 
               className="w-full h-full object-cover"
             />
@@ -173,7 +173,7 @@ const BeachExploration = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/foki.jpeg" 
+              src="/images/foki.webp" 
               alt="Foki Beach near Fiskardo, Kefalonia with crystal clear water and surrounding pine trees" 
               className="w-full h-full object-cover"
             />
@@ -242,7 +242,7 @@ const BeachExploration = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/emplisi.jpg" 
+              src="/images/emplisi.webp" 
               alt="Emblisi Beach near Fiskardo with clear turquoise waters" 
               className="w-full h-full object-cover"
             />
@@ -259,7 +259,7 @@ const BeachExploration = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/antisamos.jpg" 
+              src="/images/antisamos.webp" 
               alt="Antisamos Beach in Kefalonia with emerald waters and lush green surroundings" 
               className="w-full h-full object-cover"
             />
@@ -432,7 +432,7 @@ const BeachExploration = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/rent.jpg" 
+              src="/images/rent.webp" 
               alt="Aerial view of boat exploring Kefalonia's coastline" 
               className="w-full h-48 object-cover"
             />
@@ -600,7 +600,7 @@ const BeachExploration = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/fiskardo.jpeg" 
+                  src="/images/fiskardo.webp" 
                   alt="Traditional Greek taverna in Fiskardo with sea view" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -616,7 +616,7 @@ const BeachExploration = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/DJI_0722.jpg" 
+                  src="/images/DJI_0722.webp" 
                   alt="Boat exploring the coast of Kefalonia with blue waters" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -632,7 +632,7 @@ const BeachExploration = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/Robola.jpg" 
+                  src="/images/Robola.webp" 
                   alt="Vineyard in Kefalonia with mountains in background" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

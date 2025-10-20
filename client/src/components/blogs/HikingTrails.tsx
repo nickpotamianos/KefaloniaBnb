@@ -22,7 +22,7 @@ const HikingTrails = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/hike.jpg" 
+          src="/images/hike.webp" 
           alt="Scenic hiking trail in Kefalonia with coastal views" 
           className="w-full h-full object-cover"
         />
@@ -114,7 +114,7 @@ const HikingTrails = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/hikepng.png" 
+              src="/images/hikepng.webp" 
               alt="Hiking path from Fiskardo to Dafnoudi Beach through cypress forest" 
               className="w-full h-full object-cover"
             />
@@ -131,7 +131,7 @@ const HikingTrails = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/fiskardo.jpg" 
+              src="/images/fiskardo.webp" 
               alt="Panoramic view of Fiskardo peninsula with hiking trails and coastal views" 
               className="w-full h-full object-cover"
             />
@@ -224,7 +224,7 @@ const HikingTrails = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/Robola.jpg" 
+              src="/images/Robola.webp" 
               alt="Mount Ainos National Park with endemic Kefalonian fir trees" 
               className="w-full h-full object-cover"
             />
@@ -241,7 +241,7 @@ const HikingTrails = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/assos.jpg" 
+              src="/images/assos.webp" 
               alt="View of Assos peninsula with hiking trail overlooking the sea" 
               className="w-full h-full object-cover"
             />
@@ -398,7 +398,7 @@ const HikingTrails = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/spring.jpg" 
+              src="/images/spring.webp" 
               alt="Spring wildflowers along Kefalonia hiking trails" 
               className="w-full h-40 object-cover"
             />
@@ -420,7 +420,7 @@ const HikingTrails = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/summer.jpg" 
+              src="/images/summer.webp" 
               alt="Summer coastal hiking in Kefalonia with clear blue skies" 
               className="w-full h-40 object-cover"
             />
@@ -442,7 +442,7 @@ const HikingTrails = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/autumn.jpg" 
+              src="/images/autumn.webp" 
               alt="Autumn colors on Kefalonia's hiking trails" 
               className="w-full h-40 object-cover"
             />
@@ -464,7 +464,7 @@ const HikingTrails = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/winter.png" 
+              src="/images/winter.webp" 
               alt="Winter views from Kefalonia hiking trails with dramatic skies" 
               className="w-full h-40 object-cover"
             />
@@ -515,7 +515,7 @@ const HikingTrails = () => {
             <div className="space-y-5">
               <div className="flex items-start">
                 <img 
-                  src="/images/odysseas.png" 
+                  src="/images/odysseas.webp" 
                   alt="Kefalonia hiking guide Odysseas" 
                   className="w-14 h-14 rounded-full object-cover mr-4"
                 />
@@ -607,7 +607,7 @@ const HikingTrails = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md h-full transition-transform duration-300 group-hover:translate-y-[-5px]">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/myrtos.jpg" 
+                  src="/images/myrtos.webp" 
                   alt="Myrtos Beach in Kefalonia" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -626,7 +626,7 @@ const HikingTrails = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md h-full transition-transform duration-300 group-hover:translate-y-[-5px]">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/fiskardo.jpeg" 
+                  src="/images/fiskardo.webp" 
                   alt="Boat exploring caves in Kefalonia" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -645,7 +645,7 @@ const HikingTrails = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md h-full transition-transform duration-300 group-hover:translate-y-[-5px]">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/fiskardo.png" 
+                  src="/images/fiskardo.webp" 
                   alt="Traditional village in Kefalonia" 
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />

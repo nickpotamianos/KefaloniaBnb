@@ -23,7 +23,7 @@ const WineTasting = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/Robola.jpg" 
+          src="/images/Robola.webp" 
           alt="Scenic Robola vineyards on the slopes of Mount Ainos in Kefalonia" 
           className="w-full h-full object-cover"
         />
@@ -129,7 +129,7 @@ const WineTasting = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/Robola.jpg" 
+              src="/images/Robola.webp" 
               alt="Gentilini Winery with rows of vines and modern tasting facility" 
               className="w-full h-full object-cover"
             />
@@ -146,7 +146,7 @@ const WineTasting = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/Robola.jpg" 
+              src="/images/Robola.webp" 
               alt="Robola Wine Cooperative with Mount Ainos in the background showcasing mountain vineyards" 
               className="w-full h-full object-cover"
             />
@@ -255,7 +255,7 @@ const WineTasting = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/summer.jpg" 
+              src="/images/summer.webp" 
               alt="Sclavos Wines biodynamic vineyard with traditional stone winery building" 
               className="w-full h-full object-cover"
             />
@@ -408,7 +408,7 @@ const WineTasting = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/Robola.jpg" 
+              src="/images/Robola.webp" 
               alt="Wine tasting experience with mountain vineyard views in Kefalonia" 
               className="w-full h-48 object-cover"
             />
@@ -551,7 +551,7 @@ const WineTasting = () => {
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="h-48 overflow-hidden">
               <img 
-                src="/images/fiskardo.jpeg" 
+                src="/images/fiskardo.webp" 
                 alt="Fresh seafood platter with grilled fish, octopus and prawns" 
                 className="w-full h-full object-cover"
               />
@@ -571,7 +571,7 @@ const WineTasting = () => {
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="h-48 overflow-hidden">
               <img 
-                src="/images/fiskardo.jpeg" 
+                src="/images/fiskardo.webp" 
                 alt="Traditional Kefalonian meat pie with spiral shape" 
                 className="w-full h-full object-cover"
               />
@@ -591,7 +591,7 @@ const WineTasting = () => {
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="h-48 overflow-hidden">
               <img 
-                src="/images/fiskardo.jpeg" 
+                src="/images/fiskardo.webp" 
                 alt="Greek meze selection with dips, cheese and olives" 
                 className="w-full h-full object-cover"
               />

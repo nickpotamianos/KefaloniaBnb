@@ -322,7 +322,7 @@ const Footer = () => {
                 </span>
               </a>
               <img 
-                src="/images/fiskardo.jpeg" 
+                src="/images/fiskardo.webp" 
                 alt="Map of Fiscardo, Kefalonia" 
                 className="w-full h-full object-cover"
               />

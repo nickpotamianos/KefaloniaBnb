@@ -44,7 +44,7 @@ const CulinaryDelights = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/fiskardo.jpeg" 
+          src="/images/fiskardo.webp" 
           alt="Traditional Greek taverna in Fiskardo with seafood and harbor views" 
           className="w-full h-full object-cover"
         />
@@ -150,7 +150,7 @@ const CulinaryDelights = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/tasia.png" 
+              src="/images/tasia.webp" 
               alt="Tassia's restaurant with harbor views in Fiskardo serving authentic Kefalonian cuisine" 
               className="w-full h-full object-cover"
             />
@@ -167,7 +167,7 @@ const CulinaryDelights = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/odysseas.png" 
+              src="/images/odysseas.webp" 
               alt="Odysseas Traditional Taverna with mountainside views and garden seating" 
               className="w-full h-full object-cover"
             />
@@ -276,7 +276,7 @@ const CulinaryDelights = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/alati.png" 
+              src="/images/alati.webp" 
               alt="Alati All Day Bar & Restaurant at Alaties Beach with sunset views over the Ionian Sea" 
               className="w-full h-full object-cover object-center object-position-y-30"
               style={{ objectPosition: '0 30%' }}
@@ -430,7 +430,7 @@ const CulinaryDelights = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/Robola.jpg" 
+              src="/images/Robola.webp" 
               alt="Robola vineyard in Kefalonia with Mount Ainos in the background" 
               className="w-full h-48 object-cover"
             />
@@ -784,7 +784,7 @@ const CulinaryDelights = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/Robola.jpg" 
+                  src="/images/Robola.webp" 
                   alt="Vineyard in Kefalonia with rows of Robola grapes and wine barrels" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -800,7 +800,7 @@ const CulinaryDelights = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/myrtos2.jpg" 
+                  src="/images/myrtos2.webp" 
                   alt="Myrtos Beach in Kefalonia with crystal clear waters perfect for a post-meal swim" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -816,7 +816,7 @@ const CulinaryDelights = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/hike.jpg" 
+                  src="/images/hike.webp" 
                   alt="Hiking trail in Kefalonia with views of mountains and countryside" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

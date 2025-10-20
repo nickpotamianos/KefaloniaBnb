@@ -22,7 +22,7 @@ const IslandCruising = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/foki.jpeg" 
+          src="/images/foki.webp" 
           alt="Boat cruising along Kefalonia's turquoise waters with view of dramatic coastline and sea caves" 
           className="w-full h-full object-cover"
         />
@@ -139,7 +139,7 @@ const IslandCruising = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/boat-rental-02.jpg" 
+              src="/images/boat-rental-02.webp" 
               alt="Small motorboat rental in Kefalonia's crystal clear waters near hidden beach coves" 
               className="w-full h-full object-cover"
             />
@@ -278,7 +278,7 @@ const IslandCruising = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/sailing.png" 
+              src="/images/sailing.webp" 
               alt="Sailing yacht cruising along Kefalonia's coastline with full sails and blue water" 
               className="w-full h-full object-cover"
             />
@@ -534,7 +534,7 @@ const IslandCruising = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/ithaca.jpg" 
+              src="/images/ithaca.webp" 
               alt="Colorful fishing village of Kioni in Ithaca with boats moored in the harbor" 
               className="w-full h-48 object-cover"
             />
@@ -754,7 +754,7 @@ const IslandCruising = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/myrtos2.jpg" 
+                  src="/images/myrtos2.webp" 
                   alt="Aerial view of Myrtos Beach in Kefalonia with white sand and turquoise water" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -770,7 +770,7 @@ const IslandCruising = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/alaties.jpg" 
+                  src="/images/alaties.webp" 
                   alt="Spectacular sunset over the Ionian Sea from Alaties Beach in Kefalonia" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -786,7 +786,7 @@ const IslandCruising = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/fiskardo.jpeg" 
+                  src="/images/fiskardo.webp" 
                   alt="Fresh seafood at a waterfront taverna in Kefalonia with harbor view" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />

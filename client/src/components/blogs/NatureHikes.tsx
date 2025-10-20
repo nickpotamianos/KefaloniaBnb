@@ -22,7 +22,7 @@ const NatureHikes = () => {
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
         <img 
-          src="/images/hike.jpg" 
+          src="/images/hike.webp" 
           alt="Hiker on mountain trail overlooking Kefalonia's dramatic coastline with turquoise waters below" 
           className="w-full h-full object-cover"
         />
@@ -135,7 +135,7 @@ const NatureHikes = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/foki.jpeg" 
+              src="/images/foki.webp" 
               alt="Coastal path from Fiskardo to Emblisi Beach with turquoise waters and pine trees" 
               className="w-full h-full object-cover"
             />
@@ -152,7 +152,7 @@ const NatureHikes = () => {
         >
           <div className="rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/hikepng.png" 
+              src="/images/hikepng.webp" 
               alt="Hikers on a trail through Mount Ainos National Park with endemic Kefalonian fir trees" 
               className="w-full h-full object-cover"
             />
@@ -278,7 +278,7 @@ const NatureHikes = () => {
           
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
             <img 
-              src="/images/assos.jpg" 
+              src="/images/assos.webp" 
               alt="Assos peninsula with Venetian castle ruins and village views surrounded by turquoise water" 
               className="w-full h-full object-cover"
             />
@@ -302,7 +302,7 @@ const NatureHikes = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <div className="flex items-center mb-3">
-              <img src="/images/spring.jpg" alt="Spring flowers on Kefalonian trail" className="w-12 h-12 rounded-full object-cover mr-3" />
+              <img src="/images/spring.webp" alt="Spring flowers on Kefalonian trail" className="w-12 h-12 rounded-full object-cover mr-3" />
               <h3 className="font-bold text-lg text-[var(--primary-blue)]">Spring (March-May)</h3>
             </div>
             <p className="text-gray-700 mb-3">The ideal hiking season with mild temperatures, spectacular wildflower displays, and lush green landscapes after the winter rains. Waterfalls and streams are at their fullest.</p>
@@ -318,7 +318,7 @@ const NatureHikes = () => {
           
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <div className="flex items-center mb-3">
-              <img src="/images/summer.jpg" alt="Summer coastline in Kefalonia" className="w-12 h-12 rounded-full object-cover mr-3" />
+              <img src="/images/summer.webp" alt="Summer coastline in Kefalonia" className="w-12 h-12 rounded-full object-cover mr-3" />
               <h3 className="font-bold text-lg text-[var(--primary-blue)]">Summer (June-August)</h3>
             </div>
             <p className="text-gray-700 mb-3">Hot days make hiking challenging during midday, but early morning coastal hikes with swimming breaks are wonderful. Mountain trails offer cooler temperatures.</p>
@@ -334,7 +334,7 @@ const NatureHikes = () => {
           
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <div className="flex items-center mb-3">
-              <img src="/images/autumn.jpg" alt="Autumn colors in Kefalonian forest" className="w-12 h-12 rounded-full object-cover mr-3" />
+              <img src="/images/autumn.webp" alt="Autumn colors in Kefalonian forest" className="w-12 h-12 rounded-full object-cover mr-3" />
               <h3 className="font-bold text-lg text-[var(--primary-blue)]">Autumn (September-November)</h3>
             </div>
             <p className="text-gray-700 mb-3">Another excellent hiking season with warm seas for swimming, fewer crowds, and the start of autumn colors. Seasonal fruits like figs and grapes line many trails.</p>
@@ -350,7 +350,7 @@ const NatureHikes = () => {
           
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <div className="flex items-center mb-3">
-              <img src="/images/winter.png" alt="Winter view of Kefalonia mountains" className="w-12 h-12 rounded-full object-cover mr-3" />
+              <img src="/images/winter.webp" alt="Winter view of Kefalonia mountains" className="w-12 h-12 rounded-full object-cover mr-3" />
               <h3 className="font-bold text-lg text-[var(--primary-blue)]">Winter (December-February)</h3>
             </div>
             <p className="text-gray-700 mb-3">Mild compared to mainland Europe, with occasional rain but many clear, sunny days. Mount Ainos may see snow. Lower crowds make for peaceful experiences.</p>
@@ -442,7 +442,7 @@ const NatureHikes = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/hikepng.png" 
+              src="/images/hikepng.webp" 
               alt="Endemic Kefalonian flora with colorful wildflowers growing along hiking trail" 
               className="w-full h-48 object-cover"
             />
@@ -649,7 +649,7 @@ const NatureHikes = () => {
           
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
             <img 
-              src="/images/hike.jpg" 
+              src="/images/hike.webp" 
               alt="Hiker with proper equipment on Kefalonian mountain trail" 
               className="w-full h-48 object-cover"
             />
@@ -684,7 +684,7 @@ const NatureHikes = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <img 
-              src="/images/_83A0543.jpg" 
+              src="/images/_83A0543.webp" 
               alt="Family hiking on easy coastal trail in Kefalonia" 
               className="w-full h-48 object-cover"
             />
@@ -715,7 +715,7 @@ const NatureHikes = () => {
           
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <img 
-              src="/images/fiskardo.jpg" 
+              src="/images/fiskardo.webp" 
               alt="Family hiking to old lighthouse ruins near Fiskardo" 
               className="w-full h-48 object-cover"
             />
@@ -827,7 +827,7 @@ const NatureHikes = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/DJI_0722.jpg" 
+                  src="/images/DJI_0722.webp" 
                   alt="Boat cruising along Kefalonia's coastline with view of hiking trails from the sea" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -843,7 +843,7 @@ const NatureHikes = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/fiskardo.jpeg" 
+                  src="/images/fiskardo.webp" 
                   alt="Traditional Greek taverna with local cuisine after a day of hiking" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
@@ -859,7 +859,7 @@ const NatureHikes = () => {
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
                 <img 
-                  src="/images/Robola.jpg" 
+                  src="/images/Robola.webp" 
                   alt="Vineyard in Kefalonia with hiking paths through wine country" 
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
