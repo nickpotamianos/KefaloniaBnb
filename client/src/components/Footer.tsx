@@ -63,10 +63,10 @@ const Footer = () => {
             
             {/* Quick booking info */}
             <div className="mt-8 bg-white/10 backdrop-blur-sm rounded-xl p-5 border-t border-l border-white/10">
-              <h4 className="text-lg font-semibold playfair flex items-center mb-3">
+              <h3 className="text-lg font-semibold playfair flex items-center mb-3">
                 <Clock className="h-4 w-4 mr-2 text-[var(--sea-blue)]" />
                 Quick Booking Info
-              </h4>
+              </h3>
               
               <ul className="space-y-3 text-sm">
                 <li className="flex items-center">

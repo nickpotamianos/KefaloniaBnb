@@ -41,7 +41,7 @@ const HeroSection = () => {
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.3 }}
+              transition={{ duration: 0.2 }}
               className="mb-6 inline-block"
             >
               <span className="px-4 py-1.5 bg-white/20 backdrop-blur-sm text-white rounded-full text-sm uppercase tracking-wider font-medium border border-white/30">
@@ -61,7 +61,7 @@ const HeroSection = () => {
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
               className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto font-light"
             >
               Experience the timeless charm of Greece in our 100-year-old villa with panoramic views of the crystal-clear Ionian Sea in picturesque Fiscardo.
@@ -70,7 +70,7 @@ const HeroSection = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
+              transition={{ duration: 0.3, delay: 0.15 }}
               className="flex flex-col sm:flex-row gap-5 justify-center"
             >
               <Button 

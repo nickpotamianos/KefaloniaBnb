@@ -85,7 +85,7 @@ const FaqSection = () => {
           <p className="text-gray-700 mb-4 font-medium">Can't find the answer you're looking for?</p>
           <a 
             href="#contact" 
-            className="inline-flex items-center justify-center px-6 py-3 bg-[#3B83BD] text-white rounded-full hover:bg-[#2C5F89] transition-colors duration-300 font-medium"
+            className="inline-flex items-center justify-center px-6 py-3 bg-[#205A8A] text-white rounded-full hover:bg-[#164463] transition-colors duration-300 font-medium"
           >
             Contact us with your question
           </a>

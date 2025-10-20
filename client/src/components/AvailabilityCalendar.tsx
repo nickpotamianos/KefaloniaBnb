@@ -273,7 +273,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({
                         ? "bg-[var(--terracotta)]/20 hover:bg-[var(--terracotta)]/30 cursor-pointer"
                         : selectedStartDate && !selectedEndDate && isSameDay(day.date, selectedStartDate)
                           ? "bg-[var(--terracotta)] text-white font-bold cursor-pointer"
-                          : "bg-green-50 hover:bg-green-100 cursor-pointer",
+                          : "bg-green-100 text-gray-800 hover:bg-green-200 cursor-pointer",
                 "transition-all duration-200"
               )}
             >
