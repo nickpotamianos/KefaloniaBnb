@@ -147,6 +147,49 @@ const Blog = () => {
           
           {/* Canonical URL - consistent formatting - belt and suspenders approach */}
           <link rel="canonical" href={canonicalUrl} />
+          
+          {/* Article Structured Data for Rich Results */}
+          <script type="application/ld+json">
+            {`
+              {
+                "@context": "https://schema.org",
+                "@type": "BlogPosting",
+                "headline": "${metadata.title}",
+                "description": "${metadata.description}",
+                "image": "${getCanonicalUrl(metadata.image)}",
+                "url": "${canonicalUrl}",
+                "datePublished": "${metadata.publishDate}",
+                "dateModified": "${metadata.modifiedDate}",
+                "author": {
+                  "@type": "Organization",
+                  "name": "Villa Fiscardo",
+                  "url": "https://villafiscardo.com"
+                },
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "Villa Fiscardo",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://villafiscardo.com/images/2logokef1.png"
+                  }
+                },
+                "mainEntityOfPage": {
+                  "@type": "WebPage",
+                  "@id": "${canonicalUrl}"
+                },
+                "keywords": "${metadata.keywords}",
+                "about": {
+                  "@type": "Place",
+                  "name": "Kefalonia",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressRegion": "Kefalonia",
+                    "addressCountry": "Greece"
+                  }
+                }
+              }
+            `}
+          </script>
         </Helmet>
       )}
       

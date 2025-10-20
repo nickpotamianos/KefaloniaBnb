@@ -1,18 +1,20 @@
-# Netlify redirect rules to fix Google indexing issues
+# Netlify redirect rules - simplified to avoid redirect chains
 
-# Redirect www to non-www (main rule for most paths)
-https://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
-
-# Force HTTPS
-http://villafiscardo.com/* https://villafiscardo.com/:splat 301!
+# Force HTTPS and www to non-www in single redirect
 http://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
+https://www.villafiscardo.com/* https://villafiscardo.com/:splat 301!
+http://villafiscardo.com/* https://villafiscardo.com/:splat 301!
 
-# Blog URL redirects to canonical pages
-/blog/beach-exploration /beach-exploration-canonical.html 301!
-/blog/culinary-delights /culinary-delights-canonical.html 301!
-/blog/nature-hikes /nature-hikes-canonical.html 301!
+# Remove blog canonical HTML redirects - let React handle routing
+# These were creating redirect chains and indexing issues
 
-# Static canonical pages to help Google indexing
-/beach-exploration-canonical.html /beach-exploration-canonical.html 200
-/culinary-delights-canonical.html /culinary-delights-canonical.html 200
-/nature-hikes-canonical.html /nature-hikes-canonical.html 200
+# Static SEO pages should redirect to main site sections
+/fiscardo-villa.html / 301!
+/fiscardo-villas.html / 301!
+/villa / 301!
+/Villa / 301!
+
+# Remove standalone canonical HTML pages - they shouldn't be indexed separately
+/beach-exploration-canonical.html /blog/beach-exploration 301!
+/culinary-delights-canonical.html /blog/culinary-delights 301!
+/nature-hikes-canonical.html /blog/nature-hikes 301!
