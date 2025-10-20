@@ -50,27 +50,27 @@ const HeroSection = () => {
             </motion.div>
             
             <motion.h1 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1 }}
               className="text-5xl md:text-7xl text-white font-bold mb-6 playfair leading-tight"
             >
               Your Seaside Escape<br className="hidden sm:block" /> in Kefalonia
             </motion.h1>
             
             <motion.p 
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.1 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
               className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl mx-auto font-light"
             >
               Experience the timeless charm of Greece in our 100-year-old villa with panoramic views of the crystal-clear Ionian Sea in picturesque Fiscardo.
             </motion.p>
             
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: 0.15 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
               className="flex flex-col sm:flex-row gap-5 justify-center"
             >
               <Button 
@@ -100,7 +100,7 @@ const HeroSection = () => {
               className="mt-12 flex flex-wrap justify-center gap-6 md:gap-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
+              transition={{ duration: 0.3, delay: 0.2 }}
             >
               <div className="flex items-center gap-2 text-white/90">
                 <span className="w-1.5 h-1.5 bg-[var(--sea-blue)] rounded-full"></span>
