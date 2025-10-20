@@ -283,21 +283,12 @@ const Navbar = ({ isBlogPage = false }: NavbarProps) => {
     >
       <div className="container mx-auto px-4 flex items-center justify-between max-w-full">
         <a href={isBlogPage ? "/" : "#"} className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-10 sm:h-12 w-auto" width="48" height="48" />
-            <div className="flex flex-col sm:block">
-              <span className={`text-lg sm:text-2xl font-bold playfair leading-tight ${
-                scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
-              }`}>
-                Villa Fiscardo
-              </span>
-              <span className={`text-xs sm:hidden ${
-                scrolled ? 'text-[var(--deep-blue)]/70' : 'text-white/70'
-              }`}>
-                Authentic Greek Experience
-              </span>
-            </div>
-          </div>
+          <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-10 sm:h-12 w-auto" width="48" height="48" />
+          <span className={`text-lg sm:text-2xl font-bold playfair ${
+            scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
+          }`}>
+            Villa Fiscardo
+          </span>
         </a>
         
         {/* Mobile menu button */}
