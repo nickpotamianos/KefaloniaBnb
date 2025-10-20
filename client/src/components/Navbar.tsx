@@ -281,15 +281,22 @@ const Navbar = ({ isBlogPage = false }: NavbarProps) => {
         : "bg-transparent py-4"
       }`}
     >
-      <div className="container mx-auto px-4 flex items-center justify-between">
-        <a href={isBlogPage ? "/" : "#"} className="flex items-center space-x-3">
-          <div className="flex items-center space-x-3">
-            <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-12 w-auto" width="48" height="48" />
-            <span className={`text-2xl font-bold playfair ${
-              scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
-            }`}>
-              Villa Fiscardo
-            </span>
+      <div className="container mx-auto px-4 flex items-center justify-between max-w-full">
+        <a href={isBlogPage ? "/" : "#"} className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <img src={logoSrc} alt="Villa Fiscardo Logo" className="h-10 sm:h-12 w-auto" width="48" height="48" />
+            <div className="flex flex-col sm:block">
+              <span className={`text-lg sm:text-2xl font-bold playfair leading-tight ${
+                scrolled ? 'text-[var(--deep-blue)]' : 'text-white'
+              }`}>
+                Villa Fiscardo
+              </span>
+              <span className={`text-xs sm:hidden ${
+                scrolled ? 'text-[var(--deep-blue)]/70' : 'text-white/70'
+              }`}>
+                Authentic Greek Experience
+              </span>
+            </div>
           </div>
         </a>
         
@@ -314,8 +321,8 @@ const Navbar = ({ isBlogPage = false }: NavbarProps) => {
       
       {/* Mobile Navigation Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white/95 backdrop-blur-md shadow-lg animate-slide-down">
-          <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+        <div className="md:hidden bg-white/95 backdrop-blur-md shadow-lg animate-slide-down overflow-hidden">
+          <div className="container mx-auto px-4 py-4 flex flex-col space-y-4 max-w-full">
             {getMobileNavLinks()}
           </div>
         </div>

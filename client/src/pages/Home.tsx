@@ -129,7 +129,7 @@ const Home = () => {
         </script>
       </Helmet>
       
-      <div className="min-h-screen bg-[#F8F6F2]">
+      <div className="min-h-screen bg-[#F8F6F2] overflow-x-hidden max-w-full">
       <Navbar />
       <HeroSection />
       <HouseSection />
