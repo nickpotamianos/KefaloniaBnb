@@ -15,30 +15,6 @@ const ReviewsSection = () => {
       <Helmet>
         <title>Guest Reviews | Villa Fiscardo</title>
         <meta name="description" content="See what our guests say about their stay at our traditional Kefalonian home. Authentic reviews highlighting our hospitality, location, and unique experience." />
-        <script type="application/ld+json">
-          {`
-            {
-              "@context": "https://schema.org",
-              "@type": "AggregateRating",
-              "itemReviewed": {
-                "@type": "LodgingBusiness",
-                "name": "Villa Fiscardo",
-                "image": "/images/cropped_83A0388.jpg",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Fiscardo",
-                  "addressRegion": "Kefalonia",
-                  "addressCountry": "Greece"
-                }
-              },
-              "ratingValue": "${averageRating}",
-              "bestRating": "5",
-              "worstRating": "1",
-              "ratingCount": "${reviews.length}",
-              "description": "Guest reviews of Villa Fiscardo in Fiscardo"
-            }
-          `}
-        </script>
       </Helmet>
       
       <section id="reviews" className="py-20 px-4 bg-gradient-to-b from-[#F8F6F2] to-[#F2F7FC]">
