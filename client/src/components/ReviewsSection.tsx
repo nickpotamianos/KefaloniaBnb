@@ -15,6 +15,7 @@ const ReviewsSection = () => {
       <Helmet>
         <title>Guest Reviews | Kefalonian Vintage Home</title>
         <meta name="description" content="See what our guests say about their stay at our traditional Kefalonian home. Authentic reviews highlighting our hospitality, location, and unique experience." />
+        <link rel="canonical" href="https://www.villafiscardo.com/" />
         <script type="application/ld+json">
           {`
             {

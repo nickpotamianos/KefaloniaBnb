@@ -12,6 +12,7 @@ const HouseSection = () => {
       <Helmet>
         <title>The House | Kefalonia Vintage Home in Fiscardo</title>
         <meta name="description" content="Traditional 100-year-old Kefalonian house beautifully restored with modern comforts. 2 bedrooms, fully equipped kitchen, private garden, and authentic Greek charm." />
+        <link rel="canonical" href="https://www.villafiscardo.com/" />
         <script type="application/ld+json">
           {`
             {
