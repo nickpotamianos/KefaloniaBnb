@@ -1,4 +1,5 @@
 import { MapPin, Anchor, Ship, Navigation, Sun, Calendar, Compass, ExternalLink } from "lucide-react";
+import { Link } from "wouter";
 import { motion } from "framer-motion";
 import Heading from "../ui/heading";
 
@@ -11,7 +12,7 @@ const IslandCruising = () => {
           <Ship className="mr-1.5 h-4 w-4" />
           Boating & Sailing
         </span>
-        
+
         <Heading
           title="Exploring Kefalonia's Coast by Boat: Hidden Coves & Sea Caves"
           description="Discover secluded beaches, crystal-clear coves, and breathtaking blue caves with our guide to boating around Kefalonia's stunning coastline."
@@ -21,9 +22,9 @@ const IslandCruising = () => {
 
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
-        <img 
-          src="/images/foki.webp" 
-          alt="Boat cruising along Kefalonia's turquoise waters with view of dramatic coastline and sea caves" 
+        <img
+          src="/images/foki.webp"
+          alt="Boat cruising along Kefalonia's turquoise waters with view of dramatic coastline and sea caves"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -36,15 +37,15 @@ const IslandCruising = () => {
       {/* Introduction with SEO-rich content */}
       <div className="prose max-w-none mb-12 text-gray-700">
         <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">The Magic of Exploring Kefalonia by Water</h2>
-        
+
         <p className="mb-4">
           While Kefalonia's landscapes are undeniably beautiful when explored by land, the island reveals its most spectacular treasures when viewed from the sea. The crystalline waters of the Ionian Sea, the hidden caves accessible only by boat, and the secluded beaches nestled between towering cliffs create an unforgettable experience for visitors who venture offshore.
         </p>
-        
+
         <p className="mb-4">
           From Villa Fiscardo, you're perfectly positioned to embark on maritime adventures. The charming harbor of Fiskardo, just minutes from your accommodation, offers numerous boat rental options suitable for all experience levels. Even if you've never captained a vessel before, the calm waters and easy navigation of the area make this the perfect place to experience the freedom of the sea.
         </p>
-        
+
         <div className="bg-[var(--sand)]/10 p-6 rounded-lg border border-[var(--sand)]/20 mb-8">
           <h3 className="text-xl font-semibold mb-3 text-[var(--deep-blue)]">Why Boat Rental is the Ultimate Kefalonia Experience</h3>
           <div className="flex flex-col space-y-3">
@@ -71,9 +72,9 @@ const IslandCruising = () => {
       {/* Boat rental information section */}
       <div className="space-y-16 mb-16">
         <h2 className="text-2xl font-bold mb-8 text-[var(--deep-blue)] playfair text-center">Renting a Boat in Fiskardo</h2>
-        
+
         {/* Boat rental options */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -82,15 +83,15 @@ const IslandCruising = () => {
         >
           <div className="order-2 md:order-1">
             <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">Motorboat Rentals (No License Required)</h2>
-            
+
             <p className="mb-4 text-gray-700">
               The most popular and accessible option for visitors is renting a small motorboat, which doesn't require any special boating license. These boats are perfect for exploring the coastline at a leisurely pace, visiting nearby beaches, and discovering hidden coves along the shore.
             </p>
-            
+
             <p className="mb-4 text-gray-700">
               Boats with engines up to 30 horsepower can be rented without prior experience, making this a fantastic opportunity for first-time captains to enjoy the freedom of the sea. The rental companies provide comprehensive safety briefings and easy-to-follow instructions before you set out.
             </p>
-            
+
             <div className="bg-[var(--sea-blue)]/5 p-4 rounded-lg mb-4">
               <h3 className="font-semibold text-[var(--primary-blue)] mb-2">What's Included</h3>
               <ul className="list-disc pl-5 text-gray-700 space-y-1">
@@ -102,7 +103,7 @@ const IslandCruising = () => {
                 <li>Emergency contact information</li>
               </ul>
             </div>
-            
+
             <div className="bg-[var(--sand)]/10 p-4 rounded-lg">
               <h3 className="font-semibold text-[var(--deep-blue)] mb-2">Practical Information</h3>
               <div className="space-y-2">
@@ -124,10 +125,10 @@ const IslandCruising = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <a 
-                  href="https://www.fiscardo.com/boat-rentals/" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://www.fiscardo.com/boat-rentals/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center text-[var(--terracotta)] hover:underline text-sm"
                 >
                   Browse Fiskardo boat rental options
@@ -136,18 +137,18 @@ const IslandCruising = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
-            <img 
-              src="/images/boat-rental-02.webp" 
-              alt="Small motorboat rental in Kefalonia's crystal clear waters near hidden beach coves" 
+            <img
+              src="/images/boat-rental-02.webp"
+              alt="Small motorboat rental in Kefalonia's crystal clear waters near hidden beach coves"
               className="w-full h-full object-cover"
             />
           </div>
         </motion.div>
-        
+
         {/* Skippered boats */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -155,24 +156,24 @@ const IslandCruising = () => {
           transition={{ duration: 0.7 }}
         >
           <div className="rounded-xl overflow-hidden h-80">
-            <img 
-              src="/images/Rental-Boat-Moraitis-Skipper-NC42-2024-MAIN.webp" 
-              alt="Skippered boat tour in Kefalonia with experienced local captain showing hidden caves" 
+            <img
+              src="/images/Rental-Boat-Moraitis-Skipper-NC42-2024-MAIN.webp"
+              alt="Skippered boat tour in Kefalonia with experienced local captain showing hidden caves"
               className="w-full h-full object-cover"
             />
           </div>
-          
+
           <div>
             <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">Skippered Boat Tours</h2>
-            
+
             <p className="mb-4 text-gray-700">
               If you prefer to sit back and enjoy the journey without the responsibility of navigating, skippered boat tours offer a wonderful alternative. With a knowledgeable local captain at the helm, you'll benefit from their expertise and insider knowledge of the best spots along Kefalonia's coast.
             </p>
-            
+
             <p className="mb-4 text-gray-700">
               These guided excursions often include stops at famous landmarks such as the Blue Caves, secluded beaches, and prime swimming and snorkeling locations. Many tours also include visits to neighboring islands like Ithaca, known as the legendary home of Odysseus.
             </p>
-            
+
             <div className="bg-[var(--sea-blue)]/5 p-4 rounded-lg mb-4">
               <h3 className="font-semibold text-[var(--primary-blue)] mb-2">Types of Guided Tours</h3>
               <ul className="list-disc pl-5 text-gray-700 space-y-1">
@@ -183,7 +184,7 @@ const IslandCruising = () => {
                 <li><strong>Fishing trips:</strong> Try your hand at traditional fishing methods</li>
               </ul>
             </div>
-            
+
             <div className="bg-[var(--sand)]/10 p-4 rounded-lg">
               <h3 className="font-semibold text-[var(--deep-blue)] mb-2">Recommended Tour Operators</h3>
               <p className="text-gray-700 mb-3">
@@ -200,10 +201,10 @@ const IslandCruising = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <a 
-                  href="https://www.tripadvisor.com/Attractions-g644214-Activities-c55-Fiskardo_Cephalonia_Ionian_Islands.html" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://www.tripadvisor.com/Attractions-g644214-Activities-c55-Fiskardo_Cephalonia_Ionian_Islands.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center text-[var(--terracotta)] hover:underline text-sm"
                 >
                   View top-rated Fiskardo boat tours
@@ -213,9 +214,9 @@ const IslandCruising = () => {
             </div>
           </div>
         </motion.div>
-        
+
         {/* Sailing options */}
-        <motion.div 
+        <motion.div
           className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -224,15 +225,15 @@ const IslandCruising = () => {
         >
           <div className="order-2 md:order-1">
             <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">Sailing Adventures</h2>
-            
+
             <p className="mb-4 text-gray-700">
               For those with sailing experience or a desire to learn, Kefalonia offers excellent sailing conditions with predictable winds and protected waters. The Ionian Sea is renowned as one of the world's premier sailing destinations, perfect for both beginners and experienced sailors.
             </p>
-            
+
             <p className="mb-4 text-gray-700">
               Sailing around Kefalonia allows you to experience the island in the most environmentally friendly way, harnessing the power of the wind while enjoying the peace and tranquility that comes with the absence of engine noise. It's a truly magical way to explore the coastline.
             </p>
-            
+
             <div className="bg-[var(--sea-blue)]/5 p-4 rounded-lg mb-4">
               <h3 className="font-semibold text-[var(--primary-blue)] mb-2">Sailing Options</h3>
               <ul className="list-disc pl-5 text-gray-700 space-y-1">
@@ -242,7 +243,7 @@ const IslandCruising = () => {
                 <li><strong>Day sailing trips:</strong> Experience sailing without commitment</li>
               </ul>
             </div>
-            
+
             <div className="bg-[var(--sand)]/10 p-4 rounded-lg">
               <h3 className="font-semibold text-[var(--deep-blue)] mb-2">Planning Your Sailing Adventure</h3>
               <p className="text-gray-700 mb-3">
@@ -263,10 +264,10 @@ const IslandCruising = () => {
                 </div>
               </div>
               <div className="mt-3">
-                <a 
-                  href="https://www.sunsail.com/destinations/mediterranean/greece/ionian-islands" 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href="https://www.sunsail.com/destinations/mediterranean/greece/ionian-islands"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center text-[var(--terracotta)] hover:underline text-sm"
                 >
                   Explore sailing charter options
@@ -275,19 +276,19 @@ const IslandCruising = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="order-1 md:order-2 rounded-xl overflow-hidden h-80">
-            <img 
-              src="/images/sailing.webp" 
-              alt="Sailing yacht cruising along Kefalonia's coastline with full sails and blue water" 
+            <img
+              src="/images/sailing.webp"
+              alt="Sailing yacht cruising along Kefalonia's coastline with full sails and blue water"
               className="w-full h-full object-cover"
             />
           </div>
         </motion.div>
       </div>
-      
+
       {/* Must-visit locations by boat */}
-      <motion.div 
+      <motion.div
         className="bg-white rounded-xl shadow-md p-8 mb-12"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -298,7 +299,7 @@ const IslandCruising = () => {
         <p className="mb-6 text-gray-700">
           With your boat rental from Fiskardo, you'll have access to some of the most beautiful and secluded spots around northern Kefalonia. Here are the must-visit locations that should be on your maritime itinerary:
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Blue Caves of Agia Efimia</h3>
@@ -312,7 +313,7 @@ const IslandCruising = () => {
               <span><strong>Tip:</strong> Visit between 10am-2pm when sunlight creates the most intense blue effect</span>
             </div>
           </div>
-          
+
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Dafnoudi Beach</h3>
             <p className="text-gray-700 mb-3">While accessible by land via a forest trail, arriving at Dafnoudi by boat reveals its true beauty. This small pebble cove with crystal-clear turquoise water is surrounded by dramatic white cliffs and sea caves.</p>
@@ -325,7 +326,7 @@ const IslandCruising = () => {
               <span><strong>Highlight:</strong> Explore the small sea cave on the right side of the beach</span>
             </div>
           </div>
-          
+
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Ithaca's East Coast</h3>
             <p className="text-gray-700 mb-3">Cross the narrow channel between Kefalonia and Ithaca to discover the mythical island of Odysseus. The east coast of Ithaca features picturesque fishing villages, secluded beaches, and quiet bays perfect for swimming.</p>
@@ -337,17 +338,17 @@ const IslandCruising = () => {
               <Compass className="h-4 w-4 mr-1.5 text-[var(--terracotta)]" />
               <span><strong>Recommendation:</strong> Stop for lunch at a waterfront taverna in Kioni</span>
             </div>
-            <a 
-              href="https://www.visitgreece.gr/islands/ionian-islands/ithaca/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://www.visitgreece.gr/islands/ionian-islands/ithaca/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center text-[var(--terracotta)] hover:underline mt-3 text-sm"
             >
               Learn more about Ithaca
               <ExternalLink className="h-3 w-3 ml-1" />
             </a>
           </div>
-          
+
           <div className="border border-[var(--sand)]/20 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Alaties Beach & Natural Arch</h3>
             <p className="text-gray-700 mb-3">This small but stunning beach is known for its natural rock arch and salt pans. The emerald waters and unique geology make it one of the most photogenic spots on the island, especially beautiful when approached by boat.</p>
@@ -360,7 +361,7 @@ const IslandCruising = () => {
               <span><strong>Perfect for:</strong> Sunset visits with incredible photo opportunities</span>
             </div>
           </div>
-          
+
           <div className="border border-[var(--sand)]/20 rounded-lg p-5 md:col-span-2">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Xi Beach (For Longer Excursions)</h3>
             <p className="text-gray-700 mb-3">For those planning a full day of exploration, the distinctive red sand beach of Xi on Kefalonia's southern coast is worth the journey. The striking contrast between the terra-cotta colored sand and turquoise water creates a unique landscape unlike anywhere else on the island.</p>
@@ -372,10 +373,10 @@ const IslandCruising = () => {
               <Compass className="h-4 w-4 mr-1.5 text-[var(--terracotta)]" />
               <span><strong>Note:</strong> This is an ambitious journey - check weather conditions and plan fuel stops</span>
             </div>
-            <a 
-              href="https://www.kefalonia.net/xi" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://www.kefalonia.net/xi"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center text-[var(--terracotta)] hover:underline mt-3 text-sm"
             >
               See photos of Xi Beach
@@ -384,11 +385,11 @@ const IslandCruising = () => {
           </div>
         </div>
       </motion.div>
-      
+
       {/* Practical information */}
       <div className="bg-[var(--sand)]/10 rounded-xl p-8 mb-12">
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair">Essential Boating Tips for Kefalonia</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="bg-white rounded-lg p-5 shadow-sm">
             <h3 className="font-bold text-lg mb-3 text-[var(--primary-blue)] flex items-center">
@@ -404,7 +405,7 @@ const IslandCruising = () => {
               <li>Maintain a safe speed, especially near swimmers</li>
             </ul>
           </div>
-          
+
           <div className="bg-white rounded-lg p-5 shadow-sm">
             <h3 className="font-bold text-lg mb-3 text-[var(--primary-blue)] flex items-center">
               <Sun className="h-5 w-5 mr-2 text-[var(--terracotta)]" />
@@ -419,7 +420,7 @@ const IslandCruising = () => {
               <li>Ask locals about hidden spots and conditions</li>
             </ul>
           </div>
-          
+
           <div className="bg-white rounded-lg p-5 shadow-sm">
             <h3 className="font-bold text-lg mb-3 text-[var(--primary-blue)] flex items-center">
               <Sun className="h-5 w-5 mr-2 text-[var(--terracotta)]" />
@@ -436,7 +437,7 @@ const IslandCruising = () => {
             </ul>
           </div>
         </div>
-        
+
         <div className="bg-white p-6 rounded-lg mt-6 shadow-sm">
           <h3 className="font-bold text-lg mb-3 text-[var(--primary-blue)]">Understanding Kefalonia's Weather Patterns</h3>
           <p className="text-gray-700 mb-4">
@@ -460,10 +461,10 @@ const IslandCruising = () => {
               </ul>
             </div>
           </div>
-          <a 
-            href="https://www.windy.com/?38.458,20.576,9" 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <a
+            href="https://www.windy.com/?38.458,20.576,9"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center text-[var(--terracotta)] hover:underline mt-4 text-sm"
           >
             Check Kefalonia wind forecasts
@@ -471,9 +472,9 @@ const IslandCruising = () => {
           </a>
         </div>
       </div>
-      
+
       {/* Island hopping section */}
-      <motion.div 
+      <motion.div
         className="mb-16"
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -481,17 +482,17 @@ const IslandCruising = () => {
         transition={{ duration: 0.7 }}
       >
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair">Day Trip to Ithaca: Following Odysseus' Path</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="col-span-2">
             <p className="mb-4 text-gray-700">
               One of the most rewarding boat excursions from Fiskardo is a day trip to the neighboring island of Ithaca. Separated from Kefalonia by a narrow channel of just 2-3 kilometers, Ithaca is steeped in mythology as the legendary home of Odysseus, hero of Homer's epic poem "The Odyssey."
             </p>
-            
+
             <p className="mb-4 text-gray-700">
               The journey across the strait takes approximately 20-30 minutes, making it perfect for a day trip. Once there, you'll discover an island that feels like a step back in time, with picturesque fishing villages, traditional architecture, and a pace of life that invites relaxation and exploration.
             </p>
-            
+
             <div className="bg-[var(--sea-blue)]/5 p-5 rounded-lg mb-4">
               <h3 className="font-semibold text-[var(--primary-blue)] mb-3">Highlights of Ithaca by Boat</h3>
               <ul className="space-y-3 text-gray-700">
@@ -521,21 +522,21 @@ const IslandCruising = () => {
                 </li>
               </ul>
             </div>
-            <a 
-              href="https://www.greeka.com/ionian/ithaca/" 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href="https://www.greeka.com/ionian/ithaca/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center text-[var(--terracotta)] hover:underline text-sm"
             >
               Discover more about Ithaca
               <ExternalLink className="h-3 w-3 ml-1" />
             </a>
           </div>
-          
+
           <div className="bg-white rounded-xl overflow-hidden shadow-md">
-            <img 
-              src="/images/ithaca.webp" 
-              alt="Colorful fishing village of Kioni in Ithaca with boats moored in the harbor" 
+            <img
+              src="/images/ithaca.webp"
+              alt="Colorful fishing village of Kioni in Ithaca with boats moored in the harbor"
               className="w-full h-48 object-cover"
             />
             <div className="p-5">
@@ -552,12 +553,12 @@ const IslandCruising = () => {
           </div>
         </div>
       </motion.div>
-      
+
       {/* Suggested itineraries */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair text-center">Perfect Boating Itineraries</h2>
         <p className="text-center text-gray-700 mb-8">Make the most of your boat rental with these carefully crafted routes</p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="bg-[var(--sea-blue)] text-white p-4 text-center">
@@ -599,7 +600,7 @@ const IslandCruising = () => {
               <p className="text-sm text-gray-600 mt-4"><strong>Perfect for:</strong> Beginners or those with limited time</p>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="bg-[var(--primary-blue)] text-white p-4 text-center">
               <h3 className="font-bold text-xl">Full-Day Coastal Exploration (8-9 hours)</h3>
@@ -646,7 +647,7 @@ const IslandCruising = () => {
               <p className="text-sm text-gray-600 mt-4"><strong>Perfect for:</strong> Those comfortable with longer journeys</p>
             </div>
           </div>
-          
+
           <div className="bg-white rounded-xl shadow-md overflow-hidden">
             <div className="bg-[var(--terracotta)] text-white p-4 text-center">
               <h3 className="font-bold text-xl">Ithaca Island Hopping (Full Day)</h3>
@@ -695,25 +696,25 @@ const IslandCruising = () => {
           </div>
         </div>
       </div>
-      
+
       {/* CTA section */}
       <div className="bg-[var(--deep-blue)] text-white rounded-xl p-8 text-center mb-16">
         <h2 className="text-2xl md:text-3xl font-bold mb-4 playfair">Ready to Set Sail from Villa Fiscardo?</h2>
         <p className="mb-6 text-white/80 max-w-2xl mx-auto">
           Stay at our traditional Kefalonian villa and enjoy easy access to Fiskardo harbor, where unforgettable maritime adventures await. Our prime location means you're just minutes away from embarking on the boating experience of a lifetime.
         </p>
-        <a 
-          href="/booking" 
+        <a
+          href="/booking"
           className="inline-block bg-white text-[var(--deep-blue)] font-semibold px-8 py-3 rounded-full hover:bg-[var(--sand)] transition-colors duration-300"
         >
           Book Your Stay & Set Sail
         </a>
       </div>
-      
+
       {/* FAQ section */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-8 text-[var(--deep-blue)] playfair text-center">Frequently Asked Questions About Boating in Kefalonia</h2>
-        
+
         <div className="space-y-4">
           <div className="border border-[var(--sand)]/30 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Do I need a license to rent a boat in Kefalonia?</h3>
@@ -721,21 +722,21 @@ const IslandCruising = () => {
               For small motorboats with engines up to 30 horsepower, no boating license is typically required in Greece. These boats are limited to a speed of about 25-30 km/h and must stay within 6 nautical miles of the coast. For more powerful boats or sailing yachts, an appropriate license is generally necessary. The rental companies will provide safety instructions and a brief orientation regardless of whether a license is required. Always confirm the specific requirements with your chosen rental company, as regulations may change.
             </p>
           </div>
-          
+
           <div className="border border-[var(--sand)]/30 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">How much does it cost to rent a boat for a day in Fiskardo?</h3>
             <p className="text-gray-700">
               In 2025, the approximate cost for a small motorboat (5-6 person capacity with 15-30hp engine) ranges from €80-120 per day, plus fuel which typically adds around €30-50 depending on your journey. Skippered boat tours start from about €150 per person for a full day tour, or €300-600 for a private boat with captain. Prices vary by season, with July and August commanding premium rates. Most companies offer discounts for multi-day rentals. Additional costs may include mooring fees if you visit other harbors (€5-10) and a security deposit (typically €150-300) which is refundable upon safe return.
             </p>
           </div>
-          
+
           <div className="border border-[var(--sand)]/30 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">Is it safe to navigate around Kefalonia for beginners?</h3>
             <p className="text-gray-700">
               The waters around northern Kefalonia are generally considered excellent for beginners, especially in the morning when the sea is typically calm. The coastline is clear with good visibility, and navigation between points is relatively straightforward. Rental companies provide detailed maps and instructions, often marking recommended routes and areas to avoid. Mobile phone coverage is good around the coast, providing an additional safety net. However, beginners should stay closer to shore, keep an eye on weather conditions, and return to port if winds pick up in the afternoon. The area between Fiskardo and nearby beaches is particularly beginner-friendly.
             </p>
           </div>
-          
+
           <div className="border border-[var(--sand)]/30 rounded-lg p-5">
             <h3 className="font-bold text-lg mb-2 text-[var(--primary-blue)]">What's the best time of year for boating around Kefalonia?</h3>
             <p className="text-gray-700">
@@ -744,64 +745,65 @@ const IslandCruising = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Related experiences */}
       <div>
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair text-center">Explore More Kefalonia Experiences</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <a href="/blog/beach-exploration" className="block group">
+          <Link href="/blog/beach-exploration" className="block group">
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
-                <img 
-                  src="/images/myrtos2.webp" 
-                  alt="Aerial view of Myrtos Beach in Kefalonia with white sand and turquoise water" 
+                <img
+                  src="/images/ftekari1.webp"
+                  alt="Hidden beach accessible only by boat in Kefalonia"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
               <div className="p-5">
                 <h3 className="text-lg font-bold text-[var(--deep-blue)] mb-2 group-hover:text-[var(--terracotta)] transition-colors duration-300">Beach Exploration</h3>
-                <p className="text-gray-700 text-sm">Discover hidden beaches accessible only by boat around Kefalonia's stunning coastline</p>
+                <p className="text-gray-700 text-sm">Discover Kefalonia's most pristine and secluded coves</p>
               </div>
             </div>
-          </a>
-          
-          <a href="/blog/sunset-magic" className="block group">
+          </Link>
+
+          <Link href="/blog/sunset-magic" className="block group">
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
-                <img 
-                  src="/images/alaties.webp" 
-                  alt="Spectacular sunset over the Ionian Sea from Alaties Beach in Kefalonia" 
+                <img
+                  src="/images/DJI_0798.webp"
+                  alt="Spectacular sunset viewed from a boat off the coast of Kefalonia"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
               <div className="p-5">
                 <h3 className="text-lg font-bold text-[var(--deep-blue)] mb-2 group-hover:text-[var(--terracotta)] transition-colors duration-300">Sunset Magic</h3>
-                <p className="text-gray-700 text-sm">Experience breathtaking sunsets from the water on an evening boat excursion</p>
+                <p className="text-gray-700 text-sm">Experience the golden hour magic from the deck of a boat</p>
               </div>
             </div>
-          </a>
-          
-          <a href="/blog/culinary-delights" className="block group">
+          </Link>
+
+          <Link href="/blog/culinary-delights" className="block group">
             <div className="bg-white rounded-xl overflow-hidden shadow-md transition-all duration-300 group-hover:shadow-xl">
               <div className="h-48 overflow-hidden">
-                <img 
-                  src="/images/fiskardo.webp" 
-                  alt="Fresh seafood at a waterfront taverna in Kefalonia with harbor view" 
+                <img
+                  src="/images/fiskardo.webp"
+                  alt="Seaside taverna in Kefalonia serving fresh seafood"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
               </div>
               <div className="p-5">
                 <h3 className="text-lg font-bold text-[var(--deep-blue)] mb-2 group-hover:text-[var(--terracotta)] transition-colors duration-300">Culinary Delights</h3>
-                <p className="text-gray-700 text-sm">Enjoy fresh seafood at waterfront tavernas accessible by boat around the island</p>
+                <p className="text-gray-700 text-sm">Combine your cruising with stops at authentic seaside tavernas</p>
               </div>
             </div>
-          </a>
+          </Link>
         </div>
       </div>
-      
+
       {/* Structured data for SEO */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `
+      <script type="application/ld+json" dangerouslySetInnerHTML={{
+        __html: `
         {
           "@context": "https://schema.org",
           "@type": "Article",

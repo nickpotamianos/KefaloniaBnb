@@ -55,7 +55,7 @@ const HeroSection = () => {
               transition={{ duration: 0.1 }}
               className="text-5xl md:text-7xl text-white font-bold mb-6 playfair leading-tight"
             >
-              Your Seaside Escape<br className="hidden sm:block" /> in Kefalonia
+              Villa Fiscardo: <br className="hidden sm:block" /> Your Seaside Escape in Kefalonia
             </motion.h1>
             
             <motion.p 

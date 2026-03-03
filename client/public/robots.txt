@@ -4,12 +4,6 @@ Allow: /blog/
 Allow: /blog/*
 Allow: /about
 
-# Block duplicate/test SEO pages
-Disallow: /fiscardo-villa.html
-Disallow: /fiscardo-villas.html
-Disallow: /villa-fiscardo-guide.html
-Disallow: /local-business.html
-Disallow: /*-canonical.html
 
 # Specify canonical domain
 Host: villafiscardo.com
@@ -17,12 +11,9 @@ Host: villafiscardo.com
 # Sitemap
 Sitemap: https://villafiscardo.com/sitemap.xml
 
-# Prevent access to admin area and test pages
+# Prevent access to admin area
 Disallow: /admin/
 Disallow: */admin/*
-Disallow: /redirect-test.html
-Disallow: /blog-redirect-test.html
-Disallow: /google-indexing-helper.html
 
 # SEO crawling directives
 Crawl-delay: 1

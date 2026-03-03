@@ -1,6 +1,7 @@
 import { MapPin, Sunset, Star, Clock, ExternalLink, Camera } from "lucide-react";
 import { motion } from "framer-motion";
 import { Heading } from "../ui/heading";
+import { Link } from "wouter";
 
 const SunsetMagic = () => {
   return (
@@ -11,7 +12,7 @@ const SunsetMagic = () => {
           <Sunset className="mr-1.5 h-4 w-4" />
           Sunset Viewing
         </span>
-        
+
         <Heading
           title="Kefalonia's Most Magical Sunset Spots: A Traveler's Guide"
           description="Discover the most breathtaking locations to witness Kefalonia's legendary sunset views, from secluded beaches to panoramic mountain vistas."
@@ -21,9 +22,9 @@ const SunsetMagic = () => {
 
       {/* Hero image with overlay */}
       <div className="relative h-[60vh] mb-10 rounded-xl overflow-hidden">
-        <img 
-          src="/images/alaties.webp" 
-          alt="Stunning sunset view over Alaties Beach in Kefalonia" 
+        <img
+          src="/images/alaties.webp"
+          alt="Stunning sunset view over Alaties Beach in Kefalonia"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -36,15 +37,15 @@ const SunsetMagic = () => {
       {/* Introduction with SEO-rich content */}
       <div className="prose max-w-none mb-12 text-gray-700">
         <h2 className="text-2xl font-bold mb-4 text-[var(--deep-blue)] playfair">Sunset Chasing in Kefalonia</h2>
-        
+
         <p className="mb-4">
           Kefalonia offers some of the most spectacular sunset views in the Mediterranean. As the day draws to a close, the island's western orientation creates perfect conditions for witnessing breathtaking sunset displays. The combination of crystal-clear waters, dramatic cliffs, and the golden Mediterranean light creates a mesmerizing natural spectacle that's not to be missed during your stay.
         </p>
-        
+
         <p className="mb-4">
           While staying at Villa Fiscardo, you're perfectly positioned to explore several world-class sunset viewing spots. From easily accessible beaches to scenic mountain viewpoints, Kefalonia offers diverse settings for enjoying the island's famous sunset magic. Planning your evening around these golden hour moments will create unforgettable memories of your Kefalonian adventure.
         </p>
-        
+
         <div className="bg-[var(--sand)]/10 p-6 rounded-lg border border-[var(--sand)]/20 mb-8">
           <h3 className="text-xl font-semibold mb-3 text-[var(--deep-blue)]">Best Times for Sunset Viewing</h3>
           <div className="flex flex-col space-y-3">
@@ -71,7 +72,7 @@ const SunsetMagic = () => {
       {/* Top sunset spots section */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair">Kefalonia's Top Sunset Viewing Spots</h2>
-        
+
         {/* Spot 1: Alaties Beach */}
         <div className="mb-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-2 order-2 md:order-1">
@@ -89,20 +90,20 @@ const SunsetMagic = () => {
             </div>
           </div>
           <div className="md:col-span-3 order-1 md:order-2 rounded-lg overflow-hidden h-64">
-            <img 
-              src="/images/alaties.webp" 
-              alt="Alaties Beach sunset with colorful sky reflection in rock pools" 
+            <img
+              src="/images/alaties.webp"
+              alt="Alaties Beach sunset with colorful sky reflection in rock pools"
               className="w-full h-full object-cover"
             />
           </div>
         </div>
-        
+
         {/* Spot 2: Petani Beach */}
         <div className="mb-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-3 rounded-lg overflow-hidden h-64">
-            <img 
-              src="/images/myrtos.webp" 
-              alt="Sunset view from Petani Beach with dramatic cliffs" 
+            <img
+              src="/images/myrtos.webp"
+              alt="Sunset view from Petani Beach with dramatic cliffs"
               className="w-full h-full object-cover"
             />
           </div>
@@ -121,7 +122,7 @@ const SunsetMagic = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Spot 3: Fiskardo Harbor */}
         <div className="mb-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-2 order-2 md:order-1">
@@ -139,20 +140,20 @@ const SunsetMagic = () => {
             </div>
           </div>
           <div className="md:col-span-3 order-1 md:order-2 rounded-lg overflow-hidden h-64">
-            <img 
-              src="/images/fiskardo.webp" 
-              alt="Sunset over Fiskardo harbor with boats and colorful buildings" 
+            <img
+              src="/images/fiskardo.webp"
+              alt="Sunset over Fiskardo harbor with boats and colorful buildings"
               className="w-full h-full object-cover"
             />
           </div>
         </div>
-        
+
         {/* Spot 4: Mount Ainos */}
         <div className="mb-10 grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-3 rounded-lg overflow-hidden h-64">
-            <img 
-              src="/images/DJI_0727.webp" 
-              alt="Panoramic sunset view from Mount Ainos overlooking Kefalonia" 
+            <img
+              src="/images/DJI_0727.webp"
+              alt="Panoramic sunset view from Mount Ainos overlooking Kefalonia"
               className="w-full h-full object-cover"
             />
           </div>
@@ -171,7 +172,7 @@ const SunsetMagic = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Spot 5: Assos Village */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 items-center">
           <div className="md:col-span-2 order-2 md:order-1">
@@ -189,9 +190,9 @@ const SunsetMagic = () => {
             </div>
           </div>
           <div className="md:col-span-3 order-1 md:order-2 rounded-lg overflow-hidden h-64">
-            <img 
-              src="/images/assos.webp" 
-              alt="Evening view of Assos village peninsula with golden hour lighting" 
+            <img
+              src="/images/assos.webp"
+              alt="Evening view of Assos village peninsula with golden hour lighting"
               className="w-full h-full object-cover"
             />
           </div>
@@ -201,7 +202,7 @@ const SunsetMagic = () => {
       {/* Sunset photography tips */}
       <div className="mb-16 bg-[var(--deep-blue)]/5 p-8 rounded-lg">
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair">Sunset Photography Tips</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h3 className="text-lg font-semibold mb-3 text-[var(--deep-blue)]">Camera Settings</h3>
@@ -267,12 +268,12 @@ const SunsetMagic = () => {
       {/* Planning your sunset experience */}
       <div className="mb-16">
         <h2 className="text-2xl font-bold mb-6 text-[var(--deep-blue)] playfair">Planning Your Perfect Sunset Experience</h2>
-        
+
         <div className="space-y-4">
           <p className="text-gray-700">
             To make the most of Kefalonia's spectacular sunsets, consider these practical tips:
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
               <div className="h-12 w-12 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center mb-4">
@@ -283,7 +284,7 @@ const SunsetMagic = () => {
                 Check the exact sunset time for your specific dates. Arrive at least 30-45 minutes early to find the perfect spot and watch the changing colors as the sun approaches the horizon.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
               <div className="h-12 w-12 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center mb-4">
                 <MapPin className="h-6 w-6 text-[var(--terracotta)]" />
@@ -293,7 +294,7 @@ const SunsetMagic = () => {
                 Plan your return journey before departing, especially from remote locations. Some roads in Kefalonia can be challenging to navigate after dark. Consider bringing a flashlight if visiting beaches or natural areas.
               </p>
             </div>
-            
+
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
               <div className="h-12 w-12 rounded-full bg-[var(--terracotta)]/10 flex items-center justify-center mb-4">
                 <ExternalLink className="h-6 w-6 text-[var(--terracotta)]" />
@@ -313,12 +314,12 @@ const SunsetMagic = () => {
         <p className="mb-6 max-w-2xl mx-auto">
           At Villa Fiscardo, we're perfectly positioned to help you experience the best sunset views Kefalonia has to offer. Ask us for personalized recommendations based on your preferences, and we can help arrange transportation or special sunset experiences.
         </p>
-        <a 
-          href="/booking" 
+        <Link
+          href="/booking"
           className="inline-block px-6 py-3 bg-white text-[var(--deep-blue)] font-medium rounded-lg hover:bg-[var(--sand)] transition-colors"
         >
           Book Your Stay Now
-        </a>
+        </Link>
       </div>
     </div>
   );
