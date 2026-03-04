@@ -2,8 +2,21 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Helmet } from "react-helmet";
+import { useEffect, useRef } from "react";
 
 const HeroSection = () => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Defer the massive 7MB video from downloading until AFTER the initial 
+  // page render (LCP) is totally complete.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.src = "/images/homepage.mp4";
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
   return (
     <>
       <Helmet>
@@ -17,13 +30,14 @@ const HeroSection = () => {
         aria-label="Villa Fiscardo Introduction"
       >
         <video
+          ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
-          src="/images/homepage.mp4"
+          poster="/images/cropped_83A0388.webp"
           autoPlay
           loop
           muted
           playsInline
-          preload="metadata"
+          preload="none"
           aria-hidden="true"
         ></video>
 
