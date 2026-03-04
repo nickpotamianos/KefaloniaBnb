@@ -43,7 +43,7 @@ const BeachExploration = () => {
                 "name": "Villa Fiscardo",
                 "logo": {
                   "@type": "ImageObject",
-                  "url": "https://villafiscardo.com/images/logokef1.png"
+                  "url": "https://villafiscardo.com/images/logokef1.webp"
                 }
               },
               "datePublished": "2024-01-15",

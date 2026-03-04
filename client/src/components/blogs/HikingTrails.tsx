@@ -532,7 +532,7 @@ const HikingTrails = () => {
 
               <div className="flex items-start">
                 <img
-                  src="/images/alex.png"
+                  src="/images/alex.webp"
                   alt="Kefalonia hiking guide Alexandra"
                   className="w-14 h-14 rounded-full object-cover mr-4"
                 />

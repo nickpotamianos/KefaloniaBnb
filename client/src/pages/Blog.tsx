@@ -43,7 +43,7 @@ const blogMetadata = {
   'nature-hikes': {
     title: "Hiking in Kefalonia: Best Trails & Nature Experiences | Villa Fiscardo",
     description: "Discover the most beautiful hiking trails in North Kefalonia. Explore scenic routes, mountain views, and coastal paths from Villa Fiscardo.",
-    image: "/images/hikepng.png",
+    image: "/images/hikepng.webp",
     publishDate: "2023-05-05",
     modifiedDate: "2023-12-18",
     keywords: "kefalonia hiking trails, hiking near fiskardo, nature walks kefalonia, best hikes in north kefalonia, foki to dafnoudi trail"
@@ -75,19 +75,19 @@ const getCanonicalUrl = (path: string) => {
 const Blog = () => {
   const { slug } = useParams<{ slug: string }>();
   const [isLoading, setIsLoading] = useState(true);
-  
+
   useEffect(() => {
     // Simulate content loading
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 300);
-    
+
     return () => clearTimeout(timer);
   }, [slug]);
-  
+
   // Map slugs to components
   const getBlogComponent = () => {
-    switch(slug) {
+    switch (slug) {
       case 'beach-exploration':
         return <BeachExploration />;
       case 'culinary-delights':
@@ -112,42 +112,42 @@ const Blog = () => {
         );
     }
   };
-  
+
   // Get metadata for current blog
   const metadata = slug ? blogMetadata[slug as keyof typeof blogMetadata] : null;
-    // Construct canonical URL for the current blog page
+  // Construct canonical URL for the current blog page
   const canonicalUrl = slug ? getCanonicalUrl(`/blog/${slug}`) : getCanonicalUrl('/');
-    return (
+  return (
     <>
       {/* Add canonical URL tag that directly manipulates DOM for search engines */}
       {slug && <CanonicalTag url={canonicalUrl} />}
-      
+
       {metadata && (
         <Helmet>
           <title>{metadata.title}</title>
           <meta name="description" content={metadata.description} />
           <meta name="keywords" content={metadata.keywords} />
-          
+
           {/* Open Graph / Facebook */}
           <meta property="og:type" content="article" />
           <meta property="og:title" content={metadata.title} />
           <meta property="og:description" content={metadata.description} />
           <meta property="og:image" content={getCanonicalUrl(metadata.image)} />
           <meta property="og:url" content={canonicalUrl} />
-          
+
           {/* Twitter */}
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content={metadata.title} />
           <meta name="twitter:description" content={metadata.description} />
           <meta name="twitter:image" content={getCanonicalUrl(metadata.image)} />
-          
+
           {/* Article specific metadata */}
           <meta property="article:published_time" content={metadata.publishDate} />
           <meta property="article:modified_time" content={metadata.modifiedDate} />
-          
+
           {/* Canonical URL - consistent formatting - belt and suspenders approach */}
           <link rel="canonical" href={canonicalUrl} />
-          
+
           {/* Article Structured Data for Rich Results */}
           <script type="application/ld+json">
             {`
@@ -170,7 +170,7 @@ const Blog = () => {
                   "name": "Villa Fiscardo",
                   "logo": {
                     "@type": "ImageObject",
-                    "url": "https://villafiscardo.com/images/2logokef1.png"
+                    "url": "https://villafiscardo.com/images/2logokef1.webp"
                   }
                 },
                 "mainEntityOfPage": {
@@ -192,21 +192,21 @@ const Blog = () => {
           </script>
         </Helmet>
       )}
-      
+
       <Navbar isBlogPage={true} />
-      
+
       <div className="pt-20 bg-[var(--bg-color)]">
         {/* Back button */}
         <div className="container mx-auto px-4 py-6">
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="inline-flex items-center text-[var(--primary-blue)] hover:text-[var(--terracotta)] transition-colors"
           >
             <ChevronLeft className="h-4 w-4 mr-1" />
             Back to Home
           </Link>
         </div>
-        
+
         {isLoading ? (
           <div className="container mx-auto px-4 py-16 flex justify-center">
             <div className="w-8 h-8 border-4 border-[var(--sea-blue)] border-t-transparent rounded-full animate-spin"></div>
@@ -215,7 +215,7 @@ const Blog = () => {
           getBlogComponent()
         )}
       </div>
-      
+
       <Footer />
     </>
   );

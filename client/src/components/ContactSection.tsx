@@ -28,7 +28,7 @@ type ContactFormValues = z.infer<typeof contactFormSchema>;
 const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -43,7 +43,7 @@ const ContactSection = () => {
 
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
-    
+
     try {
       // Use Formspree with the provided ID to handle form submissions
       const response = await fetch("https://formspree.io/f/xqapdkez", {
@@ -53,17 +53,17 @@ const ContactSection = () => {
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      
+
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you as soon as possible.",
         variant: "default",
       });
-      
+
       form.reset();
     } catch (error) {
       toast({
@@ -79,7 +79,7 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-24 px-4 bg-gradient-to-b from-white to-[var(--off-white)]">
       <div className="container mx-auto">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -89,17 +89,17 @@ const ContactSection = () => {
             <MessageSquare className="mr-1.5 h-4 w-4" />
             We're Here For You
           </span>
-          
+
           <Heading
             title="Contact Us"
             description="Have questions about our villa or need assistance with your booking? We're here to help you plan your perfect Kefalonian getaway!"
             centered
           />
         </motion.div>
-        
+
         <div className="flex flex-col lg:flex-row gap-12 mt-16">
           {/* Contact Information */}
-          <motion.div 
+          <motion.div
             className="lg:w-1/2"
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -118,7 +118,7 @@ const ContactSection = () => {
                   We pride ourselves on providing exceptional service to all our guests. Feel free to reach out with any questions, special requests, or for assistance planning your Kefalonian adventure. We're always happy to share local insights and recommendations!
                 </p>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
                   <div className="flex items-start space-x-4">
@@ -127,8 +127,8 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Email</h4>
-                      <a 
-                        href="mailto:info@villafiscardo.com" 
+                      <a
+                        href="mailto:info@villafiscardo.com"
                         className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300 break-words"
                         style={{ wordBreak: "break-word", display: "block", maxWidth: "100%" }}
                       >
@@ -137,7 +137,7 @@ const ContactSection = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
                   <div className="flex items-start space-x-4">
                     <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
@@ -145,15 +145,15 @@ const ContactSection = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Phone</h4>
-                      <a 
-                        href="tel:+306948201383" 
+                      <a
+                        href="tel:+306948201383"
                         className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300"
                       >
                         +30 694 820 1383 (Alex)
                       </a>
-                      <br/>
-                      <a 
-                        href="tel:+306948201383" 
+                      <br />
+                      <a
+                        href="tel:+306948201383"
                         className="text-[var(--primary-blue)] hover:text-[var(--deep-blue)] transition duration-300"
                       >
                         +30 698 679 2378 (Nick)
@@ -161,7 +161,7 @@ const ContactSection = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
                   <div className="flex items-start space-x-4">
                     <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
@@ -173,7 +173,7 @@ const ContactSection = () => {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 border-t border-l border-gray-50">
                   <div className="flex items-start space-x-4">
                     <div className="bg-[var(--sea-blue)]/10 p-3 rounded-lg flex-shrink-0">
@@ -186,7 +186,7 @@ const ContactSection = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-[var(--sand)]/20 p-6 rounded-xl border border-[var(--sand)]/30">
                 <div className="flex items-center gap-3 mb-3">
                   <Calendar className="h-5 w-5 text-[var(--terracotta)]" />
@@ -195,52 +195,52 @@ const ContactSection = () => {
                 <p className="text-gray-700 mb-4">
                   Planning a stay at our Kefalonian villa? We're happy to answer any questions about availability, rates, and special requests.
                 </p>
-                <Button 
+                <Button
                   asChild
-                  variant="outline" 
+                  variant="outline"
                   className="bg-white text-[var(--deep-blue)] border-[var(--deep-blue)] hover:bg-[var(--deep-blue)]/5 rounded-full"
                 >
                   <a href="#booking">Check Availability</a>
                 </Button>
               </div>
-              
+
               <div>
                 <h4 className="text-xl font-semibold playfair text-[var(--deep-blue)] mb-4">Connect With Us</h4>
                 <div className="flex space-x-4">
-                  <a 
-                    href="https://www.instagram.com/kefalonianvintagehome" 
+                  <a
+                    href="https://www.instagram.com/kefalonianvintagehome"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]" 
+                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]"
                     aria-label="Follow us on Instagram"
                   >
                     <Instagram className="h-5 w-5" />
                   </a>
-                  <a 
-                    href="https://www.facebook.com/kefalonianvintagehome" 
+                  <a
+                    href="https://www.facebook.com/kefalonianvintagehome"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]" 
+                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]"
                     aria-label="Follow us on Facebook"
                   >
                     <Facebook className="h-5 w-5" />
                   </a>
-                  <a 
-                    href="https://www.airbnb.com/h/kefalonianvintagehome" 
+                  <a
+                    href="https://www.airbnb.com/h/kefalonianvintagehome"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]" 
+                    className="bg-white p-3 rounded-full shadow-sm hover:shadow-md transition-all duration-300 hover:translate-y-[-2px] text-[var(--primary-blue)]"
                     aria-label="View our Airbnb listing"
                   >
                     <Globe className="h-5 w-5" />
                   </a>
                 </div>
               </div>
-              
+
               <div className="glass-card p-6 rounded-xl">
                 <h4 className="text-xl font-semibold playfair text-[var(--deep-blue)] mb-4">Your Host</h4>
                 <div className="flex items-start gap-4">
-                  <img src="/images/alex.png" alt="Host photo" className="w-20 h-20 rounded-full object-cover border-2 border-white shadow-md" />
+                  <img src="/images/alex.webp" alt="Host photo" className="w-20 h-20 rounded-full object-cover border-2 border-white shadow-md" />
                   <div>
                     <h5 className="font-bold text-gray-800 text-lg mb-1">Alex</h5>
                     <div className="flex items-center text-sm text-[var(--terracotta)] mb-3">
@@ -256,9 +256,9 @@ const ContactSection = () => {
               </div>
             </div>
           </motion.div>
-          
+
           {/* Contact Form */}
-          <motion.div 
+          <motion.div
             className="lg:w-1/2"
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -273,7 +273,7 @@ const ContactSection = () => {
                     <span className="absolute -bottom-1 left-0 h-1 w-12 bg-[var(--terracotta)] rounded-full"></span>
                   </span>
                 </h3>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <FormField
                     control={form.control}
@@ -282,17 +282,17 @@ const ContactSection = () => {
                       <FormItem>
                         <FormLabel className="text-gray-700 font-medium">Your Name</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="John Doe" 
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
-                            {...field} 
+                          <Input
+                            placeholder="John Doe"
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="email"
@@ -300,11 +300,11 @@ const ContactSection = () => {
                       <FormItem>
                         <FormLabel className="text-gray-700 font-medium">Email Address</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="email" 
-                            placeholder="your@email.com" 
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
-                            {...field} 
+                          <Input
+                            type="email"
+                            placeholder="your@email.com"
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
@@ -312,7 +312,7 @@ const ContactSection = () => {
                     )}
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   <FormField
                     control={form.control}
@@ -321,18 +321,18 @@ const ContactSection = () => {
                       <FormItem>
                         <FormLabel className="text-gray-700 font-medium">Phone Number (optional)</FormLabel>
                         <FormControl>
-                          <Input 
-                            type="tel" 
-                            placeholder="+1 (123) 456-7890" 
-                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
-                            {...field} 
+                          <Input
+                            type="tel"
+                            placeholder="+1 (123) 456-7890"
+                            className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="subject"
@@ -359,7 +359,7 @@ const ContactSection = () => {
                     )}
                   />
                 </div>
-                
+
                 <FormField
                   control={form.control}
                   name="message"
@@ -367,25 +367,25 @@ const ContactSection = () => {
                     <FormItem className="mb-6">
                       <FormLabel className="text-gray-700 font-medium">Your Message</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Tell us how we can help you plan your perfect Kefalonian vacation..." 
-                          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]" 
+                        <Textarea
+                          placeholder="Tell us how we can help you plan your perfect Kefalonian vacation..."
+                          className="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-[var(--terracotta)]"
                           rows={5}
-                          {...field} 
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="privacy"
                   render={({ field }) => (
                     <FormItem className="mb-6 flex flex-row items-center space-x-3">
                       <FormControl>
-                        <Checkbox 
+                        <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           className="text-[var(--terracotta)]"
@@ -400,15 +400,15 @@ const ContactSection = () => {
                     </FormItem>
                   )}
                 />
-                
-                <Button 
-                  type="submit" 
+
+                <Button
+                  type="submit"
                   className="w-full bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 text-white font-medium py-6 rounded-lg transition duration-300 shadow-sm hover:shadow-md"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
-                
+
                 <p className="text-sm text-gray-600 mt-4 text-center">
                   We respect your privacy and will never share your information with third parties.
                 </p>

@@ -891,7 +891,7 @@ const NatureHikes = () => {
             "name": "Villa Fiscardo",
             "logo": {
               "@type": "ImageObject",
-              "url": "https://villafiscardo.com/images/logokef1.png"
+              "url": "https://villafiscardo.com/images/logokef1.webp"
             }
           },
           "datePublished": "2023-05-10",

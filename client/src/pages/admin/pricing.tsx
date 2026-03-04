@@ -31,7 +31,7 @@ const PricingAdmin: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [adminKey, setAdminKey] = useState(localStorage.getItem('adminKey') || '');
   const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('adminKey'));
-  
+
   // Pricing state
   const [seasonalPrices, setSeasonalPrices] = useState<SeasonalPrice[]>([]);
   const [discounts, setDiscounts] = useState<Discount[]>([]);
@@ -42,18 +42,18 @@ const PricingAdmin: React.FC = () => {
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
-  
+
   // Load pricing configuration
   useEffect(() => {
     if (isAuthenticated) {
       fetchPricingConfiguration();
     }
   }, [isAuthenticated]);
-  
+
   const fetchPricingConfiguration = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       // Use both query params and headers for better compatibility with the server auth middleware
       const response = await axios.get(`${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`, {
@@ -61,10 +61,10 @@ const PricingAdmin: React.FC = () => {
           'x-admin-key': adminKey
         }
       });
-      
+
       if (response.data.success && response.data.pricing) {
         const { seasonalPrices, discounts, cleaningFee } = response.data.pricing;
-        
+
         // Round all price values to whole numbers
         if (Array.isArray(seasonalPrices)) {
           const roundedPrices = seasonalPrices.map(price => ({
@@ -72,21 +72,21 @@ const PricingAdmin: React.FC = () => {
             pricePerNight: Math.round(price.pricePerNight)
           }));
           setSeasonalPrices(roundedPrices || []);
-          
+
           // Update the PricingService singleton with the fetched data
           pricingService.setSeasonalPrices(roundedPrices);
         } else {
           setSeasonalPrices([]);
         }
-        
+
         setDiscounts(discounts || []);
         // Update discounts in the PricingService singleton
         pricingService.setDiscounts(discounts || []);
-        
+
         setCleaningFee(Math.round(cleaningFee || 60));
         // Update cleaning fee in the PricingService singleton
         pricingService.setCleaningFee(Math.round(cleaningFee || 60));
-        
+
         console.log("Admin: Updated PricingService with fetched data");
       } else {
         setError('Failed to load pricing configuration');
@@ -103,7 +103,7 @@ const PricingAdmin: React.FC = () => {
       setLoading(false);
     }
   };
-  
+
   // Add a new seasonal price entry
   const addSeasonalPrice = () => {
     const newId = `season-${Date.now()}`;
@@ -121,7 +121,7 @@ const PricingAdmin: React.FC = () => {
     // Update PricingService immediately with new season
     pricingService.setSeasonalPrices(newPrices);
   };
-  
+
   // Add a new discount entry
   const addDiscount = () => {
     const newId = `discount-${Date.now()}`;
@@ -138,7 +138,7 @@ const PricingAdmin: React.FC = () => {
     // Update PricingService immediately with new discount
     pricingService.setDiscounts(newDiscounts);
   };
-  
+
   // Delete a seasonal price entry
   const deleteSeasonalPrice = (id: string) => {
     const updatedPrices = seasonalPrices.filter(price => price.id !== id);
@@ -146,7 +146,7 @@ const PricingAdmin: React.FC = () => {
     // Update PricingService immediately when a season is deleted
     pricingService.setSeasonalPrices(updatedPrices);
   };
-  
+
   // Delete a discount entry
   const deleteDiscount = (id: string) => {
     const updatedDiscounts = discounts.filter(discount => discount.id !== id);
@@ -154,46 +154,46 @@ const PricingAdmin: React.FC = () => {
     // Update PricingService immediately when a discount is deleted
     pricingService.setDiscounts(updatedDiscounts);
   };
-  
+
   // Update a seasonal price field
   const updateSeasonalPrice = (id: string, field: keyof SeasonalPrice, value: string | number) => {
-    const updatedPrices = seasonalPrices.map(price => 
-      price.id === id 
+    const updatedPrices = seasonalPrices.map(price =>
+      price.id === id
         ? { ...price, [field]: field === 'name' ? value : Number(value) }
         : price
     );
-    
+
     setSeasonalPrices(updatedPrices);
     // Update PricingService immediately when prices are changed in the UI
     pricingService.setSeasonalPrices(updatedPrices);
   };
-  
+
   // Update a discount field
   const updateDiscount = (id: string, field: keyof Discount, value: string | number) => {
-    const updatedDiscounts = discounts.map(discount => 
-      discount.id === id 
+    const updatedDiscounts = discounts.map(discount =>
+      discount.id === id
         ? { ...discount, [field]: field === 'name' ? value : Number(value) }
         : discount
     );
-    
+
     setDiscounts(updatedDiscounts);
     // Update PricingService immediately when discounts are changed in the UI
     pricingService.setDiscounts(updatedDiscounts);
   };
-  
+
   // Save pricing configuration
   const savePricingConfiguration = async () => {
     setSaving(true);
     setError(null);
     setSuccessMessage(null);
-    
+
     try {
       // Make sure all price values are integers
       const roundedSeasonalPrices = seasonalPrices.map(price => ({
         ...price,
         pricePerNight: Math.round(price.pricePerNight)
       }));
-      
+
       // Include admin key in request headers, query params, and body for maximum compatibility
       const response = await axios.post(
         `${API_ENDPOINTS.ADMIN_PRICING}?adminKey=${adminKey}`,
@@ -209,13 +209,13 @@ const PricingAdmin: React.FC = () => {
           }
         }
       );
-      
+
       if (response.data.success) {
         setSuccessMessage('Pricing configuration saved successfully');
-        
+
         // Force reload the pricing service to ensure consistent data across the app
         await pricingService.reloadPricing();
-        
+
         // Reload the configuration to get the server-validated data
         fetchPricingConfiguration();
       } else {
@@ -227,27 +227,27 @@ const PricingAdmin: React.FC = () => {
       setSaving(false);
     }
   };
-  
+
   // Handle login submission
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!adminKey.trim()) {
       setError('Admin key is required');
       return;
     }
-    
+
     localStorage.setItem('adminKey', adminKey);
     setIsAuthenticated(true);
   };
-  
+
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem('adminKey');
     setIsAuthenticated(false);
     setAdminKey('');
   };
-  
+
   // Login form
   if (!isAuthenticated) {
     return (
@@ -255,24 +255,24 @@ const PricingAdmin: React.FC = () => {
         <Helmet>
           <title>Admin Login | Villa Fiscardo</title>
         </Helmet>
-        
+
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center mb-8">
-            <img 
-              src="/images/logokef1.png" 
-              alt="Villa Fiscardo" 
+            <img
+              src="/images/logokef1.webp"
+              alt="Villa Fiscardo"
               className="h-16 mx-auto mb-4"
             />
             <h1 className="text-2xl font-bold text-gray-800">Admin Login</h1>
             <p className="text-gray-600 mt-2">Enter your admin key to access the pricing management</p>
           </div>
-          
+
           {error && (
             <div className="bg-red-50 text-red-800 p-3 rounded-md mb-6 text-sm">
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleLogin}>
             <div className="mb-6">
               <label htmlFor="adminKey" className="block text-sm font-medium text-gray-700 mb-1">
@@ -288,7 +288,7 @@ const PricingAdmin: React.FC = () => {
                 className="w-full"
               />
             </div>
-            
+
             <Button type="submit" className="w-full bg-[var(--primary-blue)]">
               Login
             </Button>
@@ -303,21 +303,21 @@ const PricingAdmin: React.FC = () => {
       <Helmet>
         <title>Pricing Management | Admin Dashboard</title>
       </Helmet>
-      
+
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <img 
-                src="/images/logokef1.png" 
-                alt="Villa Fiscardo" 
+              <img
+                src="/images/logokef1.webp"
+                alt="Villa Fiscardo"
                 className="h-10 mr-4"
               />
               <h1 className="text-xl font-bold text-gray-800">Pricing Management</h1>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleLogout}
               className="text-gray-600"
             >
@@ -326,7 +326,7 @@ const PricingAdmin: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Navigation */}
       <div className="bg-gray-100 border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
@@ -340,7 +340,7 @@ const PricingAdmin: React.FC = () => {
           </Button>
         </div>
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {loading ? (
           <div className="text-center py-12">
@@ -354,13 +354,13 @@ const PricingAdmin: React.FC = () => {
                 {error}
               </div>
             )}
-            
+
             {successMessage && (
               <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
                 {successMessage}
               </div>
             )}
-            
+
             {/* Seasonal Pricing Section */}
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <div className="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
@@ -368,7 +368,7 @@ const PricingAdmin: React.FC = () => {
                   <Calendar className="h-5 w-5 text-[var(--primary-blue)] mr-2" />
                   <h2 className="text-lg font-medium text-gray-800">Seasonal Pricing</h2>
                 </div>
-                <Button 
+                <Button
                   onClick={addSeasonalPrice}
                   size="sm"
                   className="bg-[var(--primary-blue)]"
@@ -377,7 +377,7 @@ const PricingAdmin: React.FC = () => {
                   Add Season
                 </Button>
               </div>
-              
+
               <div className="p-6">
                 <div className="grid grid-cols-12 gap-4 font-medium text-sm text-gray-500 mb-2 px-2">
                   <div className="col-span-3">Season Name</div>
@@ -386,7 +386,7 @@ const PricingAdmin: React.FC = () => {
                   <div className="col-span-2">Price per Night</div>
                   <div className="col-span-1">Action</div>
                 </div>
-                
+
                 {seasonalPrices.map((price) => (
                   <div key={price.id} className="grid grid-cols-12 gap-4 mb-4 items-center">
                     <div className="col-span-3">
@@ -444,19 +444,19 @@ const PricingAdmin: React.FC = () => {
                     </div>
                   </div>
                 ))}
-                
+
                 {seasonalPrices.length === 0 && (
                   <div className="text-center py-4 text-gray-500">
                     No seasonal pricing configured. Add your first season.
                   </div>
                 )}
-                
+
                 <div className="mt-4 text-sm text-gray-500">
                   <p>Note: Seasonal pricing is based on calendar months. The system will use the highest applicable price if dates span multiple seasons.</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Discounts Section */}
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <div className="px-6 py-4 bg-gray-50 border-b flex justify-between items-center">
@@ -464,7 +464,7 @@ const PricingAdmin: React.FC = () => {
                   <Percent className="h-5 w-5 text-[var(--primary-blue)] mr-2" />
                   <h2 className="text-lg font-medium text-gray-800">Length of Stay Discounts</h2>
                 </div>
-                <Button 
+                <Button
                   onClick={addDiscount}
                   size="sm"
                   className="bg-[var(--primary-blue)]"
@@ -473,7 +473,7 @@ const PricingAdmin: React.FC = () => {
                   Add Discount
                 </Button>
               </div>
-              
+
               <div className="p-6">
                 <div className="grid grid-cols-12 gap-4 font-medium text-sm text-gray-500 mb-2 px-2">
                   <div className="col-span-4">Discount Name</div>
@@ -481,7 +481,7 @@ const PricingAdmin: React.FC = () => {
                   <div className="col-span-4">Discount Percentage</div>
                   <div className="col-span-1">Action</div>
                 </div>
-                
+
                 {discounts.map((discount) => (
                   <div key={discount.id} className="grid grid-cols-12 gap-4 mb-4 items-center">
                     <div className="col-span-4">
@@ -527,26 +527,26 @@ const PricingAdmin: React.FC = () => {
                     </div>
                   </div>
                 ))}
-                
+
                 {discounts.length === 0 && (
                   <div className="text-center py-4 text-gray-500">
                     No discounts configured. Add your first discount.
                   </div>
                 )}
-                
+
                 <div className="mt-4 text-sm text-gray-500">
                   <p>Note: Only the highest applicable discount will be applied to a booking.</p>
                 </div>
               </div>
             </div>
-            
+
             {/* Cleaning Fee Section */}
             <div className="bg-white shadow rounded-lg overflow-hidden">
               <div className="px-6 py-4 bg-gray-50 border-b flex items-center">
                 <Euro className="h-5 w-5 text-[var(--primary-blue)] mr-2" />
                 <h2 className="text-lg font-medium text-gray-800">Cleaning Fee</h2>
               </div>
-              
+
               <div className="p-6">
                 <div className="max-w-md">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -575,10 +575,10 @@ const PricingAdmin: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             {/* Save button */}
             <div className="flex justify-end">
-              <Button 
+              <Button
                 onClick={savePricingConfiguration}
                 className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90"
                 disabled={saving}

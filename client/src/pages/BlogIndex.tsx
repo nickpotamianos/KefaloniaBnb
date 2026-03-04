@@ -38,7 +38,7 @@ const blogMetadata = {
   'nature-hikes': {
     title: "Hiking in Kefalonia: Best Trails & Nature Experiences | Villa Fiscardo",
     description: "Discover the most beautiful hiking trails in North Kefalonia. Explore scenic routes, mountain views, and coastal paths from Villa Fiscardo.",
-    image: "/images/hikepng.png",
+    image: "/images/hikepng.webp",
     publishDate: "2023-05-05",
     modifiedDate: "2023-12-18",
     keywords: "kefalonia hiking trails, hiking near fiskardo, nature walks kefalonia, best hikes in north kefalonia, foki to dafnoudi trail",
@@ -57,7 +57,7 @@ const blogMetadata = {
     title: "Best Sunset Spots in Kefalonia: Evening Magic Near Villa Fiscardo",
     description: "Discover the most breathtaking sunset viewing locations around Fiskardo and across Kefalonia, perfect for romantic evenings during your stay at Villa Fiscardo.",
     image: "/images/lighthouse.jpg",
-    publishDate: "2023-06-10", 
+    publishDate: "2023-06-10",
     modifiedDate: "2023-12-22",
     keywords: "kefalonia sunset spots, best sunset views fiskardo, romantic sunset locations kefalonia, assos sunset, myrtos sunset, fiskardo lighthouse sunset",
     shortTitle: "Best Sunset Spots in Kefalonia"
@@ -87,43 +87,43 @@ const BlogIndex = () => {
     <>
       {/* Direct DOM manipulation for canonical tag */}
       <CanonicalTag url={canonicalUrl} />
-      
+
       <Helmet>
         <title>Villa Fiscardo Blog | Travel Tips & Insights for Kefalonia</title>
-        <meta 
-          name="description" 
+        <meta
+          name="description"
           content="Explore guides, tips and local insights about Kefalonia, Fiskardo, beaches, dining, activities and more for your perfect Greek island vacation at Villa Fiscardo."
         />
-        <meta 
-          name="keywords" 
+        <meta
+          name="keywords"
           content="villa fiscardo blog, kefalonia travel guide, fiskardo travel tips, kefalonia beaches, kefalonia activities, greek island vacation tips"
         />
-        
+
         {/* Open Graph / Facebook */}
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Villa Fiscardo Blog | Travel Tips & Insights for Kefalonia" />
-        <meta 
-          property="og:description" 
+        <meta
+          property="og:description"
           content="Explore guides, tips and local insights about Kefalonia, Fiskardo, beaches, dining, activities and more for your perfect Greek island vacation."
         />
         <meta property="og:image" content={getCanonicalUrl("/images/fiskardo.jpeg")} />
         <meta property="og:url" content={canonicalUrl} />
-        
+
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Villa Fiscardo Blog | Travel Tips & Insights for Kefalonia" />
-        <meta 
-          name="twitter:description" 
+        <meta
+          name="twitter:description"
           content="Explore guides, tips and local insights about Kefalonia, Fiskardo, beaches, dining, activities and more for your perfect Greek island vacation."
         />
         <meta name="twitter:image" content={getCanonicalUrl("/images/fiskardo.jpeg")} />
-        
+
         {/* Canonical URL - both through Helmet and direct DOM manipulation */}
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
-      
+
       <Navbar isBlogPage={true} />
-      
+
       <div className="container mx-auto px-4 py-16 max-w-6xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-serif font-semibold mb-4 text-gray-800">Villa Fiscardo Blog</h1>
@@ -135,16 +135,16 @@ const BlogIndex = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {Object.entries(blogMetadata).map(([slug, meta]) => (
-            <div 
-              key={slug} 
+            <div
+              key={slug}
               className="rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:shadow-xl hover:-translate-y-1"
             >
               <Link href={`/blog/${slug}`}>
                 <a className="block">
                   <div className="h-56 overflow-hidden relative">
-                    <img 
-                      src={meta.image} 
-                      alt={meta.shortTitle} 
+                    <img
+                      src={meta.image}
+                      alt={meta.shortTitle}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                     />
                   </div>
@@ -160,7 +160,7 @@ const BlogIndex = () => {
           ))}
         </div>
       </div>
-      
+
       <Footer />
     </>
   );

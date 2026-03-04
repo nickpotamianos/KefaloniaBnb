@@ -62,7 +62,7 @@ const AdminBookingsPage: React.FC = () => {
         const sortedBookings = response.data.bookings.sort((a: Booking, b: Booking) => {
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         });
-        
+
         setBookings(sortedBookings);
         setFilteredBookings(sortedBookings);
       } else {
@@ -83,7 +83,7 @@ const AdminBookingsPage: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!adminKey.trim()) {
       setError('Admin key is required.');
       return;
@@ -108,19 +108,19 @@ const AdminBookingsPage: React.FC = () => {
   // Filter bookings based on search term and status filter
   useEffect(() => {
     const filtered = bookings.filter(booking => {
-      const matchesSearch = 
+      const matchesSearch =
         booking.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         booking.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         booking.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (booking.phone && booking.phone.includes(searchTerm));
-      
-      const matchesStatus = 
-        statusFilter === 'all' || 
+
+      const matchesStatus =
+        statusFilter === 'all' ||
         booking.paymentStatus === statusFilter;
-      
+
       return matchesSearch && matchesStatus;
     });
-    
+
     setFilteredBookings(filtered);
   }, [searchTerm, statusFilter, bookings]);
 
@@ -128,22 +128,22 @@ const AdminBookingsPage: React.FC = () => {
     if (!window.confirm('Are you sure you want to cancel this booking?')) {
       return;
     }
-    
+
     try {
       const response = await axios.post(
-        `${API_ENDPOINTS.ADMIN_CANCEL_BOOKING}/${bookingId}`, 
+        `${API_ENDPOINTS.ADMIN_CANCEL_BOOKING}/${bookingId}`,
         { reason: 'Admin cancellation' },
-        { 
+        {
           headers: { 'x-admin-key': adminKey },
           params: { sendEmail: true }
         }
       );
-      
+
       if (response.data.success) {
         // Update the booking status in the local state
-        setBookings(prevBookings => 
-          prevBookings.map(booking => 
-            booking.id === bookingId 
+        setBookings(prevBookings =>
+          prevBookings.map(booking =>
+            booking.id === bookingId
               ? { ...booking, paymentStatus: 'cancelled' }
               : booking
           )
@@ -161,7 +161,7 @@ const AdminBookingsPage: React.FC = () => {
   const formatCurrency = (amount: number) => {
     return `€${(amount / 100).toFixed(2)}`;
   };
-  
+
   const formatDate = (dateString: string, includeDay = false) => {
     try {
       const date = new Date(dateString);
@@ -170,7 +170,7 @@ const AdminBookingsPage: React.FC = () => {
       return 'Invalid date';
     }
   };
-  
+
   const formatDateTime = (dateString: string) => {
     try {
       const date = new Date(dateString);
@@ -223,25 +223,25 @@ const AdminBookingsPage: React.FC = () => {
         <Helmet>
           <title>Admin Login | Villa Fiscardo</title>
         </Helmet>
-        
+
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
           <div className="text-center mb-8">
-            <img 
-              src="/images/logokef1.png" 
-              alt="Villa Fiscardo" 
+            <img
+              src="/images/logokef1.webp"
+              alt="Villa Fiscardo"
               className="h-16 mx-auto mb-4"
             />
             <h1 className="text-2xl font-bold text-gray-800">Admin Login</h1>
             <p className="text-gray-600 mt-2">Enter your admin key to access the booking dashboard</p>
           </div>
-          
+
           {error && (
             <div className="bg-red-50 text-red-800 p-3 rounded-md mb-6 text-sm flex items-center">
               <AlertTriangle className="h-4 w-4 mr-2 flex-shrink-0" />
               {error}
             </div>
           )}
-          
+
           <form onSubmit={handleLogin}>
             <div className="mb-6">
               <label htmlFor="adminKey" className="block text-sm font-medium text-gray-700 mb-1">
@@ -257,7 +257,7 @@ const AdminBookingsPage: React.FC = () => {
                 className="w-full"
               />
             </div>
-            
+
             <Button type="submit" className="w-full bg-[var(--primary-blue)]">
               Login
             </Button>
@@ -272,21 +272,21 @@ const AdminBookingsPage: React.FC = () => {
       <Helmet>
         <title>Manage Bookings | Admin Dashboard</title>
       </Helmet>
-      
+
       {/* Header */}
       <div className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <img 
-                src="/images/logokef1.png" 
-                alt="Villa Fiscardo" 
+              <img
+                src="/images/logokef1.webp"
+                alt="Villa Fiscardo"
                 className="h-10 mr-4"
               />
               <h1 className="text-xl font-bold text-gray-800">Admin Dashboard</h1>
             </div>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={handleLogout}
               className="text-gray-600"
             >
@@ -295,16 +295,16 @@ const AdminBookingsPage: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="md:flex md:items-center md:justify-between mb-6">
           <h2 className="text-2xl font-bold text-gray-900">Booking Management</h2>
-          
+
           <div className="mt-4 md:mt-0 flex flex-wrap gap-3">
-            <Button 
+            <Button
               onClick={() => fetchBookings(adminKey)}
-              variant="outline" 
+              variant="outline"
               className="bg-white"
             >
               Refresh List
@@ -316,7 +316,7 @@ const AdminBookingsPage: React.FC = () => {
             </a>
           </div>
         </div>
-        
+
         {/* Filters */}
         <div className="bg-white shadow rounded-lg mb-8 p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -332,7 +332,7 @@ const AdminBookingsPage: React.FC = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
+
             <div>
               <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
                 Payment Status
@@ -349,7 +349,7 @@ const AdminBookingsPage: React.FC = () => {
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
-            
+
             <div className="flex items-end">
               <div className="text-sm text-gray-600">
                 <span className="font-medium">{filteredBookings.length}</span> bookings found
@@ -357,7 +357,7 @@ const AdminBookingsPage: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Bookings List */}
         {loading ? (
           <div className="text-center py-12">
@@ -368,7 +368,7 @@ const AdminBookingsPage: React.FC = () => {
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-8 rounded-lg text-center">
             <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-red-500" />
             <p>{error}</p>
-            <Button 
+            <Button
               onClick={() => fetchBookings(adminKey)}
               className="mt-4 bg-red-600 hover:bg-red-700 text-white"
             >
@@ -385,10 +385,10 @@ const AdminBookingsPage: React.FC = () => {
               const checkInDate = new Date(booking.checkIn);
               const checkOutDate = new Date(booking.checkOut);
               const nights = differenceInDays(checkOutDate, checkInDate);
-              
+
               return (
-                <div 
-                  key={booking.id} 
+                <div
+                  key={booking.id}
                   className="bg-white shadow rounded-lg overflow-hidden"
                 >
                   {/* Booking Header */}
@@ -407,10 +407,10 @@ const AdminBookingsPage: React.FC = () => {
                         Booking ID: <span className="font-mono">{booking.id.substring(0, 8).toUpperCase()}</span>
                       </p>
                     </div>
-                    
+
                     <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         size="sm"
                         className="border-gray-300 text-gray-700"
                         disabled={booking.paymentStatus === 'cancelled'}
@@ -420,7 +420,7 @@ const AdminBookingsPage: React.FC = () => {
                       </Button>
                     </div>
                   </div>
-                  
+
                   {/* Booking Details */}
                   <div className="p-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -450,7 +450,7 @@ const AdminBookingsPage: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Stay Details */}
                       <div className="bg-gray-50 p-4 rounded-lg">
                         <h4 className="text-sm font-medium text-gray-500 mb-3">Stay Details</h4>
@@ -480,7 +480,7 @@ const AdminBookingsPage: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Payment Details */}
                       <div className="bg-gray-50 p-4 rounded-lg">
                         <h4 className="text-sm font-medium text-gray-500 mb-3">Payment Details</h4>
@@ -499,7 +499,7 @@ const AdminBookingsPage: React.FC = () => {
                           <div>
                             <p className="text-sm text-gray-500">Booking Date</p>
                             <p className="font-medium">
-                              {booking.bookingTime 
+                              {booking.bookingTime
                                 ? formatDateTime(booking.bookingTime)
                                 : formatDateTime(booking.createdAt)
                               }
@@ -520,7 +520,7 @@ const AdminBookingsPage: React.FC = () => {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Special Requests */}
                     {booking.specialRequests && (
                       <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
