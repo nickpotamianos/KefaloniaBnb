@@ -57,7 +57,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
         {text}
       </div>
       
-      <meta itemProp="itemReviewed" content="Kefalonian Vintage Home" />
+      <meta itemProp="itemReviewed" content="Villa Fiscardo" />
     </div>
   );
 };

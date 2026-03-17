@@ -1,103 +1,64 @@
 import React, { useState, useEffect } from "react";
-import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, isBefore, isToday } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { addMonths, format, isWithinInterval, isSameDay, startOfMonth, endOfMonth, eachDayOfInterval, 
+  isBefore, isToday, compareAsc, startOfWeek, endOfWeek } from "date-fns";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
-import ICAL from "ical.js";
+import { useBookings } from "@/hooks/use-bookings";
+import pricingService from "@/lib/pricingService";
 
 type AvailabilityCalendarProps = {
   className?: string;
+  showPrices?: boolean;
+  showHelpText?: boolean;
 };
 
-type BookingEvent = {
-  startDate: Date;
-  endDate: Date;
-  summary: string;
+// Calculate discounts based on length of stay - now using the pricing service
+const calculateDiscount = (nights: number) => {
+  return pricingService.calculateDiscount(nights);
 };
 
-const CALENDAR_URLS = [
-  "https://api.host.holidu.com/pmc/rest/apartments/62738918/ical.ics?key=133c7bc35012e5825e06b5cd503c77e8",
-  "https://ical.booking.com/v1/export?t=ae535b52-549f-4976-bffd-dd05f7121b9c",
-  "https://www.airbnb.com/calendar/ical/936140466545331330.ics?s=4db5df46d02514f399d3cc9362b00162",
-  "http://www.vrbo.com/icalendar/a5f9a9c10a434d21a93c76b054037556.ics?nonTentative",
-  "https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
-];
-
-// For development, use AllOrigins as a CORS proxy
-const corsProxyUrl = "https://api.allorigins.win/raw?url=";
-
-const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [bookings, setBookings] = useState<BookingEvent[]>([]);
+const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ 
+  className, 
+  showPrices = false,
+  showHelpText = false 
+}) => {
+  const { isLoading: isBookingsLoading, error: bookingsError, bookings } = useBookings();
   const [month, setMonth] = useState<Date>(new Date());
-  const [days, setDays] = useState<{date: Date, isBooked: boolean, isPast: boolean}[]>([]);
+  const [days, setDays] = useState<{
+    date: Date, 
+    isBooked: boolean, 
+    isPast: boolean, 
+    isCurrentMonth: boolean,
+    price: number
+  }[]>([]);
   
-  // Fetch booking data from iCal feeds
+  // New states for date selection
+  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+  const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
+  const [selectionPhase, setSelectionPhase] = useState<'start' | 'end'>('start');
+  const [showBookButton, setShowBookButton] = useState(false);
+  const [animateButton, setAnimateButton] = useState(false);
+  const [totalPrice, setTotalPrice] = useState<number | null>(null);
+  const [discountInfo, setDiscountInfo] = useState<{percentage: number, text: string} | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
+  
+  // Flag to track if prices are loaded
+  const [pricesLoaded, setPricesLoaded] = useState(false);
+  // Combined loading state
+  const isLoading = isBookingsLoading || !pricesLoaded;
+  
+  // Load pricing data when the component mounts
   useEffect(() => {
-    const fetchCalendarData = async () => {
-      try {
-        setIsLoading(true);
-        setError(null);
-        
-        const allBookings: BookingEvent[] = [];
-        
-        // Process each calendar URL
-        for (const url of CALENDAR_URLS) {
-          try {
-            // Use the CORS proxy to fetch the iCal feed
-            const encodedUrl = encodeURIComponent(url);
-            const response = await fetch(`${corsProxyUrl}${encodedUrl}`);
-            
-            if (!response.ok) {
-              console.error(`Failed to fetch from ${url}: ${response.statusText}`);
-              continue;
-            }
-            
-            const icalData = await response.text();
-            
-            // Parse the iCal data
-            try {
-              const jcalData = ICAL.parse(icalData);
-              const comp = new ICAL.Component(jcalData);
-              const events = comp.getAllSubcomponents("vevent");
-              
-              events.forEach((event) => {
-                const icalEvent = new ICAL.Event(event);
-                const startDate = icalEvent.startDate.toJSDate();
-                const endDate = icalEvent.endDate.toJSDate();
-                
-                // For booking purposes, the end date is exclusive in iCal,
-                // so we consider the day before as the last booked day
-                const adjustedEndDate = new Date(endDate);
-                adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
-                
-                allBookings.push({
-                  startDate,
-                  endDate: adjustedEndDate,
-                  summary: icalEvent.summary || "Booked"
-                });
-              });
-            } catch (err) {
-              console.error(`Error parsing iCal data from ${url}:`, err);
-            }
-          } catch (err) {
-            console.error(`Error processing ${url}:`, err);
-          }
-        }
-        
-        setBookings(allBookings);
-      } catch (err) {
-        console.error("Calendar fetch error:", err);
-        setError("Failed to load availability data. Please try again later.");
-      } finally {
-        setIsLoading(false);
-      }
+    const loadPricing = async () => {
+      // Wait for pricing service to initialize
+      await pricingService.getPriceForDateAsync(new Date());
+      setPricesLoaded(true);
     };
     
-    fetchCalendarData();
+    loadPricing();
   }, []);
   
-  // Determine if a date is booked based on the fetched bookings
+  // Create isDateBooked function within component to prevent dependency issues
   const isDateBooked = (date: Date): boolean => {
     return bookings.some(booking => 
       isWithinInterval(date, { 
@@ -111,21 +72,119 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
   
   // Calculate days for the current month with booking status
   useEffect(() => {
-    // Get all days in the current month
+    // Don't process if still loading bookings or prices
+    if (isLoading) return;
+    
+    // Get all days in the current month, plus days from prev/next month to fill the week
     const monthStart = startOfMonth(month);
     const monthEnd = endOfMonth(month);
-    const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
+    const calendarStart = startOfWeek(monthStart);
+    const calendarEnd = endOfWeek(monthEnd);
+    
+    const daysInView = eachDayOfInterval({ start: calendarStart, end: calendarEnd });
     const today = new Date();
     
-    // Calculate booking status for each day
-    const daysWithStatus = daysInMonth.map(day => ({
+    // Calculate booking status for each day - using pricing service for prices
+    const daysWithStatus = daysInView.map(day => ({
       date: day,
       isBooked: isDateBooked(day),
-      isPast: isBefore(day, today) && !isToday(day)
+      isPast: isBefore(day, today) && !isToday(day),
+      isCurrentMonth: day.getMonth() === month.getMonth(),
+      price: pricingService.getPriceForDate(day)
     }));
     
     setDays(daysWithStatus);
-  }, [month, bookings]);
+  }, [month, bookings, isLoading]); // Add isLoading as dependency
+
+  // Calculate the total price when date range changes
+  useEffect(() => {
+    if (selectedStartDate && selectedEndDate) {
+      const nights = Math.max(1, Math.round((selectedEndDate.getTime() - selectedStartDate.getTime()) / (1000 * 60 * 60 * 24)));
+      let totalCost = 0;
+      
+      // Get all dates in the selected range
+      const datesInRange = eachDayOfInterval({
+        start: selectedStartDate,
+        end: new Date(selectedEndDate.getTime() - 86400000) // Subtract one day as checkout day is not counted
+      });
+      
+      // Sum up the price for each night
+      datesInRange.forEach(date => {
+        totalCost += pricingService.getPriceForDate(date);
+      });
+      
+      // Apply discount based on length of stay
+      const { discountPercentage, discountText } = calculateDiscount(nights);
+      if (discountPercentage > 0) {
+        const discountAmount = totalCost * discountPercentage;
+        totalCost = totalCost - discountAmount;
+        setDiscountInfo({
+          percentage: discountPercentage * 100,
+          text: discountText
+        });
+      } else {
+        setDiscountInfo(null);
+      }
+      
+      // Add cleaning fee (€60)
+      totalCost += 60;
+      
+      // Round the total to whole numbers
+      totalCost = Math.round(totalCost);
+      
+      setTotalPrice(totalCost);
+    } else {
+      setTotalPrice(null);
+      setDiscountInfo(null);
+    }
+  }, [selectedStartDate, selectedEndDate]);
+
+  // Handle date selection
+  const handleDateClick = (day: {date: Date, isBooked: boolean, isPast: boolean, isCurrentMonth: boolean}) => {
+    if (day.isPast || day.isBooked) return;
+    
+    if (selectionPhase === 'start') {
+      // Starting a new selection
+      setSelectedStartDate(day.date);
+      setSelectedEndDate(null);
+      setSelectionPhase('end');
+      setShowBookButton(false);
+    } else {
+      // Completing the selection
+      // Ensure end date is after start date
+      if (selectedStartDate && compareAsc(day.date, selectedStartDate) >= 0) {
+        setSelectedEndDate(day.date);
+        setSelectionPhase('start');
+        
+        // Animate the button appearance
+        setTimeout(() => {
+          setShowBookButton(true);
+          setTimeout(() => setAnimateButton(true), 100);
+        }, 300);
+      } else {
+        // If user clicks a date before start date, treat it as a new start date
+        setSelectedStartDate(day.date);
+        setSelectedEndDate(null);
+      }
+    }
+  };
+  
+  // Check if a date is within the selected range
+  const isInSelectedRange = (date: Date): boolean => {
+    if (!selectedStartDate || !selectedEndDate) {
+      return false;
+    }
+    return isWithinInterval(date, {
+      start: selectedStartDate,
+      end: selectedEndDate
+    });
+  };
+  
+  // Check if a date is the selected start or end date
+  const isSelectedDate = (date: Date): boolean => {
+    return (selectedStartDate && isSameDay(date, selectedStartDate)) || 
+           (selectedEndDate && isSameDay(date, selectedEndDate));
+  };
   
   const handlePreviousMonth = () => {
     setMonth(prev => addMonths(prev, -1));
@@ -135,21 +194,43 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
     setMonth(prev => addMonths(prev, 1));
   };
 
+  const handleBookNow = () => {
+    if (selectedStartDate && selectedEndDate) {
+      const startDateStr = format(selectedStartDate, 'yyyy-MM-dd');
+      const endDateStr = format(selectedEndDate, 'yyyy-MM-dd');
+      
+      // Use the current domain instead of hardcoded production URL
+      // This ensures it works both in development and production
+      const currentDomain = window.location.origin;
+      window.location.href = `${currentDomain}/booking?checkIn=${startDateStr}&checkOut=${endDateStr}`;
+    }
+  };
+
+  // Reset selection
+  const handleResetSelection = () => {
+    setSelectedStartDate(null);
+    setSelectedEndDate(null);
+    setSelectionPhase('start');
+    setShowBookButton(false);
+    setAnimateButton(false);
+  };
+
   // Create a visual calendar grid
   const renderCalendarGrid = () => {
     if (isLoading) {
       return (
         <div className="h-[320px] flex items-center justify-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-[var(--terracotta)]"></div>
+          <span className="ml-3 text-gray-600">Loading calendar...</span>
         </div>
       );
     }
 
-    if (error) {
+    if (bookingsError) {
       return (
         <div className="h-[200px] flex items-center justify-center">
           <div className="text-red-500 text-center">
-            <p>{error}</p>
+            <p>{bookingsError}</p>
             <button 
               className="mt-3 px-4 py-2 bg-[var(--terracotta)] text-white rounded-md hover:bg-[var(--terracotta)]/90"
               onClick={() => window.location.reload()}
@@ -173,18 +254,36 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
         {/* Render days in month */}
         {days.map((day, i) => (
           <div 
-            key={i} 
-            className={cn(
-              "h-10 w-full flex items-center justify-center rounded-md text-sm transition-colors",
-              isToday(day.date) && "border-2 border-[var(--sea-blue)]",
-              day.isPast 
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
-                : day.isBooked 
-                  ? "bg-red-100 text-red-700 line-through" 
-                  : "bg-green-50 hover:bg-green-100 cursor-pointer"
-            )}
+            key={i}
+            className="relative"
           >
-            {format(day.date, "d")}
+            <div 
+              onClick={() => handleDateClick(day)}
+              className={cn(
+                "h-10 w-full flex flex-col items-center justify-center rounded-md text-sm transition-all",
+                !day.isCurrentMonth && "opacity-40",
+                isToday(day.date) && !isSelectedDate(day.date) && "border-2 border-[var(--sea-blue)]",
+                day.isPast 
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed" 
+                  : day.isBooked 
+                    ? "bg-red-100 text-red-700 line-through cursor-not-allowed" 
+                    : isSelectedDate(day.date)
+                      ? "bg-[var(--terracotta)] text-white font-bold hover:bg-[var(--terracotta)]/90 cursor-pointer"
+                      : isInSelectedRange(day.date)
+                        ? "bg-[var(--terracotta)]/20 hover:bg-[var(--terracotta)]/30 cursor-pointer"
+                        : selectedStartDate && !selectedEndDate && isSameDay(day.date, selectedStartDate)
+                          ? "bg-[var(--terracotta)] text-white font-bold cursor-pointer"
+                          : "bg-green-100 text-gray-800 hover:bg-green-200 cursor-pointer",
+                "transition-all duration-200"
+              )}
+            >
+              {showPrices && day.isCurrentMonth && !day.isPast && !day.isBooked && (
+                <div className="text-[8px] font-medium text-gray-600 -mt-1 mb-0.5">
+                  €{Math.round(day.price)}
+                </div>
+              )}
+              {format(day.date, "d")}
+            </div>
           </div>
         ))}
       </div>
@@ -192,12 +291,44 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
   };
   
   return (
-    <div className={cn("availability-calendar", className)}>
+    <div className={cn("availability-calendar relative", className)}>
       <div className="space-y-4">
+        {showHelpText && (
+          <div className="relative group">
+            <div className="flex items-center justify-between">
+              <h3 className="text-md font-medium text-gray-700">Check Availability & Prices</h3>
+              <div className="relative">
+                <div 
+                  className="text-gray-500 hover:text-gray-700 focus:outline-none cursor-help"
+                >
+                  <Info className="h-4 w-4" />
+                </div>
+                
+                <div className="absolute right-0 mt-2 w-72 bg-white p-3 rounded-md shadow-lg z-10 text-xs leading-relaxed text-gray-700 border border-gray-200 
+                  invisible group-hover:visible transition-all duration-200 opacity-0 group-hover:opacity-100">
+                  <p className="font-medium mb-1">How to use this calendar:</p>
+                  <ol className="list-decimal ml-4 space-y-1">
+                    <li>Click once to select your check-in date</li>
+                    <li>Click again to select your check-out date</li>
+                    <li>View the total price with any applicable discounts</li>
+                  </ol>
+                  <p className="mt-2 font-medium">Special offers:</p>
+                  <ul className="list-disc ml-4 space-y-1">
+                    <li>12% discount for 7+ night stays</li>
+                    <li>20% discount for 30+ night stays</li>
+                  </ul>
+                  <p className="mt-2 text-[10px] text-gray-500">Prices shown include taxes.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      
         <div className="flex justify-between items-center">
           <button 
             onClick={handlePreviousMonth}
             className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Previous month"
           >
             <ChevronLeft className="h-4 w-4 text-gray-600" />
           </button>
@@ -209,6 +340,7 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
           <button 
             onClick={handleNextMonth}
             className="p-2 rounded-full hover:bg-gray-100"
+            aria-label="Next month"
           >
             <ChevronRight className="h-4 w-4 text-gray-600" />
           </button>
@@ -216,20 +348,88 @@ const AvailabilityCalendar: React.FC<AvailabilityCalendarProps> = ({ className }
         
         {renderCalendarGrid()}
         
-        <div className="flex justify-center gap-8 text-sm text-gray-600 pt-2">
-          
-          
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-red-100"></span>
-            <span>Booked</span>
+        <div className="flex justify-between items-center pt-2">
+          <div className="flex gap-4 text-sm text-gray-600">
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-3 h-3 rounded-full bg-red-100"></span>
+              <span>Booked</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="inline-block w-3 h-3 rounded-full bg-green-50"></span>
+              <span>Available</span>
+            </div>
           </div>
           
-          <div className="flex items-center gap-2">
-            <span className="inline-block w-3 h-3 rounded-full bg-green-50"></span>
-            <span>Available</span>
-          </div>
+          {selectedStartDate && (
+            <button 
+              onClick={handleResetSelection}
+              className="text-xs text-gray-500 hover:text-gray-700 underline"
+            >
+              Reset selection
+            </button>
+          )}
         </div>
+        
+        {/* Selection info */}
+        {selectedStartDate && (
+          <div className="pt-2 text-sm">
+            <p className="font-medium">
+              {selectionPhase === 'end' ? 'Select checkout date' : 'Selected dates:'}
+            </p>
+            <p className="text-gray-600">
+              {format(selectedStartDate, 'MMM d, yyyy')}
+              {selectedEndDate ? ` to ${format(selectedEndDate, 'MMM d, yyyy')}` : ''}
+            </p>
+            
+            {/* Price calculation */}
+            {totalPrice && selectedEndDate && (
+              <div className="mt-2 p-3 bg-gray-50 rounded-md">
+                <div className="text-gray-700 font-medium">Price Details:</div>
+                <div className="text-sm text-gray-600 mt-1">
+                  <div className="flex justify-between">
+                    <span>Nightly rate × {Math.round((selectedEndDate.getTime() - selectedStartDate.getTime()) / (1000 * 60 * 60 * 24))} nights</span>
+                    <span>€{Math.round(totalPrice - 60)}</span>
+                  </div>
+                  
+                  {discountInfo && (
+                    <div className="flex justify-between text-green-600">
+                      <span>{discountInfo.text}</span>
+                      <span>-{Math.round(discountInfo.percentage)}%</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between">
+                    <span>Cleaning fee</span>
+                    <span>€60</span>
+                  </div>
+                  
+                  <div className="flex justify-between font-medium border-t border-gray-200 pt-1 mt-1 text-gray-700">
+                    <span>Total</span>
+                    <span>€{totalPrice}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
+      
+      {/* Book Now button */}
+      {showBookButton && (
+        <div className={cn(
+          "mt-4 transition-all duration-500 ease-in-out transform",
+          animateButton ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+        )}>
+          <button
+            onClick={handleBookNow}
+            className="w-full flex items-center justify-center gap-2 bg-[var(--terracotta)] text-white py-3 px-6 rounded-lg shadow-lg hover:bg-[var(--terracotta)]/90 transition-all"
+          >
+            <CalendarIcon className="h-5 w-5" />
+            <span className="font-medium">Complete Booking</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

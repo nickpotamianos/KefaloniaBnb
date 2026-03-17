@@ -1,0 +1,85 @@
+{
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "Villa Fiscardo",
+  "alternateName": ["Villa Fiscardo Kefalonia", "Fiscardo Villa Rental", "Best Villa Fiscardo"],
+  "description": "Top-rated villa rental in Fiscardo, Kefalonia. Traditional Greek villa with modern amenities, stunning sea views, and prime location near Myrtos Beach.",
+  "url": "https://villafiscardo.com",
+  "image": [
+    "https://villafiscardo.com/images/cropped_83A0388.jpg",
+    "https://villafiscardo.com/images/_83A0388.jpg",
+    "https://villafiscardo.com/images/myrtos2.jpg"
+  ],
+  "telephone": "+306948201383",
+  "email": "info@villafiscardo.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Fiscardo Village",
+    "addressLocality": "Fiscardo",
+    "addressRegion": "Kefalonia",
+    "postalCode": "28081",
+    "addressCountry": "GR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "38.447111",
+    "longitude": "20.555222"
+  },
+  "openingHours": "Mo-Su 00:00-23:59",
+  "priceRange": "€€€",
+  "currenciesAccepted": "EUR",
+  "paymentAccepted": "Cash, Credit Card, Bank Transfer",
+  "numberOfRooms": "2",
+  "maximumAttendeeCapacity": 4,
+  "checkinTime": "15:00",
+  "checkoutTime": "11:00",
+  "amenityFeature": [
+    {"@type": "LocationFeatureSpecification", "name": "Free WiFi"},
+    {"@type": "LocationFeatureSpecification", "name": "Air conditioning"},
+    {"@type": "LocationFeatureSpecification", "name": "Sea View"},
+    {"@type": "LocationFeatureSpecification", "name": "Kitchen"},
+    {"@type": "LocationFeatureSpecification", "name": "Private garden"},
+    {"@type": "LocationFeatureSpecification", "name": "Parking"},
+    {"@type": "LocationFeatureSpecification", "name": "Terrace"},
+    {"@type": "LocationFeatureSpecification", "name": "Traditional Architecture"}
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5.0",
+    "reviewCount": "47",
+    "bestRating": "5",
+    "worstRating": "1"
+  },
+  "review": [
+    {
+      "@type": "Review",
+      "author": {
+        "@type": "Person",
+        "name": "Guest Review"
+      },
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "5",
+        "bestRating": "5"
+      },
+      "reviewBody": "Perfect villa in Fiscardo with amazing sea views. The location is unbeatable and the traditional architecture is beautifully preserved."
+    }
+  ],
+  "hasMap": "https://maps.google.com/?q=38.447111,20.555222",
+  "tourBookingPage": "https://villafiscardo.com/#booking",
+  "keywords": "villa fiscardo, fiscardo villa, kefalonia villa rental, luxury fiscardo accommodation, traditional villa kefalonia",
+  "sameAs": [
+    "https://www.instagram.com/villafiscardo/",
+    "https://www.facebook.com/villafiscardo",
+    "https://www.airbnb.com/rooms/villafiscardo"
+  ],
+  "makesOffer": {
+    "@type": "Offer",
+    "name": "Villa Fiscardo Rental",
+    "description": "Luxury villa rental in prime Fiscardo location",
+    "availability": "https://schema.org/InStock",
+    "validFrom": "2025-01-01",
+    "priceRange": "€€€",
+    "priceCurrency": "EUR"
+  }
+}

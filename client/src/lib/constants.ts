@@ -71,33 +71,33 @@ export const cafeShoppingOptions: Location[] = [
 export const experiences: Experience[] = [
   {
     title: "Beach Exploration",
-    description: "Discover Kefalonia’s breathtaking coastline—from the world-renowned Myrtos Beach with its turquoise waters and dramatic cliffs, to secluded Petani and Antisamos.",
-    image: "/images/myrtos2.jpg"
+    description: "Discover Kefalonia's breathtaking coastline—from the world-renowned Myrtos Beach with its turquoise waters and dramatic cliffs, to secluded Petani and Antisamos.",
+    image: "/images/myrtos2.webp"
   },
   {
     title: "Culinary Delights",
     description: "Savor authentic Kefalonian flavors in family-run tavernas. Try fresh-caught seafood in Fiscardo, traditional meat pies in mountain villages, and local meze with a view of the Ionian.",
-    image: "/images/fiskardo.jpeg"
+    image: "/images/fiskardo.webp"
   },
   {
     title: "Island Cruising",
-    description: "Sail along Kefalonia’s coast to explore hidden sea caves, swim in crystal-clear coves, and spot dolphins. Don’t miss a day trip to nearby Ithaca, the mythical home of Odysseus.",
-    image: "/images/foki.jpeg"
+    description: "Sail along Kefalonia's coast to explore hidden sea caves, swim in crystal-clear coves, and spot dolphins. Don't miss a day trip to nearby Ithaca, the mythical home of Odysseus.",
+    image: "/images/foki.webp"
   },
   {
     title: "Nature Hikes",
-    description: "Scenic trails from Foki to Dafnoudi lead through pine forests and sea views, with stops near Fiskardo and hidden coves along the way.",
-    image: "/images/hikepng.png"
+    description: "Scenic trails from Foki to Dafnoudi lead through pine forests and sea views, with stops near Fiskardo and hidden coves.",
+    image: "/images/hikepng.webp"
   },
   {
     title: "Wine Tasting",
     description: "Visit local wineries to sample the island's distinctive Robola wine and learn about Kefalonia's winemaking traditions.",
-    image: "/images/Robola.jpg"
+    image: "/images/Robola.webp"
   },
   {
     title: "Sunset Magic",
     description: " Catch unforgettable sunsets at Alaties Beach or nearby spots, with sweeping views of the Ionian Sea.",
-    image: "/images/alaties.jpg"
+    image: "/images/alaties.webp"
   }
 ];
 

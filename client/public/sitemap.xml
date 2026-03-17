@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://villafiscardo.com/</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/cropped_83A0388.jpg</image:loc>
+      <image:caption>Villa Fiscardo - Best villa rental in Fiscardo, Kefalonia</image:caption>
+      <image:title>Villa Fiscardo Exterior with Sea View</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/_83A0388.jpg</image:loc>
+      <image:caption>Villa Fiscardo Traditional Architecture</image:caption>
+      <image:title>Villa Fiscardo Traditional Greek House</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/myrtos2.jpg</image:loc>
+      <image:caption>Myrtos Beach near Villa Fiscardo</image:caption>
+      <image:title>Famous Myrtos Beach Kefalonia</image:title>
+    </image:image>
+  </url>
+  
+  <!-- About Page -->
+  <url>
+    <loc>https://villafiscardo.com/about</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Booking Page - IMPORTANT FOR CONVERSIONS -->
+  <url>
+    <loc>https://villafiscardo.com/booking</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+  </url>
+  
+  <!-- Blog Index -->
+  <url>
+    <loc>https://villafiscardo.com/blog</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Blog Posts - Use React routes NOT canonical HTML files -->
+  <url>
+    <loc>https://villafiscardo.com/blog/beach-exploration</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/myrtos2.jpg</image:loc>
+      <image:caption>Kefalonia Beaches Guide</image:caption>
+      <image:title>Best Beaches in Kefalonia</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://villafiscardo.com/blog/culinary-delights</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/fiskardo.jpeg</image:loc>
+      <image:caption>Kefalonian Cuisine and Restaurants</image:caption>
+      <image:title>Traditional Greek Food in Kefalonia</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://villafiscardo.com/blog/island-cruising</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/DJI_0722.jpg</image:loc>
+      <image:caption>Kefalonia Boat Tours and Cruising</image:caption>
+      <image:title>Explore Kefalonia by Boat</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://villafiscardo.com/blog/nature-hikes</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/hikepng.png</image:loc>
+      <image:caption>Hiking Trails in Kefalonia</image:caption>
+      <image:title>Best Hikes in North Kefalonia</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://villafiscardo.com/blog/wine-tasting</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/Robola.jpg</image:loc>
+      <image:caption>Kefalonia Wine Tasting and Wineries</image:caption>
+      <image:title>Robola Wine of Kefalonia</image:title>
+    </image:image>
+  </url>
+  
+  <url>
+    <loc>https://villafiscardo.com/blog/sunset-magic</loc>
+    <lastmod>2025-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://villafiscardo.com/images/alaties.jpg</image:loc>
+      <image:caption>Best Sunset Spots in Kefalonia</image:caption>
+      <image:title>Kefalonia Sunset Views</image:title>
+    </image:image>
+  </url>
+
+</urlset>

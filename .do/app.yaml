@@ -1,0 +1,55 @@
+name: villafiscardo
+static_sites:
+- name: villafiscardo-frontend
+  github:
+    branch: dev
+    deploy_on_push: true
+    repo: nickpotamianos/KefaloniaBnb
+  build_command: cd client && npm run build
+  output_dir: client/dist
+  # Domain configuration - add both domains, but set non-www as primary
+  domains:
+  - domain: villafiscardo.com
+    type: primary
+  - domain: www.villafiscardo.com
+    type: alias
+  env:
+  - key: NODE_ENV
+    value: production
+  cors:
+    allow_origins:
+    - https://villafiscardo.com
+    allow_methods:
+    - GET
+    - OPTIONS
+  # Redirect rules to handle www to non-www redirects
+  routes:
+  - path: /
+    preserve_path_prefix: true  # Handle 301 redirects from www to non-www - preserve all paths
+  rewrites:
+  - source: /(.*)
+    destination: /$1
+    if: "${host} == www.villafiscardo.com"
+    status: 301
+    headers:
+      Location: https://villafiscardo.com/$1
+      Cache-Control: public, max-age=86400
+
+  # Specific blog post redirects to ensure they're handled correctly
+  - source: /blog/(.*)
+    destination: /blog/$1
+    if: "${host} == www.villafiscardo.com"
+    status: 301
+    headers:
+      Location: https://villafiscardo.com/blog/$1
+      Cache-Control: public, max-age=86400
+  http_port: 8080
+  catchall_document: index.html  # Needed for SPA routing
+  error_document: index.html
+  headers:
+  - path: /
+    values:
+      X-Frame-Options: DENY
+      X-XSS-Protection: 1; mode=block
+      X-Content-Type-Options: nosniff
+      Strict-Transport-Security: max-age=63072000; includeSubDomains; preload

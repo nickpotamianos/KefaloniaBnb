@@ -1,10 +1,58 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import * as bodyParser from 'body-parser';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import addCanonicalTagsMiddleware from './middleware/canonicalTags';
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
-app.use(express.json());
+
+// Get the environment
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Add WWW to non-WWW redirect middleware (before other middlewares)
+app.use((req, res, next) => {
+  if (isProduction && req.headers.host?.startsWith('www.')) {
+    // Get the original host without 'www.' prefix
+    const nonWwwHost = req.headers.host.replace(/^www\./, '');
+    
+    // Build the redirect URL with full path and query parameters
+    const protocol = req.headers['x-forwarded-proto'] || 'https';
+    const queryString = req.url.includes('?') ? req.url.substring(req.url.indexOf('?')) : '';
+    const redirectUrl = `${protocol}://${nonWwwHost}${req.path}${queryString}`;
+    
+    // Send a 301 permanent redirect
+    return res.redirect(301, redirectUrl);
+  }
+  next();
+});
+
+// Configure CORS
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://villafiscardo.com', 'https://www.villafiscardo.com']
+    : 'http://localhost:5173',
+  credentials: true
+}));
+
+// Parse JSON for regular routes
+app.use((req, res, next) => {
+  // Skip body parsing for Stripe webhook route
+  if (req.originalUrl === '/api/stripe-webhook') {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+});
+
 app.use(express.urlencoded({ extended: false }));
+
+// Add canonical tags middleware for proper SEO
+app.use(addCanonicalTagsMiddleware);
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -56,15 +104,10 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on port 5000
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = 5000;
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
+  // Use PORT environment variable (set by many cloud providers)
+  // or default to 8080 in production, 3000 in development
+  const port = process.env.PORT || (isProduction ? 8080 : 3000);
+  server.listen(port, () => {
     log(`serving on port ${port}`);
   });
 })();

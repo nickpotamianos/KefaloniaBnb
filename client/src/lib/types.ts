@@ -2,6 +2,11 @@ export interface Experience {
   title: string;
   description: string;
   image: string;
+  location?: string;
+  season?: string;
+  categories?: string[];
+  distance?: string;
+  duration?: string;
 }
 
 export interface Review {

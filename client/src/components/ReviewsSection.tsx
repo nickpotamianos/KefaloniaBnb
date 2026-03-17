@@ -13,32 +13,8 @@ const ReviewsSection = () => {
   return (
     <>
       <Helmet>
-        <title>Guest Reviews | Kefalonian Vintage Home</title>
+        <title>Guest Reviews | Villa Fiscardo</title>
         <meta name="description" content="See what our guests say about their stay at our traditional Kefalonian home. Authentic reviews highlighting our hospitality, location, and unique experience." />
-        <script type="application/ld+json">
-          {`
-            {
-              "@context": "https://schema.org",
-              "@type": "AggregateRating",
-              "itemReviewed": {
-                "@type": "LodgingBusiness",
-                "name": "Kefalonian Vintage Home",
-                "image": "/images/cropped_83A0388.jpg",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "Fiscardo",
-                  "addressRegion": "Kefalonia",
-                  "addressCountry": "Greece"
-                }
-              },
-              "ratingValue": "${averageRating}",
-              "bestRating": "5",
-              "worstRating": "1",
-              "ratingCount": "${reviews.length}",
-              "description": "Guest reviews of Kefalonian Vintage Home in Fiscardo"
-            }
-          `}
-        </script>
       </Helmet>
       
       <section id="reviews" className="py-20 px-4 bg-gradient-to-b from-[#F8F6F2] to-[#F2F7FC]">
@@ -70,7 +46,7 @@ const ReviewsSection = () => {
             
             <div className="mt-12 text-center">
               <Button asChild className="bg-[#3B83BD] hover:bg-[#2C5F89] text-white">
-                <a href="#booking" aria-label="Book your stay at our Kefalonian Vintage Home">Book Your Stay Today</a>
+                <a href="#booking" aria-label="Book your stay at our Villa Fiscardo">Book Your Stay Today</a>
               </Button>
             </div>
           </div>

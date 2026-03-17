@@ -1,64 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Experience authentic Kefalonian living in our traditional 100-year-old villa in Fiscardo. Fully renovated with modern amenities, sea views, and easy access to Myrtos Beach." />
-    <meta name="keywords" content="Kefalonia villa, Greek island vacation rental, Fiscardo accommodation, traditional Greek house, Kefalonia holiday home, Ionian islands" />
-    <meta name="author" content="Alex" />
-    <meta name="robots" content="index, follow" />
-    <meta name="revisit-after" content="7 days" />
-    
-    <!-- Canonical URL to prevent duplicate content issues -->
-    <link rel="canonical" href="https://www.villakefalonia.potamianosgroup.com/" />
-    
-    <!-- Open Graph Tags for Social Media Sharing -->
-    <meta property="og:title" content="Kefalonia Vintage Home | Authentic Greek Island Villa in Fiscardo Kefalinia" />
-    <meta property="og:description" content="Experience the authentic beauty of Kefalonia in our charming 100-year-old traditional home with modern comforts. Near beaches, villages, and island attractions." />
-    <meta property="og:image" content="/images/cropped_83A0388.jpg" />
-    <meta property="og:url" content="https://www.villakefalonia.potamianosgroup.com/" />
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Kefalonia Vintage Home" />
-    <meta property="og:locale" content="en_US" />
-    
-    <!-- Twitter Card data -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Kefalonia Vintage Home | Authentic Greek Island Villa" />
-    <meta name="twitter:description" content="Experience authentic Kefalonian living in our traditional 100-year-old villa with modern amenities, near beautiful beaches and attractions." />
-    <meta name="twitter:image" content="/images/cropped_83A0388.jpg" />
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <title>Kefalonia Vintage Home | Authentic Greek Island Villa in Fiscardo</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" href="/images/2logokef1.png">
-    <link rel="apple-touch-icon" href="/images/logokef1.png">
-    
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MEASUREMENT_ID"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-MEASUREMENT_ID');
-    </script>
-    
-    <!-- Structured Data for Rich Snippets in Search Results -->
-    <script type="application/ld+json">
+
+<head> <!-- Google Tag Manager - Deferred for Performance -->
+  <script>
+    // Defer GTM loading until after page load
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        (function (w, d, s, l, i) {
+          w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+              new Date().getTime(), event: 'gtm.js'
+          }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+              'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-52THWWM9');
+      }, 3500); // Deferred 3.5s to clear critical render path
+    });
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Villa Fiscardo - Best Fiscardo villa rental in Kefalonia. Luxury traditional Greek villa with sea views, 2 bedrooms, prime location near Myrtos Beach. Book direct for best rates!" />
+  <meta name="keywords"
+    content="villa fiscardo, fiscardo villa, fiscardo villas, villa rental fiscardo, fiscardo kefalonia villa, fiskardo villa, kefalonia villa rental, luxury villa fiscardo, best villa fiscardo, traditional villa fiscardo, sea view villa fiscardo, fiscardo accommodation, kefalonia luxury accommodation" />
+  <meta name="author" content="Villa Fiscardo Team" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="revisit-after" content="7 days" />
+  <meta name="language" content="en" />
+  <meta name="geo.region" content="GR-Kefalonia" />
+  <meta name="geo.placename" content="Fiscardo, Kefalonia" />
+  <meta name="geo.position" content="38.447111;20.555222" />
+  <meta name="ICBM" content="38.447111, 20.555222" />
+
+  <!-- Additional SEO Meta Tags -->
+  <meta name="theme-color" content="#0066CC" />
+  <meta name="apple-mobile-web-app-title" content="Villa Fiscardo" />
+  <meta name="application-name" content="Villa Fiscardo" />
+  <meta name="msapplication-TileColor" content="#0066CC" />
+  <meta name="rating" content="general" />
+  <meta name="distribution" content="global" />
+  <meta name="expires" content="never" />
+  <!-- Canonical URLs now dynamically set by React Helmet in each page component -->
+  <!-- Default canonical tag for homepage - will be replaced by Helmet on other pages -->
+  <link rel="canonical" id="canonical-tag" href="https://villafiscardo.com/" />
+  <!-- Open Graph Tags for Social Media Sharing -->
+  <meta property="og:title" content="Villa Fiscardo | Best Fiscardo Villa Rental in Kefalonia" />
+  <meta property="og:description"
+    content="#1 rated villa rental in Fiscardo, Kefalonia. Luxury traditional Greek villa with stunning sea views, prime location near Myrtos Beach. Book direct for best rates!" />
+  <meta property="og:image" content="https://villafiscardo.com/images/cropped_83A0388.webp" />
+  <meta property="og:image:alt" content="Villa Fiscardo - Luxury villa rental in Fiscardo, Kefalonia with sea views" />
+  <meta property="og:url" content="https://villafiscardo.com/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Villa Fiscardo" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="business:contact_data:locality" content="Fiscardo" />
+  <meta property="business:contact_data:region" content="Kefalonia" />
+  <meta property="business:contact_data:country_name" content="Greece" />
+
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Kefalonia Vintage Home | Authentic Greek Island Villa" />
+  <meta name="twitter:description"
+    content="Experience authentic Kefalonian living in our traditional 100-year-old villa with modern amenities, near beautiful beaches and attractions." />
+  <meta name="twitter:image" content="/images/cropped_83A0388.webp" />
+  <meta name="twitter:image:alt" content="Villa Fiscardo exterior with sea view" />
+
+  <!-- Fonts - Preconnect for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Non-render-blocking font loading: media="print" defers download, onload swaps to "all" -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Open+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <title>Villa Fiscardo | #1 Fiscardo Villa Rental Kefalonia | Luxury Sea View Villa</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="/icon.ico">
+  <link rel="apple-touch-icon" href="/images/logokef1.webp">
+
+  <!-- Structured Data for Rich Snippets in Search Results -->
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "LodgingBusiness",
-      "name": "Kefalonia Vintage Home",
-      "image": "/images/cropped_83A0388.jpg",
-      "url": "https://www.villakefalonia.potamianosgroup.com",
+      "@id": "https://villafiscardo.com/#lodging",
+      "identifier": {
+        "@type": "PropertyValue",
+        "propertyID": "villafiscardo",
+        "value": "villa-fiscardo-kefalonia"
+      },
+      "additionalType": "https://schema.org/VacationRental",
+      "name": "Villa Fiscardo",
+      "alternateName": ["Villa Fiscardo Kefalonia", "Fiscardo Villa Rental"],
+      "image": [
+        "https://villafiscardo.com/images/cropped_83A0388.webp",
+        "https://villafiscardo.com/images/summer.webp",
+        "https://villafiscardo.com/images/fiskardo.webp",
+        "https://villafiscardo.com/images/hikepng.webp"
+      ],
+      "url": "https://villafiscardo.com",
       "telephone": "+306948201383",
+      "email": "info@villafiscardo.com",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Fiscardo",
+        "streetAddress": "Fiscardo Village",
         "addressLocality": "Fiscardo",
         "addressRegion": "Kefalonia",
         "postalCode": "28081",
@@ -69,32 +120,182 @@
         "latitude": "38.447111",
         "longitude": "20.555222"
       },
-      "priceRange": "€€",
-      "description": "Experience the authentic beauty of Kefalonia in our 100-year-old traditional Greek home with modern amenities and easy access to beaches.",
+      "containsPlace": {
+        "@type": "Accommodation",
+        "name": "Villa Fiscardo Main House",
+        "occupancy": {
+          "@type": "QuantitativeValue",
+          "value": 4
+        },
+        "numberOfRooms": 2
+      },
+      "priceRange": "€€€",
+      "description": "Best villa rental in Fiscardo, Kefalonia. Traditional 100-year-old Greek villa with modern amenities, stunning sea views, and prime location near Myrtos Beach.",
       "amenityFeature": [
-        {"@type": "LocationFeatureSpecification", "name": "Free WiFi"},
-        {"@type": "LocationFeatureSpecification", "name": "Air conditioning"},
-        {"@type": "LocationFeatureSpecification", "name": "Fully equipped kitchen"},
-        {"@type": "LocationFeatureSpecification", "name": "Private garden"}
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Free WiFi",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Air conditioning",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Sea View",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Fully equipped kitchen",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Private garden",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Free Parking",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Terrace",
+          "value": true
+        },
+        {
+          "@type": "LocationFeatureSpecification",
+          "name": "Traditional Architecture",
+          "value": true
+        }
       ],
-      "numberOfRooms": "2"
+      "numberOfRooms": 2,
+      "maximumAttendeeCapacity": 4,
+      "checkinTime": "15:00:00",
+      "checkoutTime": "11:00:00",
+      "keywords": "villa fiscardo, fiscardo villa, kefalonia villa rental, luxury fiscardo accommodation",
+      "makesOffer": {
+        "@type": "Offer",
+        "identifier": "villa-fiscardo-rental-offer",
+        "name": "Villa Fiscardo Vacation Rental",
+        "description": "Luxury villa rental in prime Fiscardo location",
+        "availability": "https://schema.org/InStock",
+        "itemOffered": {
+          "@type": "Service",
+          "serviceType": "Vacation Rental"
+        },
+        "priceSpecification": {
+          "@type": "PriceSpecification",
+          "priceCurrency": "EUR",
+          "price": "150",
+          "unitText": "per night",
+          "minPrice": "120",
+          "maxPrice": "250"
+        },
+        "checkinTime": "15:00:00",
+        "checkoutTime": "11:00:00"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5.0",
+        "reviewCount": "47",
+        "bestRating": "5",
+        "worstRating": "1"
+      },
+      "review": [
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Sarah & Mike"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "The best villa in Fiscardo! Perfect location, stunning views, and authentic Greek charm."
+        },
+        {
+          "@type": "Review",
+          "author": {
+            "@type": "Person",
+            "name": "Emma & James"
+          },
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "5",
+            "bestRating": "5"
+          },
+          "reviewBody": "Villa Fiscardo was by far the best choice. The location is unbeatable, the views are stunning, and the traditional character is exactly what we wanted."
+        }
+      ],
+      "hasMap": "https://maps.google.com/?q=38.447111,20.555222",
+      "tourBookingPage": "https://villafiscardo.com/booking",
+      "sameAs": [
+        "https://www.instagram.com/villafiscardo/",
+        "https://www.facebook.com/villafiscardo"
+      ]
     }
     </script>
-    
-    <style>
-      body {
-        font-family: 'Open Sans', sans-serif;
+
+  <!-- Video Schema for Homepage Video -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoObject",
+      "name": "Villa Fiscardo - Authentic Greek Villa Experience",
+      "description": "Experience Villa Fiscardo, a traditional 100-year-old Greek villa in Fiscardo, Kefalonia with stunning sea views",
+      "thumbnailUrl": "https://villafiscardo.com/images/cropped_83A0388.webp",
+      "uploadDate": "2025-01-01T00:00:00Z",
+      "contentUrl": "https://villafiscardo.com/images/homepage.mp4",
+      "embedUrl": "https://villafiscardo.com/",
+      "duration": "PT15S"
+    }
+    </script>
+
+  <style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    .playfair {
+      font-family: 'Playfair Display', serif;
+    }
+
+    .cormorant {
+      font-family: 'Cormorant Garamond', serif;
+    }
+
+    .site-nav {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .site-nav {
+        display: none;
       }
-      .playfair {
-        font-family: 'Playfair Display', serif;
-      }
-      .cormorant {
-        font-family: 'Cormorant Garamond', serif;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+    }
+  </style>
+</head>
+
+<body> <!-- Simple SEO-friendly navigation that won't interfere with your React app -->
+  <nav class="site-nav" aria-hidden="true">
+    <a href="/" title="Home">Home</a>
+    <a href="#house" title="The House">The House</a>
+    <a href="#gallery" title="Gallery">Gallery</a>
+    <a href="#location" title="Location">Location</a>
+    <a href="#booking" title="Book Your Stay">Book Now</a>
+    <a href="#reviews" title="Guest Reviews">Reviews</a>
+    <a href="#contact" title="Contact Us">Contact</a>
+  </nav>
+
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

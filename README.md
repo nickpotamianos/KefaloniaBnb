@@ -235,5 +235,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 Villa Fiscardo is a luxury vacation rental located in the picturesque village of Fiscardo, Kefalonia. This booking platform showcases the property and provides guests with a seamless reservation experience while highlighting the natural beauty and attractions of the Greek islands.
 
 ---
-
-**Built with ❤️ for the beautiful island of Kefalonia, Greece**

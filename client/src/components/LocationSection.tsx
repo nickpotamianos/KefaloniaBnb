@@ -27,14 +27,14 @@ const LocationSection = () => {
   return (
     <>
       <Helmet>
-        <title>Kefalonia Vintage Home in Fiscardo</title>
+        <title>Villa Fiscardo in Fiscardo</title>
         <meta name="description" content="Perfectly positioned in Fiscardo, Kefalonia - just minutes from Myrtos Beach, Antisamos Beach, and charming fishing villages. Ideal base for exploring the island." />
         <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
               "@type": "Place",
-              "name": "Kefalonian Vintage Home Location",
+              "name": "Villa Fiscardo Location",
               "description": "Traditional villa located in Fiscardo, Kefalonia, Greece, close to beaches and attractions",
               "geo": {
                 "@type": "GeoCoordinates",
@@ -97,10 +97,10 @@ const LocationSection = () => {
                   <Marker position={villaPosition} icon={customIcon}>
                     <Popup>
                       <div className="text-center">
-                        <strong className="text-[var(--deep-blue)] block">Kefalonian Vintage Home</strong>
+                        <strong className="text-[var(--deep-blue)] block">Villa Fiscardo</strong>
                         <span className="text-sm block mb-2">Traditional villa in Fiscardo</span>
                         <a 
-                          href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                          href="https://maps.app.goo.gl/UfJRhLzjntBUpAHv8" 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="text-sm text-[var(--terracotta)] hover:underline"
@@ -128,7 +128,7 @@ const LocationSection = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Address</h4>
-                      <p className="text-gray-600">Kefalonian Vintage Home, Fiscardo, Kefalonia 28081, Greece</p>
+                      <p className="text-gray-600">Villa Fiscardo, Fiscardo, Kefalonia 28081, Greece</p>
                     </div>
                   </div>
                   
@@ -148,7 +148,7 @@ const LocationSection = () => {
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-800 mb-1">Transportation</h4>
-                      <p className="text-gray-600">Car rental recommended for exploring the island. We can arrange airport transfers upon request.</p>
+                      <p className="text-gray-600">Car rental recommended for exploring the island.</p>
                     </div>
                   </div>
                 </div>
@@ -159,7 +159,7 @@ const LocationSection = () => {
                     className="bg-[var(--terracotta)] hover:bg-[var(--terracotta)]/90 rounded-full shadow-sm hover:shadow-md transition-all duration-300"
                   >
                     <a 
-                      href="https://maps.app.goo.gl/5dfiX2VPvbXASHiC9" 
+                      href="https://maps.app.goo.gl/UfJRhLzjntBUpAHv8" 
                       target="_blank" 
                       rel="noopener noreferrer"
                     >

@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+Allow: /blog/
+Allow: /blog/*
+Allow: /about
+
+
+# Specify canonical domain
+Host: villafiscardo.com
+
+# Sitemap
+Sitemap: https://villafiscardo.com/sitemap.xml
+
+# Prevent access to admin area
+Disallow: /admin/
+Disallow: */admin/*
+
+# SEO crawling directives
+Crawl-delay: 1
+
+# Additional indexing hints for search engines
+User-agent: Googlebot
+Allow: /images/
+Allow: /*.css
+Allow: /*.js
