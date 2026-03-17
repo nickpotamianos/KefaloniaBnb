@@ -14,7 +14,7 @@ const CALENDAR_URLS = [
   "https://ical.booking.com/v1/export?t=ae535b52-549f-4976-bffd-dd05f7121b9c",
   "https://www.airbnb.com/calendar/ical/936140466545331330.ics?s=4db5df46d02514f399d3cc9362b00162",
   "http://www.vrbo.com/icalendar/a5f9a9c10a434d21a93c76b054037556.ics?nonTentative",
-  //"https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
+  "https://my-api.hometogo.com/api/calendar/export/M2BH67W.ics"
 ];
 
 // Use our server-side proxy instead of AllOrigins
